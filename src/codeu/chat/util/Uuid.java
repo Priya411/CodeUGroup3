@@ -192,8 +192,8 @@ public final class Uuid {
 
     if ((id >> 32) != 0) {
       throw new IOException(String.format(
-          "ID value '%s' is too large to be an unsigned 32 bit integer",
-          tokens[index]));
+              "ID value '%s' is too large to be an unsigned 32 bit integer",
+              tokens[index]));
     }
 
     final Uuid link = new Uuid(root, (int)(id & 0xFFFFFFFF));
@@ -201,7 +201,7 @@ public final class Uuid {
     final int nextIndex = index + 1;
 
     return nextIndex < tokens.length ?
-        parse(link, tokens, nextIndex) :
-        link;
+            parse(link, tokens, nextIndex) :
+            link;
   }
 }
