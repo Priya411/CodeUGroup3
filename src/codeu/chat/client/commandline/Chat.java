@@ -194,8 +194,10 @@ public final class Chat {
         if (info == null) {
           // Communicate error to user - the server did not send us a valid
           // info object.
+					System.out.println("The server didn't send us a valid info object");
         } else {
           // Print the server info to the user in a pretty way
+					System.out.print(info);
         }
       }
     });
