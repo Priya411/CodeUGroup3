@@ -23,6 +23,7 @@ import codeu.chat.client.core.Context;
 import codeu.chat.client.core.ConversationContext;
 import codeu.chat.client.core.MessageContext;
 import codeu.chat.client.core.UserContext;
+import codeu.chat.common.ServerInfo;
 
 public final class Chat {
 
@@ -97,6 +98,7 @@ public final class Chat {
     // Add a command to print a list of all commands and their description when
     // the user for "help" while on the root panel.
     //
+    // Added info command information: Priyanka Agarwal
     panel.register("help", new Panel.Command() {
       @Override
       public void invoke(Scanner args) {
@@ -109,6 +111,8 @@ public final class Chat {
         System.out.println("    Sign in as the user with the given name.");
         System.out.println("  exit");
         System.out.println("    Exit the program.");
+        System.out.println("  info");
+        System.out.println("    Prints out the server information");
       }
     });
 
@@ -180,6 +184,23 @@ public final class Chat {
         return null;
       }
     });
+
+    // Added by Priyanka Agarwal according to CodeU Tutorial
+    // Added import statement
+    panel.register("info", new Panel.Command() {
+      @Override
+      public void invoke(Scanner args) {
+        final ServerInfo info = context.getInfo();
+        if (info == null) {
+          // Communicate error to user - the server did not send us a valid
+          // info object.
+        } else {
+          // Print the server info to the user in a pretty way
+        }
+      }
+    });
+
+
 
     // Now that the panel has all its commands registered, return the panel
     // so that it can be used.

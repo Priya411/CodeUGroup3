@@ -22,15 +22,19 @@ import codeu.chat.common.BasicView;
 import codeu.chat.common.User;
 import codeu.chat.util.Uuid;
 import codeu.chat.util.connections.ConnectionSource;
+import codeu.chat.common.ServerInfo;
+import codeu.chat.client.core.View;
 
 public final class Context {
 
   private final BasicView view;
+  private final View view1;
   private final Controller controller;
 
   public Context(ConnectionSource source) {
     this.view = new View(source);
     this.controller = new Controller(source);
+    this.view1 = new View(source);
   }
 
   public UserContext create(String name) {
@@ -38,6 +42,12 @@ public final class Context {
     return user == null ?
         null :
         new UserContext(user, view, controller);
+  }
+
+  // Added according to CodeU tutorial by Priyanka Agarwal
+  // Created View1 Variable
+  public ServerInfo getInfo() {
+    return view1.getInfo();
   }
 
   public Iterable<UserContext> allUsers() {
