@@ -39,6 +39,7 @@ import codeu.chat.util.Time;
 import codeu.chat.util.Timeline;
 import codeu.chat.util.Uuid;
 import codeu.chat.util.connections.Connection;
+import codeu.chat.common.ServerInfo;
 
 public final class Server {
 
@@ -53,10 +54,9 @@ public final class Server {
   private final Timeline timeline = new Timeline();
 
   private final Map<Integer, Command> commands = new HashMap<>();
-
   private final Uuid id;
   private final Secret secret;
-
+  private static final ServerInfo info = new ServerInfo();
   private final Model model = new Model();
   private final View view = new View(model);
   private final Controller controller;
@@ -169,6 +169,21 @@ public final class Server {
 
         Serializers.INTEGER.write(out, NetworkCode.GET_MESSAGES_BY_ID_RESPONSE);
         Serializers.collection(Message.SERIALIZER).write(out, messages);
+      }
+    });
+
+    // Allows user to request Server Info and handles this request, added by Priyanka Agarwal
+    // Modeled after given code of:
+    /* if (type == NetworkCode.SERVER_INFO_REQUEST) {
+    Serializers.INTEGER.write(out, NetworkCode.SERVER_INFO_RESPONSE);
+    Uuid.SERIALIZER.write(out, info.version);
+    } else if …
+    */
+      this.commands.put(NetworkCode.SERVER_INFO_REQUEST, new Command() {
+      @Override
+      public void onMessage(InputStream in, OutputStream out) throws IOException {
+        Serializers.INTEGER.write(out, NetworkCode.SERVER_INFO_RESPONSE);
+        Uuid.SERIALIZER.write(out, info.version);
       }
     });
 
