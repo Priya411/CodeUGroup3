@@ -41,11 +41,14 @@ import codeu.chat.util.Uuid;
 import codeu.chat.util.connections.Connection;
 
 public final class Server {
+	
 
   private interface Command {
     void onMessage(InputStream in, OutputStream out) throws IOException;
   }
 
+  private static final ServerInfo info = new ServerInfo();
+  
   private static final Logger.Log LOG = Logger.newLog(Server.class);
 
   private static final int RELAY_REFRESH_MS = 5000;  // 5 seconds
@@ -172,6 +175,21 @@ public final class Server {
       }
     });
 
+    
+    // Get Server Info - **for TimeUp function**
+    //					A client wants to know the time the server was started
+    //					added by Julia 5/19 
+    
+    this.commands.put(NetworkCode.SERVER_INFO_REQUEST, new Command() {
+    	@Override
+        public void onMessage(InputStream in, OutputStream out) throws IOException {
+    		
+          Serializers.INTEGER.write(out, NetworkCode.SERVER_INFO_RESPONSE);
+    	  Uuid.SERIALIZER.write(out, info.startTime);
+        }
+      });
+    
+    
     this.timeline.scheduleNow(new Runnable() {
       @Override
       public void run() {
