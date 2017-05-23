@@ -30,8 +30,7 @@ public final class ServerInfo {
 
     // This method allows the version to be printed as a string, 
     // to help with displaying the information. 
-    public String toString()
-    {
+    public String toString() {
         return version.toString();
     }
 }
