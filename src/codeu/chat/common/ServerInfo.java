@@ -21,4 +21,9 @@ public final class ServerInfo {
     public ServerInfo(Uuid version) {
         this.version = version;
     }
+
+    public String toString()
+    {
+        return version.toString();
+    }
 }
