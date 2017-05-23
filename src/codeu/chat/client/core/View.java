@@ -26,6 +26,7 @@ import codeu.chat.common.User;
 import codeu.chat.util.Logger;
 import codeu.chat.util.Serializers;
 import codeu.chat.util.Time;
+import codeu.chat.common.ServerInfo; 
 import codeu.chat.util.Uuid;
 import codeu.chat.util.connections.Connection;
 import codeu.chat.util.connections.ConnectionSource;
@@ -138,14 +139,13 @@ final class View implements BasicView {
   }
 
 
-//Added for TimeUp by Julia 5/19
+//Updated for UpTime by Julia 5/22
 
-@Override 
-public ServerInfo getInfo() {
-	
-	  try (final Connection connection = source.connection()) {
+	public ServerInfo getInfo() {
+		
+		try (final Connection connection = source.connect()) {
 		  
-	    Serializers.INTEGER.write(connection.out(), NetworkCodeSERVER_INFO_REQUEST);
+	    Serializers.INTEGER.write(connection.out(), NetworkCode.SERVER_INFO_REQUEST);
 	    
 	    if (Serializers.INTEGER.read(connection.in()) == NetworkCode.SERVER_INFO_RESPONSE) {
 	      final Time startTime = Time.SERIALIZER.read(connection.in());
@@ -162,3 +162,4 @@ public ServerInfo getInfo() {
 	}
 
 }
+
