@@ -1,5 +1,9 @@
-/*Class created by Priyanka Agarwal as per code written
-on codeU directions. Only added package and import statements
+/*Class created by Priyanka Agarwal. It allows the version of the server
+to be stored and updated. ServerInfo contains the variable Server_Version
+which represents the version, starting with 1.0.0. It can then be updated 
+as needed. The toString method allows the version to be converted from Uuid
+to a string so that it can be displayed in the Panels, to be use by the Chat.java
+class.
  */
 
 package codeu.chat.common;
