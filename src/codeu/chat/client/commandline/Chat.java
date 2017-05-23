@@ -98,7 +98,6 @@ public final class Chat {
     // Add a command to print a list of all commands and their description when
     // the user for "help" while on the root panel.
     //
-    // Added info command information: Priyanka Agarwal
     panel.register("help", new Panel.Command() {
       @Override
       public void invoke(Scanner args) {
@@ -111,6 +110,9 @@ public final class Chat {
         System.out.println("    Sign in as the user with the given name.");
         System.out.println("  exit");
         System.out.println("    Exit the program.");
+        // Added by Priyanka Agarwal
+        // Added the info option to allow the user to get the information about the server,
+        // including its version
         System.out.println("  info");
         System.out.println("    Prints out the server information");
       }
@@ -185,8 +187,12 @@ public final class Chat {
       }
     });
 
-    // Added by Priyanka Agarwal according to CodeU Tutorial
-    // Added import statement
+    // Added by Priyanka Agarwal
+    // info (get server info)
+    //
+    // Add a command to print server information when the user enters "info"
+    // while on the root panel.
+    //
     panel.register("info", new Panel.Command() {
       @Override
       public void invoke(Scanner args) {
@@ -196,7 +202,7 @@ public final class Chat {
           // info object.
           System.out.println("The server didn't send us a valid info object");
         } else {
-          // Print the server info to the user in a pretty way
+          // Print the server info to the user
           System.out.print("Your version number is: ");
           System.out.println(info.toString());
         }
