@@ -138,7 +138,10 @@ final class View implements BasicView {
     return messages;
   }
 
-  // Added by Priyanka Agarwal according to CodeU tutorial
+  // Added by Priyanka Agarwal
+  // This function returns the information about the Server,
+  // including it's Versions based on the specific server it
+  // is using and is connected to. 
   public ServerInfo getInfo() {
     try (final Connection connection = this.source.connect()) {
       Serializers.INTEGER.write(connection.out(), NetworkCode.SERVER_INFO_REQUEST);
@@ -148,9 +151,11 @@ final class View implements BasicView {
       } else {
         // Communicate this error - the server did not respond with the type of
         // response we expected.
+        System.out.println("The server couldn't process the inputted information");
       }
     } catch (Exception ex) {
       // Communicate this error - something went wrong with the connection.
+      System.out.println("There were some problems with the connection, so the information couldn't be accessed");
     }
     // If we get here it means something went wrong and null should be returned
     return null;
