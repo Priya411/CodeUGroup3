@@ -27,31 +27,28 @@ import codeu.chat.client.core.View;
 
 public final class Context {
 
-  private final BasicView view;
-  // We need to access the information of the view, but since 
-  // the method that returns this is private in the child class 
-  // BasicView, we're going to create a variable ViewInterface,
-  // which has a public version of this function - Priyanka Agarwal
-  private final View viewInterface;
+  private final View view;
+  // Changed the view object to type View rather than BasicView
+  // as this prevented having a parent and sublcass object
+  // of the same type - Priyanka Agarwal
   private final Controller controller;
 
   public Context(ConnectionSource source) {
     this.view = new View(source);
     this.controller = new Controller(source);
-    this.viewInterface = new View(source);
   }
 
   public UserContext create(String name) {
     final User user = controller.newUser(name);
     return user == null ?
-        null :
-        new UserContext(user, view, controller);
+            null :
+            new UserContext(user, view, controller);
   }
 
   public ServerInfo getInfo() {
     // This function returns the server information, which is
     // the version number for the specific host/connection
-    return viewInterface.getInfo();
+    return view.getInfo();
   }
 
   public Iterable<UserContext> allUsers() {
