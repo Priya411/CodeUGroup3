@@ -140,7 +140,7 @@ final class View implements BasicView {
 
 
 //Updated for UpTime by Julia 5/22
-
+  	@Override 
 	public ServerInfo getInfo() {
 		
 		try (final Connection connection = source.connect()) {

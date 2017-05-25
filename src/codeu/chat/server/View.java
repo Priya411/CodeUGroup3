@@ -93,8 +93,6 @@ public final class View implements BasicView, SinglesView {
   
   // For Up Time
   // added by Julia 5/22 
-  // I'm not sure if this is exactly what should be here, but since this implements BasicView 
-  // it needed to have a ServerInfo function 
   
   
   @Override 

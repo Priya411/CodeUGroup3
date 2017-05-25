@@ -53,9 +53,9 @@ public interface BasicView {
   Collection<Message> getMessages(Collection<Uuid> ids);
   
   // GET INFO 
-  //
-  //  Return Server Info to the client 
-  ServerInfo getInfo();
+  // 
+  // Returns server info including Up Time 
+  ServerInfo getInfo(); 
   
 
 

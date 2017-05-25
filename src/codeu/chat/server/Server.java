@@ -148,10 +148,10 @@ public final class Server {
       }
     });
     
-    // Get Server Info - **for Up Time function**
-    //					A client wants to know the time the server was started
-    //					updated by Julia 5/22
-    
+//    // Get Server Info - **for Up Time function**
+//    //					A client wants to know the time the server was started
+//    //					updated by Julia 5/22
+//    
     this.commands.put(NetworkCode.SERVER_INFO_REQUEST, new Command() {
     	@Override
         public void onMessage(InputStream in, OutputStream out) throws IOException {

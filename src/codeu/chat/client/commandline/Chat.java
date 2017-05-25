@@ -132,7 +132,7 @@ public final class Chat {
     	    	System.out.println("ERROR: Failed to retrieve server information"); 
     	    } else {
     	    	System.out.format(
-    	    			"TimeUp: %s \n",
+    	    			"Up Time: %s \n",
     	    			info.startTime);
     	    }
     	  }
