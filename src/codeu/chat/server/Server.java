@@ -56,7 +56,15 @@ public final class Server {
   private final Map<Integer, Command> commands = new HashMap<>();
   private final Uuid id;
   private final Secret secret;
-  private static final ServerInfo info = new ServerInfo();
+  private ServerInfo info = null;
+
+  {
+    try {
+      info = new ServerInfo(Uuid.parse("1.0.0"));
+    } catch (IOException e) {
+      System.out.println("Invalid input");
+    }
+  }
   private final Model model = new Model();
   private final View view = new View(model);
   private final Controller controller;
