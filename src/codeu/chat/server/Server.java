@@ -57,20 +57,14 @@ public final class Server {
   private final Uuid id;
   private final Secret secret;
   private ServerInfo info = null;
-
-  {
-    try {
-      info = new ServerInfo(Uuid.parse("1.0.0"));
-    } catch (IOException e) {
-      System.out.println("Invalid input");
-    }
-  }
   private final Model model = new Model();
   private final View view = new View(model);
   private final Controller controller;
-
   private final Relay relay;
   private Uuid lastSeen = Uuid.NULL;
+  // This string should be changed whenever the initial version value for the server
+  // needs to be changed
+  private String version = "1.0.0";
 
   public Server(final Uuid id, final Secret secret, final Relay relay) {
 
@@ -78,6 +72,13 @@ public final class Server {
     this.secret = secret;
     this.controller = new Controller(id, model);
     this.relay = relay;
+    // This try catch block initializes the server version based on the version
+    // set in object 'version'
+    try {
+      info = new ServerInfo(Uuid.parse(version));
+    } catch (IOException e) {
+      System.out.println("Invalid input");
+    }
 
     // New Message - A client wants to add a new message to the back end.
     this.commands.put(NetworkCode.NEW_MESSAGE_REQUEST, new Command() {
