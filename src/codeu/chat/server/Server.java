@@ -62,8 +62,9 @@ public final class Server {
   private final Controller controller;
   private final Relay relay;
   private Uuid lastSeen = Uuid.NULL;
-  // This string should be changed whenever the initial version value for the server
-  // needs to be changed
+  // This string should be changed whenever the current version value for the server
+  // needs to be changed. 1.0.0 is simply the default initial value, however this
+  // can also be updated and customized.
   private String version = "1.0.0";
 
   public Server(final Uuid id, final Secret secret, final Relay relay) {
@@ -78,6 +79,7 @@ public final class Server {
       info = new ServerInfo(Uuid.parse(version));
     } catch (IOException e) {
       System.out.println("Invalid input");
+      System.out.println("The version must be able to be represented as an unsigned 32 bit long");
     }
 
     // New Message - A client wants to add a new message to the back end.
