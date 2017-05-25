@@ -6,6 +6,13 @@ the version to be converted from Uuid to a string so that it can be
 displayed in the Panels, to be use by the Chat.java class.
  */
 
+/* This class is used to hold the information of the server, including
+* its version. The version can be set with the Parametrized constructor.
+* The default version on the server side is 1.0.0, as is set in the Server class
+* in the server folder. This version can be changed, and this is updated in the View class
+* accordingly.
+ */
+
 package codeu.chat.common;
 import codeu.chat.util.Uuid;
 
