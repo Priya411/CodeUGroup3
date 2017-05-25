@@ -32,5 +32,7 @@ public class ServerInfo {
         return version.toString();
     }
 
-    public Uuid getVersion() { return version;}
+    public Uuid getVersion() { 
+        return version;
+    }
 }
