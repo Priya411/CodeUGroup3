@@ -194,7 +194,7 @@ public final class Server {
       @Override
       public void onMessage(InputStream in, OutputStream out) throws IOException {
         Serializers.INTEGER.write(out, NetworkCode.SERVER_INFO_RESPONSE);
-        Uuid.SERIALIZER.write(out, info.version);
+        Uuid.SERIALIZER.write(out, info.getVersion());
       }
     });
 
