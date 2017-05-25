@@ -23,6 +23,8 @@ import codeu.chat.client.core.Context;
 import codeu.chat.client.core.ConversationContext;
 import codeu.chat.client.core.MessageContext;
 import codeu.chat.client.core.UserContext;
+import codeu.chat.common.ServerInfo; 
+
 
 public final class Chat {
 
@@ -91,6 +93,7 @@ public final class Chat {
   private Panel createRootPanel(final Context context) {
 
     final Panel panel = new Panel();
+    
 
     // HELP
     //
@@ -101,6 +104,8 @@ public final class Chat {
       @Override
       public void invoke(Scanner args) {
         System.out.println("ROOT MODE");
+        System.out.println("  info");
+        System.out.println("    Provides server information.");
         System.out.println("  u-list");
         System.out.println("    List all users.");
         System.out.println("  u-add <name>");
@@ -111,6 +116,28 @@ public final class Chat {
         System.out.println("    Exit the program.");
       }
     });
+    
+    
+    // INFO 
+    //
+    // Gives user information on the server 
+    // Added only for TimeUp which gives server's start time
+    // added by Julia 5/19 
+    
+    panel.register("info", new Panel.Command() {
+    	  @Override
+    	  public void invoke(Scanner args) {
+    	    final ServerInfo info = context.getInfo();
+    	    if (info == null) {
+    	    	System.out.println("ERROR: Failed to retrieve server information"); 
+    	    } else {
+    	    	System.out.format(
+    	    			"Up Time: %s \n",
+    	    			info.startTime);
+    	    }
+    	  }
+    	});
+
 
     // U-LIST (user list)
     //

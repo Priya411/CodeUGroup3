@@ -39,13 +39,18 @@ import codeu.chat.util.Time;
 import codeu.chat.util.Timeline;
 import codeu.chat.util.Uuid;
 import codeu.chat.util.connections.Connection;
+import codeu.chat.common.ServerInfo; 
+
 
 public final class Server {
+	
 
   private interface Command {
     void onMessage(InputStream in, OutputStream out) throws IOException;
   }
 
+  private static final ServerInfo info = new ServerInfo();
+  
   private static final Logger.Log LOG = Logger.newLog(Server.class);
 
   private static final int RELAY_REFRESH_MS = 5000;  // 5 seconds
@@ -142,6 +147,22 @@ public final class Server {
         Serializers.collection(ConversationHeader.SERIALIZER).write(out, conversations);
       }
     });
+    
+//    // Get Server Info - **for Up Time function**
+//    //					A client wants to know the time the server was started
+//    //					updated by Julia 5/22
+//    
+    this.commands.put(NetworkCode.SERVER_INFO_REQUEST, new Command() {
+    	@Override
+        public void onMessage(InputStream in, OutputStream out) throws IOException {
+    		final ServerInfo info = new ServerInfo();
+    		
+          Serializers.INTEGER.write(out, NetworkCode.SERVER_INFO_RESPONSE);
+    	  Serializers.nullable(Time.SERIALIZER).write(out, info.startTime);
+        }
+      });
+    
+    
 
     // Get Conversations By Id - A client wants to get a subset of the converations from
     //                           the back end. Normally this will be done after calling
@@ -172,6 +193,9 @@ public final class Server {
       }
     });
 
+  
+    
+    
     this.timeline.scheduleNow(new Runnable() {
       @Override
       public void run() {

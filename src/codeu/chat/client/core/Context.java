@@ -22,6 +22,8 @@ import codeu.chat.common.BasicView;
 import codeu.chat.common.User;
 import codeu.chat.util.Uuid;
 import codeu.chat.util.connections.ConnectionSource;
+import codeu.chat.common.ServerInfo; 
+import codeu.chat.util.Time; 
 
 public final class Context {
 
@@ -47,4 +49,11 @@ public final class Context {
     }
     return users;
   }
+
+  //added for UpTime by Julia 5/19
+	public ServerInfo getInfo() {
+		  return view.getInfo();
+	}
+
 }
+

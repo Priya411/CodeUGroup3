@@ -26,6 +26,7 @@ import codeu.chat.common.User;
 import codeu.chat.util.Logger;
 import codeu.chat.util.Serializers;
 import codeu.chat.util.Time;
+import codeu.chat.common.ServerInfo; 
 import codeu.chat.util.Uuid;
 import codeu.chat.util.connections.Connection;
 import codeu.chat.util.connections.ConnectionSource;
@@ -136,4 +137,29 @@ final class View implements BasicView {
 
     return messages;
   }
+
+
+//Updated for UpTime by Julia 5/22
+  	@Override 
+	public ServerInfo getInfo() {
+		
+		try (final Connection connection = source.connect()) {
+		  
+	    Serializers.INTEGER.write(connection.out(), NetworkCode.SERVER_INFO_REQUEST);
+	    
+	    if (Serializers.INTEGER.read(connection.in()) == NetworkCode.SERVER_INFO_RESPONSE) {
+	      final Time startTime = Time.SERIALIZER.read(connection.in());
+	      return new ServerInfo(startTime);
+	    } else {
+	    	LOG.error("Response from server failed."); 
+	    }
+	  } catch (Exception ex) {
+	      System.out.println("ERROR: Exception during call on server. Check log for details.");
+	      LOG.error(ex, "Exception during call on server.");
+	  }
+	  // If we get here it means something went wrong and null should be returned
+	  return null;
+	}
+
 }
+

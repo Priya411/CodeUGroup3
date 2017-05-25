@@ -37,6 +37,8 @@ import codeu.chat.util.Logger;
 import codeu.chat.util.Time;
 import codeu.chat.util.Uuid;
 import codeu.chat.util.store.StoreAccessor;
+import codeu.chat.common.ServerInfo; 
+
 
 public final class View implements BasicView, SinglesView {
 
@@ -87,6 +89,15 @@ public final class View implements BasicView, SinglesView {
     }
 
     return all;
+  }
+  
+  // For Up Time
+  // added by Julia 5/22 
+  
+  
+  @Override 
+  public ServerInfo getInfo() {
+	  return new ServerInfo();
   }
 
   private static <T> Collection<T> intersect(StoreAccessor<Uuid, T> store, Collection<Uuid> ids) {
