@@ -6,7 +6,7 @@ import codeu.chat.util.Uuid;
 import java.io.IOException;
 
 public class ServerInfoTest {
-
+    boolean errorThrown = false;
     @Test
     public void testServerInfo() {
         try{
@@ -30,8 +30,11 @@ public class ServerInfoTest {
             fail(); // if we got here, no exception was thrown, which is bad
         }
         catch (IOException e) {
-            assertEquals(true,true);
+            errorThrown = true;
         }
+        assertTrue(errorThrown);
+        errorThrown = false;
+
         try {
             // Exception only caught when version is larger than 32 bits
             // Testing that it doesn't matter that the equal sign is there
@@ -39,7 +42,9 @@ public class ServerInfoTest {
             fail(); // if we got here, no exception was thrown, which is bad
         }
         catch (IOException e) {
-            assertEquals(true,true);
+            errorThrown = true;
         }
+        assertTrue(errorThrown);
+
     }
 }
