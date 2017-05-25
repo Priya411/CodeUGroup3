@@ -36,6 +36,7 @@ final public class CommandTokenizer {
 	// returns a String starting at currentIndex until the next occurrence of
 	// endingChar.
 	// Does not include endingChar in the String
+	// Leaves currentIndex one character after the end of the returned string.
 	private String nextStringUntil(char endingChar) {
 		String toReturn = "";
 		while (hasNextArg() && source.charAt(currentIndex) != endingChar) {
