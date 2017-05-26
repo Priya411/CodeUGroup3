@@ -23,6 +23,7 @@ import codeu.chat.client.core.ConversationContext;
 import codeu.chat.client.core.MessageContext;
 import codeu.chat.client.core.UserContext;
 import codeu.chat.util.CommandTokenizer;
+import codeu.chat.common.ServerInfo;
 
 public final class Chat {
 
@@ -108,6 +109,11 @@ public final class Chat {
         System.out.println("    Sign in as the user with the given name.");
         System.out.println("  exit");
         System.out.println("    Exit the program.");
+        // Added by Priyanka Agarwal
+        // Added the info option to allow the user to get the information about the server,
+        // including its version
+        System.out.println("  info");
+        System.out.println("    Prints out the server information");
       }
     });
 
@@ -179,6 +185,30 @@ public final class Chat {
         return null;
       }
     });
+
+    // Added by Priyanka Agarwal
+    // info (get server info)
+    //
+    // Add a command to print server information when the user enters "info"
+    // while on the root panel.
+    //
+    panel.register("info", new Panel.Command() {
+      @Override
+      public void invoke(Scanner args) {
+        final ServerInfo info = context.getInfo();
+        if (info == null) {
+          // Communicate error to user - the server did not send us a valid
+          // info object.
+          System.out.println("The server didn't send us a valid info object");
+        } else {
+          // Print the server info to the user
+          System.out.print("Your version number is: ");
+          System.out.println(info.toString());
+        }
+      }
+    });
+
+
 
     // Now that the panel has all its commands registered, return the panel
     // so that it can be used.
