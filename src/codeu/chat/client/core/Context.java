@@ -22,10 +22,15 @@ import codeu.chat.common.BasicView;
 import codeu.chat.common.User;
 import codeu.chat.util.Uuid;
 import codeu.chat.util.connections.ConnectionSource;
+import codeu.chat.common.ServerInfo;
+import codeu.chat.client.core.View;
 
 public final class Context {
 
-  private final BasicView view;
+  private final View view;
+  // Changed the view object to type View rather than BasicView
+  // as this prevented having a parent and sublcass object
+  // of the same type - Priyanka Agarwal
   private final Controller controller;
 
   public Context(ConnectionSource source) {
@@ -36,8 +41,14 @@ public final class Context {
   public UserContext create(String name) {
     final User user = controller.newUser(name);
     return user == null ?
-        null :
-        new UserContext(user, view, controller);
+            null :
+            new UserContext(user, view, controller);
+  }
+
+  public ServerInfo getInfo() {
+    // This function returns the server information, which is
+    // the version number for the specific host/connection
+    return view.getInfo();
   }
 
   public Iterable<UserContext> allUsers() {
