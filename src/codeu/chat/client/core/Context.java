@@ -50,7 +50,6 @@ public final class Context {
     return users;
   }
 
-  //added for UpTime by Julia 5/19
 	public ServerInfo getInfo() {
 		  return view.getInfo();
 	}

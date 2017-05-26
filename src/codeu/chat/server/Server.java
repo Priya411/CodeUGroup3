@@ -48,7 +48,9 @@ public final class Server {
   private interface Command {
     void onMessage(InputStream in, OutputStream out) throws IOException;
   }
-
+  
+  // creates new instance of server info when the server is launched 
+  // info.startTime is the timestamp for when the server started up 
   private static final ServerInfo info = new ServerInfo();
   
   private static final Logger.Log LOG = Logger.newLog(Server.class);
@@ -75,6 +77,7 @@ public final class Server {
     this.secret = secret;
     this.controller = new Controller(id, model);
     this.relay = relay;
+   
 
     // New Message - A client wants to add a new message to the back end.
     this.commands.put(NetworkCode.NEW_MESSAGE_REQUEST, new Command() {
@@ -148,17 +151,14 @@ public final class Server {
       }
     });
     
-//    // Get Server Info - **for Up Time function**
-//    //					A client wants to know the time the server was started
-//    //					updated by Julia 5/22
-//    
+    // Get Server Info - **for Up Time function**
+    //					The client wants to know the time the server was started
+   
     this.commands.put(NetworkCode.SERVER_INFO_REQUEST, new Command() {
     	@Override
-        public void onMessage(InputStream in, OutputStream out) throws IOException {
-    		final ServerInfo info = new ServerInfo();
-    		
-          Serializers.INTEGER.write(out, NetworkCode.SERVER_INFO_RESPONSE);
-    	  Serializers.nullable(Time.SERIALIZER).write(out, info.startTime);
+        public void onMessage(InputStream in, OutputStream out) throws IOException {		
+    		Serializers.INTEGER.write(out, NetworkCode.SERVER_INFO_RESPONSE);
+    		Time.SERIALIZER.write(out, info.getStartTime());
         }
       });
     

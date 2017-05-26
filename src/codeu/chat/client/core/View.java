@@ -151,6 +151,7 @@ final class View implements BasicView {
 	      final Time startTime = Time.SERIALIZER.read(connection.in());
 	      return new ServerInfo(startTime);
 	    } else {
+	    	System.out.println("Unexpected Input: server cannot interpret information"); 
 	    	LOG.error("Response from server failed."); 
 	    }
 	  } catch (Exception ex) {

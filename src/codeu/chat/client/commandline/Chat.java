@@ -24,6 +24,8 @@ import codeu.chat.client.core.ConversationContext;
 import codeu.chat.client.core.MessageContext;
 import codeu.chat.client.core.UserContext;
 import codeu.chat.common.ServerInfo; 
+import codeu.chat.util.Time;
+
 
 
 public final class Chat {
@@ -121,19 +123,23 @@ public final class Chat {
     // INFO 
     //
     // Gives user information on the server 
-    // Added only for TimeUp which gives server's start time
-    // added by Julia 5/19 
+    // Added only for UpTime which returns the amount of time the server has been running for 
     
     panel.register("info", new Panel.Command() {
     	  @Override
     	  public void invoke(Scanner args) {
     	    final ServerInfo info = context.getInfo();
+    	    final Time currentTime = Time.now(); 
     	    if (info == null) {
     	    	System.out.println("ERROR: Failed to retrieve server information"); 
     	    } else {
+    	    	long upTime = currentTime.inMs() - info.getStartTime().inMs();
+    	    	long hours = upTime/1000/60/60; 
+    	    	long mins = (upTime - hours*1000*60*60)/1000/60; 
+    	    	long secs = (upTime - hours*1000*60*60 - mins*1000*60)/1000;
     	    	System.out.format(
-    	    			"Up Time: %s \n",
-    	    			info.startTime);
+    	    			"Up Time: %s hours %s minutes %s seconds",
+    	    			hours, mins, secs);
     	    }
     	  }
     	});

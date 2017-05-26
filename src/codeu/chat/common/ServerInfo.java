@@ -26,4 +26,8 @@ public final class ServerInfo {
 		this.startTime = startTime;
 	}
 	
+	public Time getStartTime() { 
+		return this.startTime; 
+	}
+	
 }
