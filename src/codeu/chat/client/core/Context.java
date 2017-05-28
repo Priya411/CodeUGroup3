@@ -27,31 +27,31 @@ import codeu.chat.util.Time;
 
 public final class Context {
 
-  private final BasicView view;
-  private final Controller controller;
+	private final BasicView view;
+	private final Controller controller;
 
-  public Context(ConnectionSource source) {
-    this.view = new View(source);
-    this.controller = new Controller(source);
-  }
+	public Context(ConnectionSource source) {
+		this.view = new View(source);
+		this.controller = new Controller(source);
+	}
 
-  public UserContext create(String name) {
-    final User user = controller.newUser(name);
-    return user == null ?
-        null :
-        new UserContext(user, view, controller);
-  }
+	public UserContext create(String name) {
+		final User user = controller.newUser(name);
+		return user == null ?
+				null :
+					new UserContext(user, view, controller);
+	}
 
-  public Iterable<UserContext> allUsers() {
-    final Collection<UserContext> users = new ArrayList<>();
-    for (final User user : view.getUsers()) {
-      users.add(new UserContext(user, view, controller));
-    }
-    return users;
-  }
+	public Iterable<UserContext> allUsers() {
+		final Collection<UserContext> users = new ArrayList<>();
+		for (final User user : view.getUsers()) {
+			users.add(new UserContext(user, view, controller));
+		}
+		return users;
+	}
 
 	public ServerInfo getInfo() {
-		  return view.getInfo();
+		return view.getInfo();
 	}
 
 }

@@ -14,20 +14,20 @@ import codeu.chat.util.Time;
 
 
 public final class ServerInfo {
-	
+
 	//Time for Up Time function which gives the time the server started
 	public final Time startTime;
-	
+
 	public ServerInfo() {
 		this.startTime = Time.now();
 	}
-	
+
 	public ServerInfo(Time startTime) {
 		this.startTime = startTime;
 	}
-	
+
 	public Time getStartTime() { 
 		return this.startTime; 
 	}
-	
+
 }
