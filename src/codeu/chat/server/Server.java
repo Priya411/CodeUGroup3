@@ -41,17 +41,12 @@ import codeu.chat.util.Uuid;
 import codeu.chat.util.connections.Connection;
 import codeu.chat.common.ServerInfo; 
 
-
 public final class Server {
 	
 
   private interface Command {
     void onMessage(InputStream in, OutputStream out) throws IOException;
   }
-  
-  // creates new instance of server info when the server is launched 
-  // info.startTime is the timestamp for when the server started up 
-  private static final ServerInfo info = new ServerInfo();
   
   private static final Logger.Log LOG = Logger.newLog(Server.class);
 
@@ -60,16 +55,18 @@ public final class Server {
   private final Timeline timeline = new Timeline();
 
   private final Map<Integer, Command> commands = new HashMap<>();
-
   private final Uuid id;
   private final Secret secret;
-
+  private ServerInfo info = null;
   private final Model model = new Model();
   private final View view = new View(model);
   private final Controller controller;
-
   private final Relay relay;
   private Uuid lastSeen = Uuid.NULL;
+  // This string should be changed whenever the current version value for the server
+  // needs to be changed. 1.0.0 is simply the default initial value, however this
+  // can also be updated and customized.
+  private String version = "1.0.0";
 
   public Server(final Uuid id, final Secret secret, final Relay relay) {
 
@@ -77,7 +74,17 @@ public final class Server {
     this.secret = secret;
     this.controller = new Controller(id, model);
     this.relay = relay;
-   
+
+    // This try catch block initializes the server version based on the version
+    // set in object 'version'
+    // automatically sets up startTime to the time at which the server is launched 
+    try {
+      info = new ServerInfo(Uuid.parse(version));
+    } catch (IOException e) {
+      System.out.println("Invalid input");
+      System.out.println("The version must be able to be represented as an unsigned 32 bit long");
+    }
+
 
     // New Message - A client wants to add a new message to the back end.
     this.commands.put(NetworkCode.NEW_MESSAGE_REQUEST, new Command() {
@@ -151,18 +158,6 @@ public final class Server {
       }
     });
     
-    // Get Server Info - **for Up Time function**
-    //					The client wants to know the time the server was started
-   
-    this.commands.put(NetworkCode.SERVER_INFO_REQUEST, new Command() {
-    	@Override
-        public void onMessage(InputStream in, OutputStream out) throws IOException {		
-    		Serializers.INTEGER.write(out, NetworkCode.SERVER_INFO_RESPONSE);
-    		Time.SERIALIZER.write(out, info.getStartTime());
-        }
-      });
-    
-    
 
     // Get Conversations By Id - A client wants to get a subset of the converations from
     //                           the back end. Normally this will be done after calling
@@ -193,9 +188,36 @@ public final class Server {
       }
     });
 
-  
-    
-    
+
+
+    // Get Server Info - **for Up Time function**
+    //					The client wants to know the time the server was started
+   
+    this.commands.put(NetworkCode.SERVER_UPTIME_REQUEST, new Command() {
+    	@Override
+        public void onMessage(InputStream in, OutputStream out) throws IOException {		
+    		Serializers.INTEGER.write(out, NetworkCode.SERVER_UPTIME_RESPONSE);
+    		Time.SERIALIZER.write(out, info.getStartTime());
+        }
+      });
+      
+      
+    // Allows user to request Server Info and handles this request, added by Priyanka Agarwal
+    // Modeled after given code of:
+    /* if (type == NetworkCode.SERVER_INFO_REQUEST) {
+    Serializers.INTEGER.write(out, NetworkCode.SERVER_INFO_RESPONSE);
+    Uuid.SERIALIZER.write(out, info.version);
+    } else if …
+    */
+      this.commands.put(NetworkCode.SERVER_VERSION_REQUEST, new Command() {
+      @Override
+      public void onMessage(InputStream in, OutputStream out) throws IOException {
+        Serializers.INTEGER.write(out, NetworkCode.SERVER_VERSION_RESPONSE);
+        Uuid.SERIALIZER.write(out, info.getVersion());
+      }
+    });
+
+
     this.timeline.scheduleNow(new Runnable() {
       @Override
       public void run() {

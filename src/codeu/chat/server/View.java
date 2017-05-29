@@ -90,15 +90,6 @@ public final class View implements BasicView, SinglesView {
 
     return all;
   }
-  
-  // For Up Time
-  // added by Julia 5/22 
-  
-  
-  @Override 
-  public ServerInfo getInfo() {
-	  return new ServerInfo();
-  }
 
   private static <T> Collection<T> intersect(StoreAccessor<Uuid, T> store, Collection<Uuid> ids) {
 

@@ -16,7 +16,6 @@ package codeu.chat.client.core;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
 import codeu.chat.common.BasicView;
 import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.ConversationPayload;
@@ -30,6 +29,7 @@ import codeu.chat.common.ServerInfo;
 import codeu.chat.util.Uuid;
 import codeu.chat.util.connections.Connection;
 import codeu.chat.util.connections.ConnectionSource;
+import codeu.chat.common.ServerInfo;
 
 // VIEW
 //
@@ -138,18 +138,31 @@ final class View implements BasicView {
 		return messages;
 	}
 
+  
+  // This function returns the information about the Server,
+  // including its Versions based on the specific server it
+  // is using and is connected to and the up time for the server 
+  public ServerInfo getInfo() {
+    Uuid version = null;
+    Time startTime = null;
+    try (final Connection connection = this.source.connect()) {
+      Serializers.INTEGER.write(connection.out(), NetworkCode.SERVER_VERSION_REQUEST);
+      if (Serializers.INTEGER.read(connection.in()) == NetworkCode.SERVER_VERSION_RESPONSE) {
+        version = Uuid.SERIALIZER.read(connection.in());
+      } else {
+        // Communicate this error - the server did not respond with the type of
+        // response we expected.
+        System.out.println("The server couldn't process the inputted information");
+      }
+    } catch (Exception ex) {
+      // Communicate this error - something went wrong with the connection.
+      System.out.println("There were some problems with the connection, so the information couldn't be accessed");
+    }
+    try (final Connection connection = source.connect()) {
 
-	//Updated for UpTime by Julia 5/22
-	@Override 
-	public ServerInfo getInfo() {
-
-		try (final Connection connection = source.connect()) {
-
-			Serializers.INTEGER.write(connection.out(), NetworkCode.SERVER_INFO_REQUEST);
-
-			if (Serializers.INTEGER.read(connection.in()) == NetworkCode.SERVER_INFO_RESPONSE) {
-				final Time startTime = Time.SERIALIZER.read(connection.in());
-				return new ServerInfo(startTime);
+			Serializers.INTEGER.write(connection.out(), NetworkCode.SERVER_UPTIME_REQUEST);
+			if (Serializers.INTEGER.read(connection.in()) == NetworkCode.SERVER_UPTIME_RESPONSE) {
+				startTime = Time.SERIALIZER.read(connection.in());
 			} else {
 				System.out.println("Unexpected Input: server cannot interpret information"); 
 				LOG.error("Response from server failed."); 
@@ -158,9 +171,12 @@ final class View implements BasicView {
 			System.out.println("ERROR: Exception during call on server. Check log for details.");
 			LOG.error(ex, "Exception during call on server.");
 		}
-		// If we get here it means something went wrong and null should be returned
-		return null;
-	}
+    if(version!=null && startTime!=null) {
+    	return new ServerInfo(version, startTime);
+    }
+    // If we get here it means something went wrong and null should be returned
+    return null;
+  }
 
 }
 
