@@ -22,8 +22,10 @@ import codeu.chat.common.BasicView;
 import codeu.chat.common.User;
 import codeu.chat.util.Uuid;
 import codeu.chat.util.connections.ConnectionSource;
-import codeu.chat.common.ServerInfo;
 import codeu.chat.client.core.View;
+import codeu.chat.common.ServerInfo; 
+import codeu.chat.util.Time;
+
 
 public final class Context {
 
@@ -46,8 +48,9 @@ public final class Context {
   }
 
   public ServerInfo getInfo() {
-    // This function returns the server information, which is
+    // This function returns the server information, including 
     // the version number for the specific host/connection
+    // and the up time of the server 
     return view.getInfo();
   }
 
@@ -59,3 +62,4 @@ public final class Context {
     return users;
   }
 }
+

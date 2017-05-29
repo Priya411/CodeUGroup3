@@ -1,4 +1,5 @@
-/* Class created by Priyanka Agarwal. It allows the version of the server
+
+/* This class allows the version of the server
 to be stored and updated. ServerInfo contains the variable Server_Version
 which represents the version. It can be updated as needed, whenever the
 server version changes by using the constructor. The toString method allows
@@ -15,16 +16,34 @@ displayed in the Panels, to be use by the Chat.java class.
 
 package codeu.chat.common;
 import codeu.chat.util.Uuid;
+  
+import codeu.chat.util.Serializer;
+import codeu.chat.util.Serializers;
+import codeu.chat.util.Time; 
 
 
 public class ServerInfo {
 
     private Uuid version;
+  	public final Time startTime;
 
-    // This constructor allows for an updated version to be made
+    // This constructor is the base case constructor as the version always must be initialized
     public ServerInfo(Uuid version) {
         this.version = version;
+        this.startTime = Time.now();
     }
+    
+    public ServerInfo(Uuid version, Time startTime) {
+      this.version = version;
+      this.startTime = startTime;
+    }  
+    
+    // This constuctor is for testing upTime only
+    //There will never be a instance where the version is null 
+    public ServerInfo(Time startTime) {
+        this.version = null;
+        this.startTime = startTime;
+      }    
 
     // This method allows the version to be printed as a string, 
     // to help with displaying the information. 
@@ -35,4 +54,9 @@ public class ServerInfo {
     public Uuid getVersion() { 
         return version;
     }
+
+    public Time getStartTime() { 
+      return this.startTime; 
+    }
+
 }
