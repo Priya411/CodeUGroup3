@@ -33,6 +33,7 @@ public class ServerInfo {
         this.startTime = Time.now();
     }
     
+<<<<<<< HEAD
     public ServerInfo(Uuid version, Time startTime) {
       this.version = version;
       this.startTime = startTime;
@@ -44,6 +45,15 @@ public class ServerInfo {
         this.version = null;
         this.startTime = startTime;
       }    
+=======
+    // This constuctor is for testing upTime only
+    //There will never be a instance where the version is null 
+    public ServerInfo(Time startTime) {
+      this.version = null;
+      this.startTime = startTime;
+    }    
+  
+>>>>>>> 41698a36762f3310a1289ed9ead47256899b370b
     // This method allows the version to be printed as a string, 
     // to help with displaying the information. 
     public String toString() {

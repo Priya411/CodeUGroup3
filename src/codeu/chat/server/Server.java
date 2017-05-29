@@ -77,7 +77,10 @@ public final class Server {
 
     // This try catch block initializes the server version based on the version
     // set in object 'version'
+<<<<<<< HEAD
     // automatically sets up startTime to the time at which the server is launched 
+=======
+>>>>>>> 41698a36762f3310a1289ed9ead47256899b370b
     try {
       info = new ServerInfo(Uuid.parse(version));
     } catch (IOException e) {
