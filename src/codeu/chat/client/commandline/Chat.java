@@ -107,7 +107,7 @@ public final class Chat {
 			public void invoke(Scanner args) {
 				System.out.println("ROOT MODE");
 				System.out.println("  info");
-				System.out.println("    Provides server information.");
+				System.out.println("    Provides server information including version number and up time.");
 				System.out.println("  u-list");
 				System.out.println("    List all users.");
 				System.out.println("  u-add <name>");
