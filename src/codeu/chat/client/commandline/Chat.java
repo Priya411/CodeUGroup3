@@ -133,6 +133,9 @@ public final class Chat {
 				if (info == null) {
 					System.out.println("ERROR: Failed to retrieve server information"); 
 				} else {
+          System.out.print("Your version number is: ");
+          System.out.println(info.toString());
+          
 					long upTime = currentTime.inMs() - info.getStartTime().inMs();
 					long[] HMS = Time.convertHMS(upTime);
 					long hours, mins, secs;
@@ -140,6 +143,7 @@ public final class Chat {
 					System.out.format(
 							"Up Time: %s hours %s minutes %s seconds",
 							hours, mins, secs);
+          
 				}
 			}
 		});
@@ -423,4 +427,5 @@ public final class Chat {
 		// so that it can be used.
 		return panel;
 	}
+
 }

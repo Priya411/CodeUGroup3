@@ -30,6 +30,7 @@ import codeu.chat.common.ServerInfo;
 import codeu.chat.util.Uuid;
 import codeu.chat.util.connections.Connection;
 import codeu.chat.util.connections.ConnectionSource;
+import codeu.chat.common.ServerInfo;
 
 // VIEW
 //
@@ -139,14 +140,13 @@ final class View implements BasicView {
 	}
 
 
-	//Updated for UpTime by Julia 5/22
+/*	//Updated for UpTime by Julia 5/22
 	@Override 
 	public ServerInfo getInfo() {
 
 		try (final Connection connection = source.connect()) {
 
 			Serializers.INTEGER.write(connection.out(), NetworkCode.SERVER_INFO_REQUEST);
-
 			if (Serializers.INTEGER.read(connection.in()) == NetworkCode.SERVER_INFO_RESPONSE) {
 				final Time startTime = Time.SERIALIZER.read(connection.in());
 				return new ServerInfo(startTime);
@@ -160,7 +160,33 @@ final class View implements BasicView {
 		}
 		// If we get here it means something went wrong and null should be returned
 		return null;
-	}
+  }*/
+
+  // This function returns the information about the Server,
+  // including its Versions based on the specific server it
+  // is using and is connected to AND the up time for the server 
+  public ServerInfo getInfo() {
+    try (final Connection connection = this.source.connect()) {
+      Serializers.INTEGER.write(connection.out(), NetworkCode.SERVER_VERSION_REQUEST);
+      Serializers.INTEGER.write(connection.out(), NetworkCode.SERVER_UPTIME_REQUEST);
+      if (Serializers.INTEGER.read(connection.in()) == NetworkCode.SERVER_UPTIME_RESPONSE && Serializers.INTEGER.read(connection.in()) == NetworkCode.SERVER_VERSION_RESPONSE) {
+        final Uuid version = Uuid.SERIALIZER.read(connection.in());
+        final Time startTime = Time.SERIALIZER.read(connection.in());
+        
+        return new ServerInfo(version, startTime);
+      } else {
+        // Communicate this error - the server did not respond with the type of
+        // response we expected.
+        System.out.println("The server couldn't process the inputted information");
+      }
+    } catch (Exception ex) {
+      // Communicate this error - something went wrong with the connection.
+      System.out.println("There were some problems with the connection, so the information couldn't be accessed");
+    }
+    // If we get here it means something went wrong and null should be returned
+    return null;
+  }
+
 
 }
 

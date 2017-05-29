@@ -19,6 +19,7 @@ import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 
 public final class TestRunner {
+
 	public static void main(String[] args) {
 		final Result result =
 				JUnitCore.runClasses(
@@ -29,7 +30,8 @@ public final class TestRunner {
 						codeu.chat.util.TimeTest.class,
 						codeu.chat.util.UuidTest.class,
 						codeu.chat.util.store.StoreTest.class,
-						codeu.chat.util.UpTimeTest.class
+						codeu.chat.util.UpTimeTest.class,
+            codeu.chat.common.ServerInfoTest.class
 						);
 		for (final Failure failure : result.getFailures()) {
 			System.out.println(failure.toString());
