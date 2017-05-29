@@ -31,11 +31,8 @@ public final class TestRunner {
 						codeu.chat.util.UuidTest.class,
 						codeu.chat.util.store.StoreTest.class,
 						codeu.chat.util.UpTimeTest.class,
-<<<<<<< HEAD
 			            codeu.chat.common.ServerInfoTest.class
-=======
-            codeu.chat.common.ServerInfoTest.class
->>>>>>> 41698a36762f3310a1289ed9ead47256899b370b
+
 						);
 		for (final Failure failure : result.getFailures()) {
 			System.out.println(failure.toString());

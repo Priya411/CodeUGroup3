@@ -138,7 +138,7 @@ final class View implements BasicView {
 		return messages;
 	}
 
-<<<<<<< HEAD
+
   
   // This function returns the information about the Server,
   // including its Versions based on the specific server it
@@ -164,19 +164,6 @@ final class View implements BasicView {
 			Serializers.INTEGER.write(connection.out(), NetworkCode.SERVER_UPTIME_REQUEST);
 			if (Serializers.INTEGER.read(connection.in()) == NetworkCode.SERVER_UPTIME_RESPONSE) {
 				startTime = Time.SERIALIZER.read(connection.in());
-=======
-
-/*	//Updated for UpTime by Julia 5/22
-	@Override 
-	public ServerInfo getInfo() {
-
-		try (final Connection connection = source.connect()) {
-
-			Serializers.INTEGER.write(connection.out(), NetworkCode.SERVER_INFO_REQUEST);
-			if (Serializers.INTEGER.read(connection.in()) == NetworkCode.SERVER_INFO_RESPONSE) {
-				final Time startTime = Time.SERIALIZER.read(connection.in());
-				return new ServerInfo(startTime);
->>>>>>> 41698a36762f3310a1289ed9ead47256899b370b
 			} else {
 				System.out.println("Unexpected Input: server cannot interpret information"); 
 				LOG.error("Response from server failed."); 
@@ -185,43 +172,13 @@ final class View implements BasicView {
 			System.out.println("ERROR: Exception during call on server. Check log for details.");
 			LOG.error(ex, "Exception during call on server.");
 		}
-<<<<<<< HEAD
     if(version!=null && startTime!=null) {
     	return new ServerInfo(version, startTime);
-=======
-		// If we get here it means something went wrong and null should be returned
-		return null;
-  }*/
-
-  // This function returns the information about the Server,
-  // including its Versions based on the specific server it
-  // is using and is connected to AND the up time for the server 
-  public ServerInfo getInfo() {
-    try (final Connection connection = this.source.connect()) {
-      Serializers.INTEGER.write(connection.out(), NetworkCode.SERVER_VERSION_REQUEST);
-      Serializers.INTEGER.write(connection.out(), NetworkCode.SERVER_UPTIME_REQUEST);
-      if (Serializers.INTEGER.read(connection.in()) == NetworkCode.SERVER_UPTIME_RESPONSE && Serializers.INTEGER.read(connection.in()) == NetworkCode.SERVER_VERSION_RESPONSE) {
-        final Uuid version = Uuid.SERIALIZER.read(connection.in());
-        final Time startTime = Time.SERIALIZER.read(connection.in());
-        
-        return new ServerInfo(version, startTime);
-      } else {
-        // Communicate this error - the server did not respond with the type of
-        // response we expected.
-        System.out.println("The server couldn't process the inputted information");
-      }
-    } catch (Exception ex) {
-      // Communicate this error - something went wrong with the connection.
-      System.out.println("There were some problems with the connection, so the information couldn't be accessed");
->>>>>>> 41698a36762f3310a1289ed9ead47256899b370b
     }
     // If we get here it means something went wrong and null should be returned
     return null;
   }
-<<<<<<< HEAD
-=======
 
->>>>>>> 41698a36762f3310a1289ed9ead47256899b370b
 
 }
 
