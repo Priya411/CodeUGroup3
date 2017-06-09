@@ -68,9 +68,13 @@ public final class Model {
   private final Store<String, Message> messageByText = new Store<>(STRING_COMPARE);
 
   public void add(User user) {
-    userById.insert(user.id, user);
-    userByTime.insert(user.creation, user);
-    userByText.insert(user.name, user);
+	// if the user does not already exist in the model, then add it and save
+	if (userById.first(user.id) != null) {
+	  userById.insert(user.id, user);
+      userByTime.insert(user.creation, user);
+      userByText.insert(user.name, user);
+      JSONReader.save(user);
+	}
   }
 
   public StoreAccessor<Uuid, User> userById() {
@@ -86,10 +90,14 @@ public final class Model {
   }
 
   public void add(ConversationHeader conversation) {
-    conversationById.insert(conversation.id, conversation);
-    conversationByTime.insert(conversation.creation, conversation);
-    conversationByText.insert(conversation.title, conversation);
-    conversationPayloadById.insert(conversation.id, new ConversationPayload(conversation.id));
+	// if the conversation does not already exist in the model, then add it and save
+	if (conversationById.first(conversation.id) != null) {
+      conversationById.insert(conversation.id, conversation);
+      conversationByTime.insert(conversation.creation, conversation);
+      conversationByText.insert(conversation.title, conversation);
+      conversationPayloadById.insert(conversation.id, new ConversationPayload(conversation.id));
+      JSONReader.save(conversation);
+	}
   }
 
   public StoreAccessor<Uuid, ConversationHeader> conversationById() {
@@ -109,9 +117,13 @@ public final class Model {
   }
 
   public void add(Message message) {
-    messageById.insert(message.id, message);
-    messageByTime.insert(message.creation, message);
-    messageByText.insert(message.content, message);
+	// if the user does not already exist in the model, then add it and save
+	if (messageById.first(message.id) != null) {
+      messageById.insert(message.id, message);
+      messageByTime.insert(message.creation, message);
+      messageByText.insert(message.content, message);
+      JSONReader.save(message);
+	}
   }
 
   public StoreAccessor<Uuid, Message> messageById() {
