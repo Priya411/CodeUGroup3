@@ -107,15 +107,13 @@ public final class Chat {
 			public void invoke(List<String> args) {
 				System.out.println("ROOT MODE");
 				System.out.println("  info");
-				System.out
-						.println("    Provides server information including version number and up time.");
+				System.out.println("    Provides server information including version number and up time.");
 				System.out.println("  u-list");
 				System.out.println("    List all users.");
 				System.out.println("  u-add <name>");
 				System.out.println("    Add a new user with the given name.");
 				System.out.println("  u-sign-in <name>");
-				System.out
-						.println("    Sign in as the user with the given name.");
+				System.out.println("    Sign in as the user with the given name.");
 				System.out.println("  exit");
 				System.out.println("    Exit the program.");
 			}
@@ -178,7 +176,7 @@ public final class Chat {
 		panel.register("u-add", new Panel.Command() {
 			@Override
 			public void invoke(List<String> args) {
-				final String name = !args.isEmpty() ? args.get(0).trim() : "";
+				final String name = !args.isEmpty() ? String.join(" ", args).trim() : "";
 				if (name.length() > 0) {
 					if (context.create(name) == null) {
 						System.out.println("ERROR: Failed to create new user");
@@ -197,7 +195,7 @@ public final class Chat {
 		panel.register("u-sign-in", new Panel.Command() {
 			@Override
 			public void invoke(List<String> args) {
-				final String name = !args.isEmpty() ? args.get(0).trim() : "";
+				final String name = !args.isEmpty() ? String.join(" ", args).trim() : "";
 				if (name.length() > 0) {
 					final UserContext user = findUser(name);
 					if (user == null) {
@@ -286,7 +284,7 @@ public final class Chat {
 		panel.register("c-add", new Panel.Command() {
 			@Override
 			public void invoke(List<String> args) {
-				final String name = !args.isEmpty() ? args.get(0).trim() : "";
+				final String name = !args.isEmpty() ? String.join(" ", args).trim() : "";
 				if (name.length() > 0) {
 					final ConversationContext conversation = user.start(name);
 					if (conversation == null) {
@@ -309,7 +307,7 @@ public final class Chat {
 		panel.register("c-join", new Panel.Command() {
 			@Override
 			public void invoke(List<String> args) {
-				final String name = !args.isEmpty() ? args.get(0).trim() : "";
+				final String name = !args.isEmpty() ? String.join(" ", args).trim() : "";
 				if (name.length() > 0) {
 					final ConversationContext conversation = find(name);
 					if (conversation == null) {
@@ -418,8 +416,7 @@ public final class Chat {
 		panel.register("m-add", new Panel.Command() {
 			@Override
 			public void invoke(List<String> args) {
-				final String message = !args.isEmpty() ? args.get(0).trim()
-						: "";
+				final String message = !args.isEmpty() ? String.join(" ", args).trim() : "";
 				if (message.length() > 0) {
 					conversation.add(message);
 				} else {
