@@ -4,7 +4,7 @@ import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.Message;
 import codeu.chat.common.User;
 
-public final class JSONReader {
+public final class JSON {
 
 	/**
 	 * Appends a user to the json file
