@@ -23,8 +23,13 @@ import codeu.chat.util.Serializers;
 import codeu.chat.util.Time;
 import codeu.chat.util.Uuid;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown=true)
 public final class Message {
 
+  @JsonIgnore
   public static final Serializer<Message> SERIALIZER = new Serializer<Message>() {
 
     @Override
@@ -54,11 +59,16 @@ public final class Message {
     }
   };
 
+  @JsonIgnore
   public final Uuid id;
+  @JsonIgnore
   public final Uuid previous;
+  @JsonIgnore
   public final Time creation;
+  @JsonIgnore
   public final Uuid author;
   public final String content;
+  @JsonIgnore
   public Uuid next;
 
   public Message(Uuid id, Uuid next, Uuid previous, Time creation, Uuid author, String content) {
@@ -70,5 +80,17 @@ public final class Message {
     this.author = author;
     this.content = content;
 
+  }
+  
+  public String getUUID() {
+	  return id.toString();
+  }
+  
+  public String getAuthorUUID() {
+	  return author.toString();
+  }
+  
+  public String getCreationTime() {
+	  return creation.toString();
   }
 }

@@ -18,13 +18,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import codeu.chat.util.Serializer;
 import codeu.chat.util.Serializers;
 import codeu.chat.util.Time;
 import codeu.chat.util.Uuid;
 
+@JsonIgnoreProperties(ignoreUnknown=true)
 public final class User {
-
+  
+  @JsonIgnore
   public static final Serializer<User> SERIALIZER = new Serializer<User>() {
 
     @Override
@@ -48,8 +54,10 @@ public final class User {
     }
   };
 
+  @JsonIgnore
   public final Uuid id;
   public final String name;
+  @JsonIgnore
   public final Time creation;
 
   public User(Uuid id, String name, Time creation) {
@@ -58,5 +66,13 @@ public final class User {
     this.name = name;
     this.creation = creation;
 
+  }
+  
+  public String getUUID() {
+	  return id.toString();
+  }
+  
+  public String getCreationTime() {
+	  return creation.toString();
   }
 }

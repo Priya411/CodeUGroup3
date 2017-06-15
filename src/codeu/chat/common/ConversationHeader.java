@@ -18,11 +18,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import codeu.chat.util.Serializer;
 import codeu.chat.util.Serializers;
 import codeu.chat.util.Time;
 import codeu.chat.util.Uuid;
 
+@JsonIgnoreProperties(ignoreUnknown=true)
 public final class ConversationHeader {
 
   public static final Serializer<ConversationHeader> SERIALIZER = new Serializer<ConversationHeader>() {
@@ -50,8 +54,11 @@ public final class ConversationHeader {
     }
   };
 
+  @JsonIgnore
   public final Uuid id;
+  @JsonIgnore
   public final Uuid owner;
+  @JsonIgnore
   public final Time creation;
   public final String title;
 
@@ -62,5 +69,17 @@ public final class ConversationHeader {
     this.creation = creation;
     this.title = title;
 
+  }
+  
+  public String getUUID() {
+	  return id.toString();
+  }
+  
+  public String getOwnerUUID() {
+	  return owner.toString();
+  }
+  
+  public String getCreationTime() {
+	  return creation.toString();
   }
 }
