@@ -41,9 +41,10 @@ public final class JSON {
         // previous transactions/commands.
         try
         {
-            // input.json is the predetermined folder in which
+            // data.json is the predetermined folder in which
             // the transaction log will go, located in the Server directory
-            return readFromFile("input.json");
+            // The path may need to be updated based on the way the local project is set up
+            return readFromFile("data.json");
         }
         catch (IOException e)
         {
