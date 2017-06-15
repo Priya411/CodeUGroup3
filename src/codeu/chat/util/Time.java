@@ -53,6 +53,13 @@ public final class Time implements Comparable<Time> {
 		return date.compareTo(other.date);
 	}
 
+	@Override
+	public boolean equals (Object toCompare)
+	{
+		if(!(toCompare instanceof Time))
+			return false;
+		return this.toString().equals(((Time)(toCompare)).toString());
+	}
 	public boolean inRange(Time start, Time end) {
 		return this.compareTo(start) >= 0 && this.compareTo(end) <= 0;
 	}
