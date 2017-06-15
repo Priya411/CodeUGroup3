@@ -71,4 +71,27 @@ public final class Message {
     this.content = content;
 
   }
+
+  @Override
+  public boolean equals(Object toCompare)
+  {
+    if(!(toCompare instanceof Message))
+    {
+      return false;
+    }
+    Message toCompareMessage = (Message)(toCompare);
+    if(!this.id.equals(toCompareMessage.id))
+      return false;
+    if(!this.next.equals(toCompareMessage.next))
+      return false;
+    if(!this.previous.equals(toCompareMessage.previous))
+      return false;
+    if(!this.creation.equals(toCompareMessage.creation))
+      return false;
+    if(!this.author.equals(toCompareMessage.author))
+      return false;
+    if(!this.content.equals(toCompareMessage.content))
+      return false;
+    return true;
+  }
 }
