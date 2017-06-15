@@ -77,153 +77,138 @@ public final class JSON {
             // that this END_OBJECT specifically relates to the
             // very last } in the json file
             {
-            if(jp.getText()=="users")
-            {
+            if(jp.getText()=="users") {
                 // If the object type represents a User, then
                 // specific steps will take place to create
                 // a User variable
-                String name = "";
-                Uuid id = null;
-                Time time = null;
                 jp.nextToken();
-                jp.nextToken();
-                jp.nextToken();
-                jp.nextToken();
-                if(jp.getText()=="name")
-                {
+                while (jp.nextToken() != JsonToken.END_ARRAY) {
+                    String name = "";
+                    Uuid id = null;
+                    Time time = null;
                     jp.nextToken();
-                    name = jp.getText();
-                }
-                jp.nextToken();
-                if(jp.getText()=="id")
-                {
-                    jp.nextToken();
-                    try {
-                        id = Uuid.parse(jp.getText());
+                    if (jp.getText() == "name") {
+                        jp.nextToken();
+                        name = jp.getText();
                     }
-                    catch (IOException e)
-                    {
-                        System.out.println("Invalid Uuid");
-                    }
-                }
-                jp.nextToken();
-                if(jp.getText()=="creationTime")
-                {
                     jp.nextToken();
-                    time = Time.fromMs(Long.parseLong(jp.getText()));
+                    if (jp.getText() == "uuid") {
+                        jp.nextToken();
+                        try {
+                            id = Uuid.parse(jp.getText());
+                        } catch (IOException e) {
+                            System.out.println("Invalid Uuid");
+                        }
+                    }
+                    jp.nextToken();
+                    if (jp.getText() == "creationTime") {
+                        jp.nextToken();
+                        time = Time.fromMs(jp.getLongValue());
+                    }
+                    jp.nextToken();
+                    System.out.println(name);
+                    System.out.println(id);
+                    System.out.println(time);
+                    if (name != "" && time != null && id != null)
+                        model.add(new User(id, name, time));
                 }
-                jp.nextToken();
-                jp.nextToken();
-                if(name!="" && time!=null && id != null)
-                    model.add(new User(id,name,time));
+                continue;
             }
             if(jp.getText()=="conversations")
             {
                 // If the object type represents a Conversation, then
                 // specific steps will take place to create
                 // a ConversationHeader variable
-                Uuid id = null;
-                Uuid owner = null;
-                Time creation = null;
-                String title = "";
                 jp.nextToken();
-                jp.nextToken();
-                jp.nextToken();
-                jp.nextToken();
-                if(jp.getText()=="title")
-                {
+                while(jp.nextToken()!=JsonToken.END_ARRAY) {
+                    Uuid id = null;
+                    Uuid owner = null;
+                    Time creation = null;
+                    String title = "";
                     jp.nextToken();
-                    title = jp.getText();
-                }
-                jp.nextToken();
-                if(jp.getText()=="id")
-                {
+                    if (jp.getText() == "title") {
+                        jp.nextToken();
+                        title = jp.getText();
+                    }
                     jp.nextToken();
-                    try {
-                        id = Uuid.parse(jp.getText());
+                    if (jp.getText() == "uuid") {
+                        jp.nextToken();
+                        try {
+                            id = Uuid.parse(jp.getText());
+                        } catch (IOException e) {
+                            System.out.println("Invalid Uuid");
+                        }
                     }
-                    catch (IOException e)
-                    {
-                        System.out.println("Invalid Uuid");
-                    }
-                }
-                jp.nextToken();
-                if(jp.getText()=="creationTime")
-                {
                     jp.nextToken();
-                    creation = Time.fromMs(Long.parseLong(jp.getText()));
-                }
-                jp.nextToken();
-                if(jp.getText()=="ownerId")
-                {
+                    if (jp.getText() == "ownerUUID") {
+                        jp.nextToken();
+                        try {
+                            owner = Uuid.parse(jp.getText());
+                        } catch (IOException e) {
+                            System.out.println("Invalid Uuid");
+                        }
+                    }
                     jp.nextToken();
-                    try {
-                        owner = Uuid.parse(jp.getText());
+                    if (jp.getText() == "creationTime") {
+                        jp.nextToken();
+                        creation = Time.fromMs(jp.getLongValue());
                     }
-                    catch (IOException e)
-                    {
-                        System.out.println("Invalid Uuid");
-                    }
+                    jp.nextToken();
+                    System.out.println(title);
+                    System.out.println(id);
+                    System.out.println(owner);
+                    System.out.println(creation);
+                    if (title != "" && id != null && owner != null && creation != null)
+                        model.add(new ConversationHeader(id, owner, creation, title));
                 }
-                jp.nextToken();
-                jp.nextToken();
-                if(title!="" && id!=null && owner != null && creation!=null)
-                    model.add(new ConversationHeader(id,owner,creation,title));
-
+                continue;
             }
-            if(jp.getText()== "messages")
-            {
+            if(jp.getText()== "messages") {
                 // If the object type represents a Message, then
                 // specific steps will take place to create
                 // a Message variable
-                Uuid id = null;
-                Uuid owner = null;
-                Time creation = null;
-                String body = "";
                 jp.nextToken();
-                jp.nextToken();
-                jp.nextToken();
-                jp.nextToken();
-                if(jp.getText()=="id")
-                {
+                while (jp.nextToken() != JsonToken.END_ARRAY) {
+                    Uuid id = null;
+                    Uuid owner = null;
+                    Time creation = null;
+                    String body = "";
                     jp.nextToken();
-                    try {
-                        id = Uuid.parse(jp.getText());
+                    if (jp.getText() == "content") {
+                        jp.nextToken();
+                        body = jp.getText();
                     }
-                    catch (IOException e)
-                    {
-                        System.out.println("Invalid Uuid");
-                    }
-                }
-                jp.nextToken();
-                if(jp.getText()=="authorId")
-                {
                     jp.nextToken();
-                    try {
-                        owner = Uuid.parse(jp.getText());
+                    if (jp.getText() == "uuid") {
+                        jp.nextToken();
+                        try {
+                            id = Uuid.parse(jp.getText());
+                        } catch (IOException e) {
+                            System.out.println("Invalid Uuid");
+                        }
                     }
-                    catch (IOException e)
-                    {
-                        System.out.println("Invalid Uuid");
+                    jp.nextToken();
+                    if (jp.getText() == "authorUUID") {
+                        jp.nextToken();
+                        try {
+                            owner = Uuid.parse(jp.getText());
+                        } catch (IOException e) {
+                            System.out.println("Invalid Uuid");
+                        }
                     }
-                }
-                jp.nextToken();
-                if(jp.getText()=="body")
-                {
                     jp.nextToken();
-                    body = jp.getText();
-                }
-                jp.nextToken();
-
-                if(jp.getText()=="creationTime")
-                {
+                    if (jp.getText() == "creationTime") {
+                        jp.nextToken();
+                        creation = Time.fromMs(jp.getLongValue());
+                    }
                     jp.nextToken();
-                    creation = Time.fromMs(Long.parseLong(jp.getText()));
+                    System.out.println(body);
+                    System.out.println(id);
+                    System.out.println(owner);
+                    System.out.println(creation);
+                    if (body != "" && id != null && owner != null && creation != null)
+                        model.add(new Message(id, Uuid.NULL, Uuid.NULL, creation, owner, body));
                 }
-                jp.nextToken();
-                jp.nextToken();
-                if(body!="" && id!=null && owner != null && creation!=null)
-                    model.add(new Message(id, Uuid.NULL, Uuid.NULL,creation,owner,body));
             }
            }
            jp.close();
