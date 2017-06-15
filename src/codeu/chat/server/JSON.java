@@ -106,9 +106,6 @@ public final class JSON {
                         time = Time.fromMs(jp.getLongValue());
                     }
                     jp.nextToken();
-                    System.out.println(name);
-                    System.out.println(id);
-                    System.out.println(time);
                     if (name != "" && time != null && id != null)
                         model.add(new User(id, name, time));
                 }
@@ -154,10 +151,6 @@ public final class JSON {
                         creation = Time.fromMs(jp.getLongValue());
                     }
                     jp.nextToken();
-                    System.out.println(title);
-                    System.out.println(id);
-                    System.out.println(owner);
-                    System.out.println(creation);
                     if (title != "" && id != null && owner != null && creation != null)
                         model.add(new ConversationHeader(id, owner, creation, title));
                 }
@@ -202,10 +195,6 @@ public final class JSON {
                         creation = Time.fromMs(jp.getLongValue());
                     }
                     jp.nextToken();
-                    System.out.println(body);
-                    System.out.println(id);
-                    System.out.println(owner);
-                    System.out.println(creation);
                     if (body != "" && id != null && owner != null && creation != null)
                         model.add(new Message(id, Uuid.NULL, Uuid.NULL, creation, owner, body));
                 }
