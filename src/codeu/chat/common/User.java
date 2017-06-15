@@ -59,4 +59,19 @@ public final class User {
     this.creation = creation;
 
   }
+
+  @Override
+  public boolean equals (Object toCompare)
+  {
+    if(!(toCompare instanceof User))
+      return false;
+    User toCompareUser = (User)(toCompare);
+    if(!this.id.equals(toCompareUser.id))
+      return false;
+    if(!this.name.equals(toCompareUser.name))
+      return false;
+    if(!this.creation.equals(toCompareUser.creation))
+      return false;
+    return true;
+  }
 }
