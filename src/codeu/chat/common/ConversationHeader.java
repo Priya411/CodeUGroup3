@@ -41,10 +41,10 @@ public final class ConversationHeader {
     public ConversationHeader read(InputStream in) throws IOException {
 
       return new ConversationHeader(
-          Uuid.SERIALIZER.read(in),
-          Uuid.SERIALIZER.read(in),
-          Time.SERIALIZER.read(in),
-          Serializers.STRING.read(in)
+              Uuid.SERIALIZER.read(in),
+              Uuid.SERIALIZER.read(in),
+              Time.SERIALIZER.read(in),
+              Serializers.STRING.read(in)
       );
 
     }
@@ -62,5 +62,22 @@ public final class ConversationHeader {
     this.creation = creation;
     this.title = title;
 
+  }
+
+  @Override
+  public boolean equals(Object toCompare)
+  {
+    if(!(toCompare instanceof ConversationHeader))
+      return false;
+    ConversationHeader toCompareConv = (ConversationHeader)(toCompare);
+    if(!this.id.equals(toCompareConv.id))
+      return false;
+    if(!this.owner.equals(toCompareConv.owner))
+      return false;
+    if(!this.creation.equals(toCompareConv.creation))
+      return false;
+    if(!this.title.equals(toCompareConv.title))
+      return false;
+    return true;
   }
 }
