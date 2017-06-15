@@ -172,6 +172,8 @@ public final class Chat {
 		//
 		// Add a command to add and sign-in as a new user when the user enters
 		// "u-add" while on the root panel.
+		// uses the entire list args as the argument since the user name may 
+		// be longer than a single word 
 		//
 		panel.register("u-add", new Panel.Command() {
 			@Override
@@ -191,6 +193,8 @@ public final class Chat {
 		//
 		// Add a command to sign-in as a user when the user enters "u-sign-in"
 		// while on the root panel.
+		// uses the entire list args as the argument since the user name may 
+		// be longer than a single word 
 		//
 		panel.register("u-sign-in", new Panel.Command() {
 			@Override
@@ -280,6 +284,8 @@ public final class Chat {
 		// Add a command that will create and join a new conversation when the
 		// user
 		// enters "c-add" while on the user panel.
+		// uses the entire list args as the argument since the conversation name 
+		// may be longer than a single word 
 		//
 		panel.register("c-add", new Panel.Command() {
 			@Override
@@ -303,6 +309,8 @@ public final class Chat {
 		//
 		// Add a command that will joing a conversation when the user enters
 		// "c-join" while on the user panel.
+		// uses the entire list args as the argument since the conversation name 
+		// may be longer than a single word 
 		//
 		panel.register("c-join", new Panel.Command() {
 			@Override
@@ -412,6 +420,8 @@ public final class Chat {
 		// Add a command to add a new message to the current conversation when
 		// the
 		// user enters "m-add" while on the conversation panel.
+		// uses the entire list args as the argument since messages are likely to 
+		// be longer than a single string 
 		//
 		panel.register("m-add", new Panel.Command() {
 			@Override
