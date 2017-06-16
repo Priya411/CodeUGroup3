@@ -67,17 +67,22 @@ public final class ConversationHeader {
   @Override
   public boolean equals(Object toCompare)
   {
-    if(!(toCompare instanceof ConversationHeader))
+    if(!(toCompare instanceof ConversationHeader)) {
       return false;
+    }
     ConversationHeader toCompareConv = (ConversationHeader)(toCompare);
-    if(!this.id.equals(toCompareConv.id))
+    if(!this.id.equals(toCompareConv.id)) {
       return false;
-    if(!this.owner.equals(toCompareConv.owner))
+    }
+    if(!this.owner.equals(toCompareConv.owner)) {
       return false;
-    if(!this.creation.equals(toCompareConv.creation))
+    }
+    if(!this.creation.equals(toCompareConv.creation)) {
       return false;
-    if(!this.title.equals(toCompareConv.title))
+    }
+    if(!this.title.equals(toCompareConv.title)) {
       return false;
+    }
     return true;
   }
 }
