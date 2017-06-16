@@ -23,14 +23,14 @@ import codeu.chat.util.Time;
 public class JSONTest {
 
     @Test
-    public void readTest1() {
+    public void eachObjectTest() {
         // This function tests if the JSON reader is working if there is a JSON with one type of each Object in the file
         Model model = new Model();
         JSON log = new JSON();
-        Model comparer = new Model();
-        comparer.add(new User(createUuid("1.1074501217"), "Krager", Time.fromMs(4309509)));
-        comparer.add(new ConversationHeader(createUuid("1.3959833157"), createUuid("1.1074501217"),  Time.fromMs(59408509), "Chat1"));
-        comparer.add(new Message(createUuid("1.3928689216"), Uuid.NULL, Uuid.NULL, Time.fromMs(49584908), createUuid("1.1074501217"),   "I'm so alone"));
+        Model expected = new Model();
+        expected.add(new User(createUuid("1.1074501217"), "Krager", Time.fromMs(4309509)));
+        expected.add(new ConversationHeader(createUuid("1.3959833157"), createUuid("1.1074501217"),  Time.fromMs(59408509), "Chat1"));
+        expected.add(new Message(createUuid("1.3928689216"), Uuid.NULL, Uuid.NULL, Time.fromMs(49584908), createUuid("1.1074501217"),   "I'm so alone"));
 
         try {
             // Path used by Priyanka:
@@ -41,33 +41,16 @@ public class JSONTest {
         } catch (IOException e) {
             System.out.println("File not handled properly");
         }
-        assertEquals(
-                compare(model.userById().all().iterator(), comparer.userById().all().iterator()), true);
-        assertEquals(
-                compare(model.userByText().all().iterator(), comparer.userByText().all().iterator()), true);
-        assertEquals(
-                compare(model.userByTime().all().iterator(), comparer.userByTime().all().iterator()), true);
-        assertEquals(
-                compare(model.conversationById().all().iterator(), comparer.conversationById().all().iterator()), true);
-        assertEquals(
-                compare(model.conversationByTime().all().iterator(), comparer.conversationByTime().all().iterator()), true);
-        assertEquals(
-                compare(model.conversationByText().all().iterator(), comparer.conversationByText().all().iterator()), true);
-        assertEquals(
-                compare(model.messageById().all().iterator(), comparer.messageById().all().iterator()), true);
-        assertEquals(
-                compare(model.messageByText().all().iterator(), comparer.messageByText().all().iterator()), true);
-        assertEquals(
-                compare(model.messageByTime().all().iterator(), comparer.messageByTime().all().iterator()), true);
+        compareModels(model,expected);
     }
 
     @Test
-    public void readTest2() {
+    public void oneUserTest() {
         // This function tests if the JSON reader is working if there is a JSON with one type of User in the file
         Model model = new Model();
         JSON log = new JSON();
-        Model comparer = new Model();
-        comparer.add(new User(createUuid("1.1074501217"), "Krager", Time.fromMs(12345)));
+        Model expected = new Model();
+        expected.add(new User(createUuid("1.1074501217"), "Krager", Time.fromMs(12345)));
         try {
             // Path used by Priyanka:
             model = log.readFromFile("/Users/HMCLoaner/Desktop/CodeU/test/codeu/chat/server/input2.json");
@@ -78,32 +61,15 @@ public class JSONTest {
             catch (IOException e) {
             System.out.println("File not handled properly");
         }
-        assertEquals(
-               compare(model.userById().all().iterator(), comparer.userById().all().iterator()), true);
-        assertEquals(
-                compare(model.userByText().all().iterator(), comparer.userByText().all().iterator()), true);
-        assertEquals(
-                compare(model.userByTime().all().iterator(), comparer.userByTime().all().iterator()), true);
-        assertEquals(
-                compare(model.conversationById().all().iterator(), comparer.conversationById().all().iterator()), true);
-        assertEquals(
-                compare(model.conversationByTime().all().iterator(), comparer.conversationByTime().all().iterator()), true);
-        assertEquals(
-                compare(model.conversationByText().all().iterator(), comparer.conversationByText().all().iterator()), true);
-        assertEquals(
-                compare(model.messageById().all().iterator(), comparer.messageById().all().iterator()), true);
-        assertEquals(
-                compare(model.messageByText().all().iterator(), comparer.messageByText().all().iterator()), true);
-        assertEquals(
-                compare(model.messageByTime().all().iterator(), comparer.messageByTime().all().iterator()), true);
+        compareModels(model,expected);
     }
 
     @Test
-    public void readTest3() {
+    public void emptyFileTest() {
         // This function tests if the JSON reader is working if there is a JSON with no data in it
         JSON log = new JSON();
         Model model = null;
-        Model comparer = new Model();
+        Model expected = new Model();
         try {
             // Path used by Priyanka:
             model = log.readFromFile("/Users/HMCLoaner/Desktop/CodeU/test/codeu/chat/server/input3.json");
@@ -113,39 +79,22 @@ public class JSONTest {
         } catch (IOException e) {
             System.out.println("File not handled properly");
         }
-        assertEquals(
-                compare(model.userById().all().iterator(), comparer.userById().all().iterator()), true);
-        assertEquals(
-                compare(model.userByText().all().iterator(), comparer.userByText().all().iterator()), true);
-        assertEquals(
-                compare(model.userByTime().all().iterator(), comparer.userByTime().all().iterator()), true);
-        assertEquals(
-                compare(model.conversationById().all().iterator(), comparer.conversationById().all().iterator()), true);
-        assertEquals(
-                compare(model.conversationByTime().all().iterator(), comparer.conversationByTime().all().iterator()), true);
-        assertEquals(
-                compare(model.conversationByText().all().iterator(), comparer.conversationByText().all().iterator()), true);
-        assertEquals(
-                compare(model.messageById().all().iterator(), comparer.messageById().all().iterator()), true);
-        assertEquals(
-                compare(model.messageByText().all().iterator(), comparer.messageByText().all().iterator()), true);
-        assertEquals(
-                compare(model.messageByTime().all().iterator(), comparer.messageByTime().all().iterator()), true);
+        compareModels(model,expected);
     }
 
     @Test
-    public void readTest4() {
-        // This function tests if the JSON reader is working if there is a JSON with two types of each object in the file
+    public void multipleObjectTest() {
+        // This function tests if the JSON reader is working if there is a JSON with multiple types of each object in the file
         JSON log = new JSON();
         Model model = new Model();
-        Model comparer = new Model();
-        comparer.add(new User(createUuid("1.1074501217"), "Krager", Time.fromMs(4098590)));
-        comparer.add(new User(createUuid("1.3566231147"), "FakeUserName1234", Time.fromMs(48574)));
-        comparer.add(new ConversationHeader(createUuid("1.3959833157"), createUuid("1.1074501217"),  Time.fromMs(98094), "Chat1"));
-        comparer.add(new ConversationHeader(createUuid("1.3959833157"), createUuid("1.1074501217"),  Time.fromMs(59485), "Chat2"));
-        comparer.add(new Message(createUuid("1.3928689216"), Uuid.NULL, Uuid.NULL, Time.fromMs(49589), createUuid("1.1074501217"),   "I'm so alone"));
-        comparer.add(new Message(createUuid("1.2016074193"), Uuid.NULL, Uuid.NULL, Time.fromMs(9485), createUuid("1.1074501217"),   "I need friends"));
-        comparer.add(new Message(createUuid("1.384992272"), Uuid.NULL, Uuid.NULL, Time.fromMs(5098), createUuid("1.1074501217"),   "Julia'sFixesAreNotImplementedYetCanYouTell?"));
+        Model expected = new Model();
+        expected.add(new User(createUuid("1.1074501217"), "Krager", Time.fromMs(4098590)));
+        expected.add(new User(createUuid("1.3566231147"), "FakeUserName1234", Time.fromMs(48574)));
+        expected.add(new ConversationHeader(createUuid("1.3959833157"), createUuid("1.1074501217"),  Time.fromMs(98094), "Chat1"));
+        expected.add(new ConversationHeader(createUuid("1.3959833157"), createUuid("1.1074501217"),  Time.fromMs(59485), "Chat2"));
+        expected.add(new Message(createUuid("1.3928689216"), Uuid.NULL, Uuid.NULL, Time.fromMs(49589), createUuid("1.1074501217"),   "I'm so alone"));
+        expected.add(new Message(createUuid("1.2016074193"), Uuid.NULL, Uuid.NULL, Time.fromMs(9485), createUuid("1.1074501217"),   "I need friends"));
+        expected.add(new Message(createUuid("1.384992272"), Uuid.NULL, Uuid.NULL, Time.fromMs(5098), createUuid("1.1074501217"),   "Julia'sFixesAreNotImplementedYetCanYouTell?"));
 
         try {
             // Path used by Priyanka:
@@ -156,26 +105,7 @@ public class JSONTest {
         } catch (IOException e) {
             System.out.println("File not handled properly");
         }
-        assertTrue(
-                "Check that the user has the correct id", true);
-        assertEquals(
-                compare(model.userById().all().iterator(), comparer.userById().all().iterator()), true);
-        assertEquals(
-                compare(model.userByText().all().iterator(), comparer.userByText().all().iterator()), true);
-        assertEquals(
-                compare(model.userByTime().all().iterator(), comparer.userByTime().all().iterator()), true);
-        assertEquals(
-                compare(model.conversationById().all().iterator(), comparer.conversationById().all().iterator()), true);
-        assertEquals(
-                compare(model.conversationByTime().all().iterator(), comparer.conversationByTime().all().iterator()), true);
-        assertEquals(
-                compare(model.conversationByText().all().iterator(), comparer.conversationByText().all().iterator()), true);
-        assertEquals(
-                compare(model.messageById().all().iterator(), comparer.messageById().all().iterator()), true);
-        assertEquals(
-                compare(model.messageByText().all().iterator(), comparer.messageByText().all().iterator()), true);
-        assertEquals(
-                compare(model.messageByTime().all().iterator(), comparer.messageByTime().all().iterator()), true);
+        compareModels(model,expected);
     }
 
     public Uuid createUuid(String id)
@@ -201,4 +131,27 @@ public class JSONTest {
         }
         return same;
     }
+
+    public void compareModels(Model model, Model expected)
+    {
+        assertEquals(
+                compare(model.userById().all().iterator(), expected.userById().all().iterator()), true);
+        assertEquals(
+                compare(model.userByText().all().iterator(), expected.userByText().all().iterator()), true);
+        assertEquals(
+                compare(model.userByTime().all().iterator(), expected.userByTime().all().iterator()), true);
+        assertEquals(
+                compare(model.conversationById().all().iterator(), expected.conversationById().all().iterator()), true);
+        assertEquals(
+                compare(model.conversationByTime().all().iterator(), expected.conversationByTime().all().iterator()), true);
+        assertEquals(
+                compare(model.conversationByText().all().iterator(), expected.conversationByText().all().iterator()), true);
+        assertEquals(
+                compare(model.messageById().all().iterator(), expected.messageById().all().iterator()), true);
+        assertEquals(
+                compare(model.messageByText().all().iterator(), expected.messageByText().all().iterator()), true);
+        assertEquals(
+                compare(model.messageByTime().all().iterator(), expected.messageByTime().all().iterator()), true);
+    }
+
 }
