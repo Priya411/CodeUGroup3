@@ -3,6 +3,7 @@ import static org.junit.Assert.*;
 
 import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.Message;
+import codeu.chat.common.ServerInfo;
 import codeu.chat.common.User;
 import codeu.chat.util.Uuid;
 import org.junit.Ignore;
@@ -106,6 +107,67 @@ public class JSONTest {
             System.out.println("File not handled properly");
         }
         compareModels(model,expected);
+    }
+
+    @Test
+    public void noFile() {
+        // When there isn't a file with the inputted name
+        // an empty model is made
+        JSON log = new JSON();
+        Model model = null;
+        Model expected = new Model();
+        try {
+            // Path used by Priyanka:
+            model = log.readFromFile("/Users/HMCLoaner/Desktop/CodeU/test/codeu/chat/server/noFile.json");
+            // The path can vary from device, so this may not compile if it's not the correct path for your project
+            // set up. A suggested path is as follows
+            //model = log.readFromFile("CodeU/test/codeu/chat/server/input3.json");
+        } catch (IOException e) {
+            System.out.println("File not handled properly");
+        }
+        compareModels(model,expected);
+    }
+
+    @Test
+    public void objectsUnmatched() {
+        // This function tests if the JSON reader is working if there is a JSON with one type of User in the file
+        // However, it's being compared to a different user
+        Model model = new Model();
+        JSON log = new JSON();
+        Model expected = new Model();
+        expected.add(new User(createUuid("1.1"), "Krager", Time.fromMs(12345)));
+        try {
+            // Path used by Priyanka:
+            model = log.readFromFile("/Users/HMCLoaner/Desktop/CodeU/test/codeu/chat/server/input2.json");
+            // The path can vary from device, so this may not compile if it's not the correct path for your project
+            // set up. A suggested path is as follows
+            //model = log.readFromFile("CodeU/test/codeu/chat/server/input2.json");
+        } catch (IOException e) {
+            System.out.println("File not handled properly");
+        }
+        assertEquals(
+                compare(model.userById().all().iterator(), expected.userById().all().iterator()), false);
+        assertEquals(
+                compare(model.userByText().all().iterator(), expected.userByText().all().iterator()), false);
+        assertEquals(
+                compare(model.userByTime().all().iterator(), expected.userByTime().all().iterator()), false);
+    }
+
+    public void errorThrown() {
+        // This function tests is an error is thrown properly if the file can't be properly read
+        JSON log = new JSON();
+        boolean errorThrown = false;
+        try {
+            // Path used by Priyanka:
+            Model model = log.readFromFile("/Users/HMCLoaner/Desktop/CodeU/test/codeu/chat/server/input5.json");
+            // The path can vary from device, so this may not compile if it's not the correct path for your project
+            // set up. A suggested path is as follows
+            //model = log.readFromFile("CodeU/test/codeu/chat/server/input2.json");
+        }
+        catch (IOException e){
+            errorThrown = true;
+        }
+        assertTrue(errorThrown);
     }
 
     public Uuid createUuid(String id)
