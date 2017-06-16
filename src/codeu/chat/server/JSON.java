@@ -78,7 +78,7 @@ public final class JSON {
             // that this END_OBJECT specifically relates to the
             // very last } in the json file
             {
-            if(jp.getText()=="users") {
+            if(jp.getText().equals("users")) {
                 // If the object type represents a User, then
                 // specific steps will take place to create
                 // a User variable
@@ -88,12 +88,12 @@ public final class JSON {
                     Uuid id = null;
                     Time time = null;
                     jp.nextToken();
-                    if (jp.getText() == "name") {
+                    if (jp.getText().equals("name")) {
                         jp.nextToken();
                         name = jp.getText();
                     }
                     jp.nextToken();
-                    if (jp.getText() == "uuid") {
+                    if (jp.getText().equals("uuid")) {
                         jp.nextToken();
                         try {
                             id = Uuid.parse(jp.getText());
@@ -102,17 +102,17 @@ public final class JSON {
                         }
                     }
                     jp.nextToken();
-                    if (jp.getText() == "creationTime") {
+                    if (jp.getText().equals("creationTime")) {
                         jp.nextToken();
                         time = Time.fromMs(jp.getLongValue());
                     }
                     jp.nextToken();
-                    if (name != "" && time != null && id != null)
+                    if (!(name.equals("")) && time != null && id != null)
                         model.add(new User(id, name, time));
                 }
                 continue;
             }
-            if(jp.getText()=="conversations")
+            if(jp.getText().equals("conversations"))
             {
                 // If the object type represents a Conversation, then
                 // specific steps will take place to create
@@ -124,12 +124,12 @@ public final class JSON {
                     Time creation = null;
                     String title = "";
                     jp.nextToken();
-                    if (jp.getText() == "title") {
+                    if (jp.getText().equals("title")) {
                         jp.nextToken();
                         title = jp.getText();
                     }
                     jp.nextToken();
-                    if (jp.getText() == "uuid") {
+                    if (jp.getText().equals("uuid")) {
                         jp.nextToken();
                         try {
                             id = Uuid.parse(jp.getText());
@@ -138,7 +138,7 @@ public final class JSON {
                         }
                     }
                     jp.nextToken();
-                    if (jp.getText() == "ownerUUID") {
+                    if (jp.getText().equals("ownerUUID")) {
                         jp.nextToken();
                         try {
                             owner = Uuid.parse(jp.getText());
@@ -147,17 +147,17 @@ public final class JSON {
                         }
                     }
                     jp.nextToken();
-                    if (jp.getText() == "creationTime") {
+                    if (jp.getText().equals("creationTime")) {
                         jp.nextToken();
                         creation = Time.fromMs(jp.getLongValue());
                     }
                     jp.nextToken();
-                    if (title != "" && id != null && owner != null && creation != null)
+                    if (!(title.equals("")) && id != null && owner != null && creation != null)
                         model.add(new ConversationHeader(id, owner, creation, title));
                 }
                 continue;
             }
-            if(jp.getText()== "messages") {
+            if(jp.getText().equals("messages")) {
                 // If the object type represents a Message, then
                 // specific steps will take place to create
                 // a Message variable
@@ -168,12 +168,12 @@ public final class JSON {
                     Time creation = null;
                     String body = "";
                     jp.nextToken();
-                    if (jp.getText() == "content") {
+                    if (jp.getText().equals("content")) {
                         jp.nextToken();
                         body = jp.getText();
                     }
                     jp.nextToken();
-                    if (jp.getText() == "uuid") {
+                    if (jp.getText().equals("uuid")) {
                         jp.nextToken();
                         try {
                             id = Uuid.parse(jp.getText());
@@ -182,7 +182,7 @@ public final class JSON {
                         }
                     }
                     jp.nextToken();
-                    if (jp.getText() == "authorUUID") {
+                    if (jp.getText().equals("authorUUID")) {
                         jp.nextToken();
                         try {
                             owner = Uuid.parse(jp.getText());
@@ -191,12 +191,12 @@ public final class JSON {
                         }
                     }
                     jp.nextToken();
-                    if (jp.getText() == "creationTime") {
+                    if (jp.getText().equals("creationTime")) {
                         jp.nextToken();
                         creation = Time.fromMs(jp.getLongValue());
                     }
                     jp.nextToken();
-                    if (body != "" && id != null && owner != null && creation != null)
+                    if (!(body.equals("")) && id != null && owner != null && creation != null)
                         model.add(new Message(id, Uuid.NULL, Uuid.NULL, creation, owner, body));
                 }
             }
