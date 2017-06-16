@@ -63,15 +63,29 @@ public final class User {
   @Override
   public boolean equals (Object toCompare)
   {
-    if(!(toCompare instanceof User))
+    if(!(toCompare instanceof User)) {
       return false;
+    }
     User toCompareUser = (User)(toCompare);
-    if(!this.id.equals(toCompareUser.id))
+    if(!this.id.equals(toCompareUser.id)) {
       return false;
-    if(!this.name.equals(toCompareUser.name))
+    }
+    if(!this.name.equals(toCompareUser.name)) {
       return false;
-    if(!this.creation.equals(toCompareUser.creation))
+    }
+    if(!this.creation.equals(toCompareUser.creation)) {
       return false;
+    }
     return true;
+  }
+
+  public int hashCode() { return hash(this); }
+
+  private static int hash(User user) {
+    int hash = 0;
+    hash+=user.id.hashCode();
+    hash+=user.name.hashCode();
+    hash+=user.creation.hashCode();
+    return hash;
   }
 }
