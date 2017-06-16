@@ -56,9 +56,6 @@ public final class Time implements Comparable<Time> {
 	@Override
 	public boolean equals (Object toCompare)
 	{
-		if(!(toCompare instanceof Time)) {
-			return false;
-		}
 		return this.toString().equals(((Time)(toCompare)).toString());
 	}
 	public boolean inRange(Time start, Time end) {
