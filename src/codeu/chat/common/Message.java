@@ -100,4 +100,19 @@ public final class Message {
     }
     return true;
   }
+
+  public int hashCode() { return hash(this); }
+
+  private static int hash(Message mess) {
+    int hash = 0;
+    hash+=mess.id.hashCode();
+    hash+=mess.next.hashCode();
+    hash+=mess.previous.hashCode();
+    hash+=mess.creation.hashCode();
+    hash+=mess.author.hashCode();
+    hash+=mess.content.hashCode();
+
+    return hash;
+  }
+
 }
