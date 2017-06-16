@@ -17,6 +17,7 @@ package codeu.chat.common;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Objects;
 
 import codeu.chat.util.Serializer;
 import codeu.chat.util.Serializers;
@@ -84,5 +85,16 @@ public final class ConversationHeader {
       return false;
     }
     return true;
+  }
+
+  public int hashCode() { return hash(this); }
+
+  private static int hash(ConversationHeader conv) {
+    int hash = 0;
+    hash+=conv.id.hashCode();
+    hash+=conv.owner.hashCode();
+    hash+=conv.creation.hashCode();
+    hash+=conv.title.hashCode();
+    return hash;
   }
 }
