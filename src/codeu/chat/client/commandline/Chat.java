@@ -70,8 +70,8 @@ public final class Chat {
 							conversation.conversation.creation.HMtime(), conversation.conversation.id);
 						
 						for (MessageContext message = conversation.firstMessage(); message != null; message = message.next()) {
-							System.out.format("\t %s | %s : \"%s\" || UUID: %s \n", 
-								allUsers.get(message.message.author), message.message.creation.HMtime(), 
+							System.out.format("\t %s | %s: \"%s\" || UUID: %s \n", 
+								message.message.creation.HMtime(), allUsers.get(message.message.author),  
 								message.message.content, message.message.id);			 
 						}	
 					}
