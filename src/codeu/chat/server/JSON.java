@@ -20,6 +20,12 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public final class JSON {
 
+	/**
+	 * Uses the given mapper to write empty arrays to the data.json file. Should
+	 * be used to reset the file or initialize basic backbone if file is blank
+	 * 
+	 * @param mapper
+	 */
 	private static void createNewJSON(ObjectMapper mapper) {
 		ObjectNode outerNode = mapper.createObjectNode();
 		outerNode.set("users", mapper.createArrayNode());
@@ -45,6 +51,7 @@ public final class JSON {
 				false);
 		// will catch if the file doesn't exist or there is an error reading
 		try {
+			// convert the file to a node and append given user
 			JsonNode fileNode = mapper.readTree(new File("data.json"));
 			final ArrayNode usersArrayNode = (ArrayNode) fileNode.path("users");
 			usersArrayNode.addPOJO(user);
@@ -69,6 +76,7 @@ public final class JSON {
 				false);
 		// will catch if the file doesn't exist or there is an error reading
 		try {
+			// convert the file to a node and append given message
 			JsonNode fileNode = mapper.readTree(new File("data.json"));
 			final ArrayNode usersArrayNode = (ArrayNode) fileNode
 					.path("messages");
@@ -94,6 +102,7 @@ public final class JSON {
 				false);
 		// will catch if the file doesn't exist or there is an error reading
 		try {
+			// convert the file to a node and append given convo
 			JsonNode fileNode = mapper.readTree(new File("data.json"));
 			final ArrayNode usersArrayNode = (ArrayNode) fileNode
 					.path("conversations");
