@@ -62,6 +62,11 @@ public final class Time implements Comparable<Time> {
 		return formatter.format(date);
 	}
 
+	//time in just hours and minutes
+  	public final String HMtime() {
+  		return formatter.format(date).substring(12,17);
+  	} 
+
 	public static Time fromMs(long ms) { return new Time(ms); }
 
 	public static Time now() { return Time.fromMs(System.currentTimeMillis()); }
