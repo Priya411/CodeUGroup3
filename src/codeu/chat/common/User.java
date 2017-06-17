@@ -18,18 +18,20 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
 import codeu.chat.util.Serializer;
 import codeu.chat.util.Serializers;
 import codeu.chat.util.Time;
 import codeu.chat.util.Uuid;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+// ignore anything that may cause problems when converting to JSON
+// prevents crashes for items that cant be serialized.
 @JsonIgnoreProperties(ignoreUnknown=true)
 public final class User {
   
+  // no need to serialize the serializer when converting to JOSN
   @JsonIgnore
   public static final Serializer<User> SERIALIZER = new Serializer<User>() {
 
@@ -44,16 +46,16 @@ public final class User {
 
     @Override
     public User read(InputStream in) throws IOException {
-
       return new User(
           Uuid.SERIALIZER.read(in),
           Serializers.STRING.read(in),
           Time.SERIALIZER.read(in)
       );
-
     }
   };
 
+  // ignore objects that aren't built-in types (string, int, etc)
+  // Jackons will default to the getters since instance vars are ignored
   @JsonIgnore
   public final Uuid id;
   public final String name;
@@ -61,11 +63,9 @@ public final class User {
   public final Time creation;
 
   public User(Uuid id, String name, Time creation) {
-
     this.id = id;
     this.name = name;
     this.creation = creation;
-
   }
   
   public String getUUID() {

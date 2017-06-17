@@ -29,6 +29,7 @@ import codeu.chat.util.Uuid;
 @JsonIgnoreProperties(ignoreUnknown=true)
 public final class ConversationHeader {
 
+  // no need to serialize the serializer when converting to JOSN
   public static final Serializer<ConversationHeader> SERIALIZER = new Serializer<ConversationHeader>() {
 
     @Override
@@ -53,7 +54,9 @@ public final class ConversationHeader {
 
     }
   };
-
+  
+  //ignore objects that aren't built-in types (string, int, etc)
+  // Jackon will default to the getters since instance vars are ignored
   @JsonIgnore
   public final Uuid id;
   @JsonIgnore

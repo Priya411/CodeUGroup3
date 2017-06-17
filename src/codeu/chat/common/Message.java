@@ -15,6 +15,7 @@
 package codeu.chat.common;
 
 import java.io.IOException;
+
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -26,9 +27,12 @@ import codeu.chat.util.Uuid;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+// ignore anything that may cause problems when converting to JSON
+// prevents crashes for items that cant be serialized.
 @JsonIgnoreProperties(ignoreUnknown=true)
 public final class Message {
-
+	
+  // no need to serialize the serializer when converting to JOSN
   @JsonIgnore
   public static final Serializer<Message> SERIALIZER = new Serializer<Message>() {
 
@@ -58,7 +62,8 @@ public final class Message {
 
     }
   };
-
+  //ignore objects that aren't built-in types (string, int, etc)
+  // Jackon will default to the getters since instance vars are ignored
   @JsonIgnore
   public final Uuid id;
   @JsonIgnore

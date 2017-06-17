@@ -16,6 +16,11 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+/**
+ * JSON class used to write and read from the given save file.
+ * 
+ *
+ */
 public final class JSON {
 
 	private String fileName = "data.json";
