@@ -66,7 +66,7 @@ public final class Controller implements RawController, BasicController {
 
       message = new Message(id, Uuid.NULL, Uuid.NULL, creationTime, author, body);
       model.add(message);
-      JSON.save(message);
+      new JSON().save(message);
       
       LOG.info("Message added: %s", message.id);
 
@@ -110,7 +110,7 @@ public final class Controller implements RawController, BasicController {
 
       user = new User(id, name, creationTime);
       model.add(user);
-      JSON.save(user);
+      new JSON().save(user);
 
       LOG.info(
           "newUser success (user.id=%s user.name=%s user.time=%s)",
@@ -140,7 +140,7 @@ public final class Controller implements RawController, BasicController {
     if (foundOwner != null && isIdFree(id)) {
       conversation = new ConversationHeader(id, owner, creationTime, title);
       model.add(conversation);
-      JSON.save(conversation);
+      new JSON().save(conversation);
       LOG.info("Conversation added: " + id);
     }
 

@@ -7,11 +7,9 @@ import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.Message;
 import codeu.chat.common.User;
 
-import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -20,24 +18,77 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public final class JSON {
 
+	private String fileName = "data.json";
+
+	public JSON() {
+	}
+
+	public JSON(String fileName) {
+		this.fileName = fileName;
+	}
+
 	/**
-	 * Uses the given mapper to write empty arrays to the data.json file. Should
-	 * be used to reset the file or initialize basic backbone if file is blank
+	 * Writes empty arrays to the json file. Should be used to reset the file or
+	 * initialize basic backbone if file is blank
 	 * 
 	 * @param mapper
 	 */
-	private static void createNewJSON(ObjectMapper mapper) {
+	private JsonNode createNodeWithBlankArrays() {
+		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode outerNode = mapper.createObjectNode();
 		outerNode.set("users", mapper.createArrayNode());
 		outerNode.set("conversations", mapper.createArrayNode());
 		outerNode.set("messages", mapper.createArrayNode());
-		ObjectWriter writer = mapper.writer(new DefaultPrettyPrinter());
+		return outerNode;
+	}
+
+	/**
+	 * Saves the given object inside of the array with given arrayName
+	 * 
+	 * @param obj
+	 *            Object to be saved
+	 * @param arrayName
+	 *            Given array to save obj in
+	 */
+	private void save(Object obj, String arrayName) {
+		final ObjectMapper mapper = new ObjectMapper();
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
+				false);
+		File file = new File(fileName);
+		// if the file doesn't exist, try to create it
+		if (!file.exists()) {
+			try {
+				file.createNewFile();
+			} catch (IOException e) {
+				// prints whats wrong if cant create file
+				e.printStackTrace();
+			}
+		}
+		// convert the file to a node and append given convo
+		JsonNode fileNode;
 		try {
-			writer.writeValue(new File("data.json"), outerNode);
+			fileNode = mapper.readTree(file);
 		} catch (Exception e) {
 			e.printStackTrace();
+			// create a node with blank arrays in case there is invalid json
+			// in the file
+			fileNode = createNodeWithBlankArrays();
 		}
-
+		// if the node is null orthere is valid json, but the given array doesnt
+		// exist, then create the given array
+		if (fileNode == null || !fileNode.has(arrayName)) {
+			fileNode = createNodeWithBlankArrays();
+		}
+		// fetch the requested array and append the new object
+		final ArrayNode usersArrayNode = (ArrayNode) fileNode.path(arrayName);
+		usersArrayNode.addPOJO(obj);
+		// save to the file
+		ObjectWriter writer = mapper.writer(new DefaultPrettyPrinter());
+		try {
+			writer.writeValue(file, fileNode);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -45,75 +96,28 @@ public final class JSON {
 	 * 
 	 * @param user
 	 */
-	public static void save(User user) {
-		final ObjectMapper mapper = new ObjectMapper();
-		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
-				false);
-		// will catch if the file doesn't exist or there is an error reading
-		try {
-			// convert the file to a node and append given user
-			JsonNode fileNode = mapper.readTree(new File("data.json"));
-			final ArrayNode usersArrayNode = (ArrayNode) fileNode.path("users");
-			usersArrayNode.addPOJO(user);
-			ObjectWriter writer = mapper.writer(new DefaultPrettyPrinter());
-			writer.writeValue(new File("data.json"), fileNode);
-		} catch (Exception e) {
-			// create the empty JSON and save it to the file
-			createNewJSON(mapper);
-			save(user);
-			return;
-		}
+	public void save(User user) {
+		// save the object user into the array "users"
+		save(user, "users");
 	}
 
 	/**
 	 * Appends a message to the json file
 	 * 
-	 * @param user
+	 * @param message
 	 */
-	public static void save(Message message) {
-		final ObjectMapper mapper = new ObjectMapper();
-		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
-				false);
-		// will catch if the file doesn't exist or there is an error reading
-		try {
-			// convert the file to a node and append given message
-			JsonNode fileNode = mapper.readTree(new File("data.json"));
-			final ArrayNode usersArrayNode = (ArrayNode) fileNode
-					.path("messages");
-			usersArrayNode.addPOJO(message);
-			ObjectWriter writer = mapper.writer(new DefaultPrettyPrinter());
-			writer.writeValue(new File("data.json"), fileNode);
-		} catch (Exception e) {
-			// create the empty JSON and save it to the file
-			createNewJSON(mapper);
-			save(message);
-			return;
-		}
+	public void save(Message message) {
+		// save the object message into the array "messages"
+		save(message, "messages");
 	}
 
 	/**
 	 * Appends a conversation to the json file
 	 * 
-	 * @param user
+	 * @param conversation
 	 */
-	public static void save(ConversationHeader conversation) {
-		final ObjectMapper mapper = new ObjectMapper();
-		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
-				false);
-		// will catch if the file doesn't exist or there is an error reading
-		try {
-			// convert the file to a node and append given convo
-			JsonNode fileNode = mapper.readTree(new File("data.json"));
-			final ArrayNode usersArrayNode = (ArrayNode) fileNode
-					.path("conversations");
-			usersArrayNode.addPOJO(conversation);
-			ObjectWriter writer = mapper.writer(new DefaultPrettyPrinter());
-			writer.writeValue(new File("data.json"), fileNode);
-		} catch (Exception e) {
-			// create the empty JSON and save it to the file
-			createNewJSON(mapper);
-			save(conversation);
-			return;
-		}
+	public void save(ConversationHeader conversation) {
+		// save the object conversation into the array "conversations"
+		save(conversation, "conversations");
 	}
 }

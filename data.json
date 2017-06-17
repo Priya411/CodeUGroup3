@@ -1,47 +1,28 @@
 {
   "users" : [ {
     "name" : "Krager",
-    "uuid" : "1.1074501217",
-    "creationTime" : "14-Jun-2017 21:32:58.160"
-  }, {
-    "name" : "FakeUserName1234",
-    "uuid" : "1.3566231147",
-    "creationTime" : "14-Jun-2017 21:33:17.553"
+    "uuid" : "1.4294824721",
+    "creationTime" : "17-Jun-2017 12:48:58.645"
   }, {
     "name" : "Krager2",
-    "uuid" : "1.412745144",
-    "creationTime" : "14-Jun-2017 21:40:12.914"
+    "uuid" : "1.1799830093",
+    "creationTime" : "17-Jun-2017 12:49:05.315"
   } ],
   "conversations" : [ {
-    "title" : "Chat1",
-    "uuid" : "1.3959833157",
-    "ownerUUID" : "1.1074501217",
-    "creationTime" : "14-Jun-2017 21:33:33.369"
-  }, {
-    "title" : "Chat2",
-    "uuid" : "1.2760281494",
-    "ownerUUID" : "1.412745144",
-    "creationTime" : "14-Jun-2017 21:40:30.873"
+    "title" : "Talks",
+    "ownerUUID" : "1.4294824721",
+    "uuid" : "1.1365912473",
+    "creationTime" : "17-Jun-2017 12:49:15.608"
   } ],
   "messages" : [ {
-    "content" : "I'm so alone",
-    "uuid" : "1.3928689216",
-    "authorUUID" : "1.1074501217",
-    "creationTime" : "14-Jun-2017 21:34:10.994"
+    "content" : "HOWDY ADSKFDAFASF",
+    "authorUUID" : "1.4294824721",
+    "uuid" : "1.1998496488",
+    "creationTime" : "17-Jun-2017 12:49:23.617"
   }, {
-    "content" : "I need friends",
-    "uuid" : "1.2016074193",
-    "authorUUID" : "1.1074501217",
-    "creationTime" : "14-Jun-2017 21:34:48.690"
-  }, {
-    "content" : "Julia'sFixesAreNotImplementedYetCanYouTell?",
-    "uuid" : "1.384992272",
-    "authorUUID" : "1.1074501217",
-    "creationTime" : "14-Jun-2017 21:35:03.418"
-  }, {
-    "content" : "Messgae",
-    "uuid" : "1.3033530175",
-    "authorUUID" : "1.412745144",
-    "creationTime" : "14-Jun-2017 21:40:34.719"
+    "content" : "More",
+    "authorUUID" : "1.4294824721",
+    "uuid" : "1.1552272612",
+    "creationTime" : "17-Jun-2017 12:49:30.049"
   } ]
 }
