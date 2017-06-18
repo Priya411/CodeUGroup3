@@ -182,6 +182,7 @@ public final class JSON {
 
     public Model readFromFile (String file) throws IOException
     {
+    	System.out.println("Reading from File");
         Model model = new Model();
         JsonFactory jsonF = new JsonFactory();
         JsonParser jp = null;
@@ -196,22 +197,28 @@ public final class JSON {
             // will be used and returned.
             System.out.println("Invalid file");
         }
-       if (jp!=null && jp.getText() != null) {
+        System.out.println("jp: " + jp + "text: " + jp.getText());
+       if (jp!=null) {
             // If the file exists, then the file will be parsed
            // in this set of code
            jp.nextToken();
+           System.out.println("Parsing file");
             while (jp.nextToken() != JsonToken.END_OBJECT)
             // This ensures that we haven't reached the end of the
             // file because the data is being parsed in such a way
             // that this END_OBJECT specifically relates to the
             // very last } in the json file
             {
+            	System.out.println("while");
             if(jp.getText().equals("users")) {
+            	System.out.println("users");
                 // If the object type represents a User, then
                 // specific steps will take place to create
                 // a User variable
                 jp.nextToken();
                 while (jp.nextToken() != JsonToken.END_ARRAY) {
+                	System.out.println("cycling through users");
+                	System.out.println(jp.getText());
                     String name = "";
                     Uuid id = null;
                     Time time = null;

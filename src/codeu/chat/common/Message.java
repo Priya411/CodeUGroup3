@@ -95,8 +95,8 @@ public final class Message {
 	  return author.toString();
   }
   
-  public String getCreationTime() {
-	  return creation.toString();
+  public long getCreationTime() {
+	  return creation.inMs();
   }
 
   @Override

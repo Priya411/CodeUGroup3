@@ -83,8 +83,8 @@ public final class ConversationHeader {
 	  return owner.toString();
   }
   
-  public String getCreationTime() {
-	  return creation.toString();
+  public long getCreationTime() {
+	  return creation.inMs();
   }
   
   @Override

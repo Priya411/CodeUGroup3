@@ -72,8 +72,8 @@ public final class User {
 	  return id.toString();
   }
   
-  public String getCreationTime() {
-	  return creation.toString();
+  public long getCreationTime() {
+	  return creation.inMs();
   }
 
   @Override
