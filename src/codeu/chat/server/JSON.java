@@ -182,7 +182,7 @@ public final class JSON {
             // will be used and returned.
             System.out.println("Invalid file");
         }
-       if (jp!=null) {
+       if (jp!=null && jp.getText() != null) {
             // If the file exists, then the file will be parsed
            // in this set of code
            jp.nextToken();
