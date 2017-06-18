@@ -39,7 +39,7 @@ import codeu.chat.util.Time;
 import codeu.chat.util.Timeline;
 import codeu.chat.util.Uuid;
 import codeu.chat.util.connections.Connection;
-import codeu.chat.common.ServerInfo; 
+import codeu.chat.common.ServerInfo;
 
 public final class Server {
 	
@@ -58,7 +58,13 @@ public final class Server {
   private final Uuid id;
   private final Secret secret;
   private ServerInfo info = null;
-  private final Model model = new Model();
+  // Changed model initialization
+  // If there were previous transactions, the createModelForServer
+  // function will reload the past transactions into this model
+  // If there haven't, and the server is being used for the first time
+  // then it will simply create a new variable of type Model
+  // without any "log" or data pre-loaded into it
+  private final Model model = new JSON().createModelForServer();
   private final View view = new View(model);
   private final Controller controller;
   private final Relay relay;

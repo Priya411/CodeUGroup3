@@ -1,0 +1,10 @@
+{
+  "users" : [
+    {
+      "name": "Krager",
+      "uuid": "1.1074501217",
+      "creationTime": 12345
+    }],
+  "conversations":[],
+  "messages":[]
+}
