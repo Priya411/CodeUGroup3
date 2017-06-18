@@ -8,9 +8,11 @@ import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.Message;
 import codeu.chat.common.User;
 
+import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -103,6 +105,18 @@ public final class JSON {
 		try {
 			writer.writeValue(file, fileNode);
 		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Used to erase all saved content and place a blank array
+	 */
+	public void clearFile() {
+		JsonNode blankNode = createNodeWithBlankArrays();
+		try {
+			new ObjectMapper().writer(new DefaultPrettyPrinter()).writeValue(new File(fileName), blankNode);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

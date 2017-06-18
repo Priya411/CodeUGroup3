@@ -1,0 +1,19 @@
+{
+  "users" : [ {
+    "name" : "Krager",
+    "uuid" : "1.1074501217",
+    "creationTime" : "31-Dec-1969 17:11:49.509"
+  } ],
+  "conversations" : [ {
+    "title" : "Chat1",
+    "uuid" : "1.3959833157",
+    "ownerUUID" : "1.1074501217",
+    "creationTime" : "01-Jan-1970 08:30:08.509"
+  } ],
+  "messages" : [ {
+    "content" : "I'm so alone",
+    "authorUUID" : "1.1074501217",
+    "uuid" : "1.3928689216",
+    "creationTime" : "01-Jan-1970 05:46:24.908"
+  } ]
+}
