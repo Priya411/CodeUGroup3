@@ -16,7 +16,7 @@ package codeu.chat.client.commandline;
 
 import java.util.List;
 import java.util.Stack;
-import java.util.*;
+import java.util.HashMap;
 
 import codeu.chat.client.core.Context;
 import codeu.chat.client.core.ConversationContext;
@@ -24,9 +24,12 @@ import codeu.chat.client.core.MessageContext;
 import codeu.chat.client.core.UserContext;
 import codeu.chat.common.ServerInfo;
 import codeu.chat.util.CommandTokenizer;
+import codeu.chat.util.Logger;
 import codeu.chat.util.Time;
 import codeu.chat.util.Uuid;
 import java.util.Iterator;
+import java.io.IOException;
+
 
 public final class Chat {
 
@@ -39,8 +42,15 @@ public final class Chat {
 	// panel all it needs to do is pop the top panel.
 	private final Stack<Panel> panels = new Stack<>();
 
+	private static final Logger.Log LOG = Logger.newLog(Chat.class);
+
 	public Chat(Context context) {
 		this.panels.push(createRootPanel(context));
+	}
+
+	//CONSTRUCTOR FOR TESTING ONLY: 
+	public Chat(){
+
 	}
 
 	// RECREATE 
@@ -51,32 +61,61 @@ public final class Chat {
 	//
 	//
 	public void recreate(Context context) {
-		Hashtable<Uuid, String> allUsers = new Hashtable<Uuid, String>();
 
+		// HashMap keeps track of users and UUIDs for easy access 
+		HashMap<Uuid, String> allUsers = new HashMap<Uuid, String>();
+		// HashMap keeps track of all the conversations that exist 
+		HashMap<Uuid, ConversationContext> allConvos = new HashMap<Uuid, ConversationContext>();
+
+		// this function only does something if there was at least one user saved from the 
+		// last session 
 		if (context.allUsers().iterator().hasNext()) {
+
+			try {
+			  Logger.enableFileOutput("chat_history_log.log");
+			} catch (IOException ex) {
+			  LOG.error(ex, "Failed to set logger to write to file");
+			}
+			LOG.info("============================= START OF SERVER HISTORY =============================");
 
 			Iterator<UserContext> users = context.allUsers().iterator(); 
 			UserContext user;
 			System.out.format("USERS: \n");
+
 			while (users.hasNext()){
 				user = users.next(); 
 				System.out.format("\t\"%s\" Added at %s || UUID: %s\n", 
 				user.user.name, user.user.creation.HMtime(), user.user.id);
 				allUsers.put(user.user.id, user.user.name); 
-				if (!users.hasNext()){
-					for (final ConversationContext conversation : user.conversations()) {
-						System.out.format("\nCONVERSATION: \"%s\" Created by %s at %s || UUID: %s \n",
-							conversation.conversation.title, allUsers.get(conversation.conversation.owner),
-							conversation.conversation.creation.HMtime(), conversation.conversation.id);
-						
-						for (MessageContext message = conversation.firstMessage(); message != null; message = message.next()) {
-							System.out.format("\t %s | %s: \"%s\" || UUID: %s \n", 
-								message.message.creation.HMtime(), allUsers.get(message.message.author),  
-								message.message.content, message.message.id);			 
-						}	
-					}
+				LOG.info("\nUSER: \"%s\" Added at %s || UUID: %s\n", 
+				user.user.name, user.user.creation.HMtime(), user.user.id);
+				allUsers.put(user.user.id, user.user.name);
+				for (final ConversationContext conversation : user.conversations()) {
+					allConvos.put(conversation.conversation.id, conversation);
 				}
 			}
+
+			for (Uuid convoUUID : allConvos.keySet()){
+				ConversationContext conversation = allConvos.get(convoUUID); 
+				System.out.format("\nCONVERSATION: \"%s\" Created by %s at %s || UUID: %s \n",
+					conversation.conversation.title, allUsers.get(conversation.conversation.owner),
+					conversation.conversation.creation.HMtime(), conversation.conversation.id);
+				LOG.info("\nCONVERSATION: \"%s\" Created by %s at %s || UUID: %s \n",
+					conversation.conversation.title, allUsers.get(conversation.conversation.owner),
+					conversation.conversation.creation.HMtime(), conversation.conversation.id);
+				
+				for (MessageContext message = conversation.firstMessage(); message != null; message = message.next()) {
+					System.out.format("\nMESSAGE: %s | %s: \"%s\" || UUID: %s \n", 
+						message.message.creation.HMtime(), allUsers.get(message.message.author),  
+						message.message.content, message.message.id);	
+					LOG.info("\nMESSAGE: %s | %s: \"%s\" || UUID: %s \n", 
+						message.message.creation.HMtime(), allUsers.get(message.message.author),  
+						message.message.content, message.message.id);	 
+				}
+			}
+
+			LOG.info("============================= END OF SERVER HISTORY =============================");
+			
 		}	
 	}
 
@@ -500,3 +539,5 @@ public final class Chat {
 		return panel;
 	}
 }
+
+
