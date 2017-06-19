@@ -188,7 +188,7 @@ public final class JSON {
         JsonParser jp = null;
         try
         {
-            jp = jsonF.createParser(new FileReader(file));
+            jp = jsonF.createParser(new FileReader(new File(file)));
         }
         catch(IOException e)
         {
@@ -197,7 +197,7 @@ public final class JSON {
             // will be used and returned.
             System.out.println("Invalid file");
         }
-        System.out.println("jp: " + jp + "text: " + jp.getText());
+
        if (jp!=null) {
             // If the file exists, then the file will be parsed
            // in this set of code
@@ -209,16 +209,12 @@ public final class JSON {
             // that this END_OBJECT specifically relates to the
             // very last } in the json file
             {
-            	System.out.println("while");
             if(jp.getText().equals("users")) {
-            	System.out.println("users");
                 // If the object type represents a User, then
                 // specific steps will take place to create
                 // a User variable
                 jp.nextToken();
                 while (jp.nextToken() != JsonToken.END_ARRAY) {
-                	System.out.println("cycling through users");
-                	System.out.println(jp.getText());
                     String name = "";
                     Uuid id = null;
                     Time time = null;
