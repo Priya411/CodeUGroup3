@@ -91,7 +91,6 @@ public final class JSON {
                         if (jp.getText().equals("name")) {
                             jp.nextToken();
                             name = jp.getText();
-                            //jp.nextToken();
                         }
                         if (jp.getText().equals("uuid")) {
                             jp.nextToken();
@@ -100,12 +99,10 @@ public final class JSON {
                             } catch (IOException e) {
                                 System.out.println("Invalid Uuid");
                             }
-                            //jp.nextToken();
                         }
                         if (jp.getText().equals("creationTime")) {
                             jp.nextToken();
                             time = Time.fromMs(jp.getLongValue());
-                            //jp.nextToken();
                         }
                         if (!(name.equals("")) && time != null && id != null) {
                             model.add(new User(id, name, time));
