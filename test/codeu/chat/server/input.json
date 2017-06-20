@@ -10,12 +10,16 @@
       "title": "Chat1",
       "uuid": "1.3959833157",
       "ownerUUID": "1.1074501217",
-      "creationTime": 59408509
+      "creationTime": 59408509,
+      "firstMessageUUID" : "1.3350517446",
+      "lastMessageUUID" : "1.1516759239"
     }],
   "messages" : [ {
     "content" : "I'm so alone",
     "uuid" : "1.3928689216",
     "authorUUID" : "1.1074501217",
-    "creationTime" : 49584908
+    "creationTime" : 49584908,
+    "nextUUID" : "1.1516759239",
+    "previousUUID" : "0",
   }]
 }
