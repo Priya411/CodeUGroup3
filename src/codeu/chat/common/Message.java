@@ -91,6 +91,14 @@ public final class Message {
 	  return id.toString();
   }
   
+  public String getNextUUID() {
+	  return next.toString();
+  }
+  
+  public String getPreviousUUID() {
+	  return previous.toString();
+  }
+  
   public String getAuthorUUID() {
 	  return author.toString();
   }

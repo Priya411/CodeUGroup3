@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import codeu.chat.common.ConversationHeader;
+import codeu.chat.common.ConversationPayload;
 import codeu.chat.common.Message;
 import codeu.chat.common.User;
 
@@ -68,7 +69,7 @@ public final class JSON {
 	 * @param arrayName
 	 *            Given array to save obj in
 	 */
-	private void save(Object obj, String arrayName) {
+	private void save(Object obj, String arrayName, String UUID) {
 		final ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
 				false);
@@ -98,8 +99,33 @@ public final class JSON {
 			fileNode = createNodeWithBlankArrays();
 		}
 		// fetch the requested array and append the new object
-		final ArrayNode usersArrayNode = (ArrayNode) fileNode.path(arrayName);
-		usersArrayNode.addPOJO(obj);
+		final ArrayNode requestedArrayNode = (ArrayNode) fileNode.path(arrayName);
+		int index = 0;
+		boolean isAlreadyPresent = false;
+		// loop through to check that there are no same uuid already saved 
+		for (JsonNode curObj : requestedArrayNode ) {
+			if (UUID.equals(curObj.get("uuid").asText())) {
+				System.out.println("Found same UUID, updating existing object");
+				// if payload, keep same data, just added first and last
+				if (obj instanceof ConversationPayload) {
+					ObjectNode nodeToSave = mapper.createObjectNode();
+					nodeToSave.setAll((ObjectNode)curObj);
+					nodeToSave.put("firstMessageUUID", ((ConversationPayload)obj).firstMessage.toString());
+					nodeToSave.put("lastMessageUUID", ((ConversationPayload)obj).lastMessage.toString());
+					requestedArrayNode.set(index, nodeToSave);
+				}else {
+					// if anything else, just rewrite with new version of object 
+					JsonNode nodeToSave = mapper.convertValue(obj, JsonNode.class);
+					requestedArrayNode.set(index, nodeToSave);
+				}
+				isAlreadyPresent = true;
+			}
+			index++;
+		}
+		if (!isAlreadyPresent) {
+			System.out.println("Adding for first itme");
+			requestedArrayNode.addPOJO(obj);
+		}
 		// save to the file
 		ObjectWriter writer = mapper.writer(new DefaultPrettyPrinter());
 		try {
@@ -128,7 +154,7 @@ public final class JSON {
 	 */
 	public void save(User user) {
 		// save the object user into the array "users"
-		save(user, "users");
+		save(user, "users", user.getUUID());
 	}
 
 	/**
@@ -138,7 +164,7 @@ public final class JSON {
 	 */
 	public void save(Message message) {
 		// save the object message into the array "messages"
-		save(message, "messages");
+		save(message, "messages", message.getUUID());
 	}
 
 	/**
@@ -148,7 +174,15 @@ public final class JSON {
 	 */
 	public void save(ConversationHeader conversation) {
 		// save the object conversation into the array "conversations"
-		save(conversation, "conversations");
+		save(conversation, "conversations", conversation.getUUID());
+	}
+	
+	/** 
+	 * 
+	 * @return
+	 */
+	public void save(ConversationPayload foundConversation) {
+		save(foundConversation, "conversations", foundConversation.id.toString());
 	}
 	
     public Model createModelForServer()
@@ -336,4 +370,5 @@ public final class JSON {
        }
         return model;
     }
+
 }

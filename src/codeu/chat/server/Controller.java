@@ -66,7 +66,7 @@ public final class Controller implements RawController, BasicController {
 
       message = new Message(id, Uuid.NULL, Uuid.NULL, creationTime, author, body);
       model.add(message);
-      new JSON().save(message);
+      
       
       LOG.info("Message added: %s", message.id);
 
@@ -82,6 +82,8 @@ public final class Controller implements RawController, BasicController {
       } else {
         final Message lastMessage = model.messageById().first(foundConversation.lastMessage);
         lastMessage.next = message.id;
+        new JSON().save(lastMessage);
+        
       }
 
       // If the first message points to NULL it means that the conversation was empty and that
@@ -96,8 +98,12 @@ public final class Controller implements RawController, BasicController {
       // Update the conversation to point to the new last message as it has changed.
 
       foundConversation.lastMessage = message.id;
+      
+      new JSON().save(foundConversation);
+      new JSON().save(message);
     }
 
+    
     return message;
   }
 

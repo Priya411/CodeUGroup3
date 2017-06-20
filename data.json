@@ -1,28 +1,44 @@
 {
   "users" : [ {
-    "name" : "Krager",
-    "uuid" : "1.4294824721",
-    "creationTime" : "17-Jun-2017 12:48:58.645"
-  }, {
-    "name" : "Krager2",
-    "uuid" : "1.1799830093",
-    "creationTime" : "17-Jun-2017 12:49:05.315"
+    "name" : "K",
+    "uuid" : "1.495319334",
+    "creationTime" : 1497935696951
   } ],
   "conversations" : [ {
-    "title" : "Talks",
-    "ownerUUID" : "1.4294824721",
-    "uuid" : "1.1365912473",
-    "creationTime" : "17-Jun-2017 12:49:15.608"
+    "title" : "T",
+    "uuid" : "1.3394057727",
+    "ownerUUID" : "1.495319334",
+    "creationTime" : 1497935701083,
+    "firstMessageUUID" : "1.3350517446",
+    "lastMessageUUID" : "1.1516759239"
   } ],
   "messages" : [ {
-    "content" : "HOWDY ADSKFDAFASF",
-    "authorUUID" : "1.4294824721",
-    "uuid" : "1.1998496488",
-    "creationTime" : "17-Jun-2017 12:49:23.617"
+    "content" : "m1",
+    "uuid" : "1.3350517446",
+    "nextUUID" : "1.3548245186",
+    "previousUUID" : "0",
+    "authorUUID" : "1.495319334",
+    "creationTime" : 1497935703101
   }, {
-    "content" : "More",
-    "authorUUID" : "1.4294824721",
-    "uuid" : "1.1552272612",
-    "creationTime" : "17-Jun-2017 12:49:30.049"
+    "content" : "m2",
+    "uuid" : "1.3548245186",
+    "nextUUID" : "1.2992919775",
+    "previousUUID" : "0",
+    "authorUUID" : "1.495319334",
+    "creationTime" : 1497935705140
+  }, {
+    "content" : "m3",
+    "uuid" : "1.2992919775",
+    "nextUUID" : "1.1516759239",
+    "previousUUID" : "0",
+    "authorUUID" : "1.495319334",
+    "creationTime" : 1497935707138
+  }, {
+    "content" : "m4",
+    "uuid" : "1.1516759239",
+    "nextUUID" : "0",
+    "previousUUID" : "0",
+    "authorUUID" : "1.495319334",
+    "creationTime" : 1497935709043
   } ]
 }
