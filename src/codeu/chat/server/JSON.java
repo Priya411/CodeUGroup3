@@ -108,6 +108,7 @@ public final class JSON {
 				System.out.println("Found same UUID, updating existing object");
 				// if payload, keep same data, just added first and last
 				if (obj instanceof ConversationPayload) {
+					
 					ObjectNode nodeToSave = mapper.createObjectNode();
 					nodeToSave.setAll((ObjectNode)curObj);
 					nodeToSave.put("firstMessageUUID", ((ConversationPayload)obj).firstMessage.toString());
