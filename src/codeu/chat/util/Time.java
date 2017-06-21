@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
 
 public final class Time implements Comparable<Time> {
 
@@ -53,6 +54,11 @@ public final class Time implements Comparable<Time> {
 		return date.compareTo(other.date);
 	}
 
+	@Override
+	public boolean equals (Object toCompare)
+	{
+		return this.toString().equals(((Time)(toCompare)).toString());
+	}
 	public boolean inRange(Time start, Time end) {
 		return this.compareTo(start) >= 0 && this.compareTo(end) <= 0;
 	}
@@ -86,5 +92,11 @@ public final class Time implements Comparable<Time> {
 		return converted; 
 	}
 
+	@Override
+	public int hashCode() { return hash(this); }
 
+	private static int hash(Time time) {
+		int hash = (int)(Objects.hash(time.inMs()));
+		return hash;
+	}
 }

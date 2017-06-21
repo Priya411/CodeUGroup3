@@ -539,5 +539,3 @@ public final class Chat {
 		return panel;
 	}
 }
-
-
