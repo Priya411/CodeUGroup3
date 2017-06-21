@@ -92,6 +92,14 @@ public final class Model {
     conversationPayloadById.insert(conversation.id, new ConversationPayload(conversation.id));
   }
 
+  public void add(ConversationHeader conversation, ConversationPayload conversationPayLoad) {
+    conversationById.insert(conversation.id, conversation);
+    conversationByTime.insert(conversation.creation, conversation);
+    conversationByText.insert(conversation.title, conversation);
+    conversationPayloadById.insert(conversation.id, conversationPayLoad);
+  }
+
+
   public StoreAccessor<Uuid, ConversationHeader> conversationById() {
     return conversationById;
   }

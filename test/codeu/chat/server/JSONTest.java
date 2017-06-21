@@ -2,6 +2,7 @@ package codeu.chat.server;
 import static org.junit.Assert.*;
 
 import codeu.chat.common.ConversationHeader;
+import codeu.chat.common.ConversationPayload;
 import codeu.chat.common.Message;
 import codeu.chat.common.ServerInfo;
 import codeu.chat.common.User;
@@ -30,9 +31,8 @@ public class JSONTest {
         JSON log = new JSON();
         Model expected = new Model();
         expected.add(new User(createUuid("1.1074501217"), "Krager", Time.fromMs(4309509)));
-        expected.add(new ConversationHeader(createUuid("1.3959833157"), createUuid("1.1074501217"),  Time.fromMs(59408509), "Chat1"));
-        expected.add(new Message(createUuid("1.3928689216"), Uuid.NULL, Uuid.NULL, Time.fromMs(49584908), createUuid("1.1074501217"),   "I'm so alone"));
-
+        expected.add(new ConversationHeader(createUuid("1.3959833157"), createUuid("1.1074501217"),  Time.fromMs(59408509), "Chat1"), new ConversationPayload( createUuid("1.3959833157"), createUuid("1.3350517446"), createUuid("1.1516759239")));
+        expected.add(new Message(createUuid("1.3928689216"), createUuid("1.1516759239"), createUuid("0"), Time.fromMs(49584908), createUuid("1.1074501217"),   "I'm so alone"));
         try {
             // Path used by Priyanka:
             model = log.readFromFile("/Users/HMCLoaner/Desktop/CodeU/test/codeu/chat/server/input.json");
@@ -91,11 +91,11 @@ public class JSONTest {
         Model expected = new Model();
         expected.add(new User(createUuid("1.1074501217"), "Krager", Time.fromMs(4098590)));
         expected.add(new User(createUuid("1.3566231147"), "FakeUserName1234", Time.fromMs(48574)));
-        expected.add(new ConversationHeader(createUuid("1.3959833157"), createUuid("1.1074501217"),  Time.fromMs(98094), "Chat1"));
-        expected.add(new ConversationHeader(createUuid("1.3959833157"), createUuid("1.1074501217"),  Time.fromMs(59485), "Chat2"));
-        expected.add(new Message(createUuid("1.3928689216"), Uuid.NULL, Uuid.NULL, Time.fromMs(49589), createUuid("1.1074501217"),   "I'm so alone"));
-        expected.add(new Message(createUuid("1.2016074193"), Uuid.NULL, Uuid.NULL, Time.fromMs(9485), createUuid("1.1074501217"),   "I need friends"));
-        expected.add(new Message(createUuid("1.384992272"), Uuid.NULL, Uuid.NULL, Time.fromMs(5098), createUuid("1.1074501217"),   "Julia'sFixesAreNotImplementedYetCanYouTell?"));
+        expected.add(new ConversationHeader(createUuid("1.3959833157"), createUuid("1.1074501217"),  Time.fromMs(98094), "Chat1"), new ConversationPayload( createUuid("1.3959833157"), createUuid("1.3350517446"), createUuid("1.1516759239")));
+        expected.add(new ConversationHeader(createUuid("1.3959833157"), createUuid("1.1074501217"),  Time.fromMs(59485), "Chat2"), new ConversationPayload( createUuid("1.3959833157"), createUuid("1.3350517446"), createUuid("1.1516759239")));
+        expected.add(new Message(createUuid("1.3928689216"), createUuid("1.1516759239"), createUuid("0"), Time.fromMs(49589), createUuid("1.1074501217"),   "I'm so alone"));
+        expected.add(new Message(createUuid("1.2016074193"), createUuid("1.1516759239"), createUuid("0"), Time.fromMs(9485), createUuid("1.1074501217"),   "I need friends"));
+        expected.add(new Message(createUuid("1.384992272"), createUuid("1.1516759239"), createUuid("0"), Time.fromMs(5098), createUuid("1.1074501217"),   "Julia'sFixesAreNotImplementedYetCanYouTell?"));
 
         try {
             // Path used by Priyanka:
@@ -153,6 +153,7 @@ public class JSONTest {
                 compare(model.userByTime().all().iterator(), expected.userByTime().all().iterator()), false);
     }
 
+    @Test
     public void errorThrown() {
         // This function tests is an error is thrown properly if the file can't be properly read
         JSON log = new JSON();
@@ -168,6 +169,33 @@ public class JSONTest {
             errorThrown = true;
         }
         assertTrue(errorThrown);
+    }
+
+    @Test
+    public void orderDoesntMatter() {
+        // This function tests if the JSON reader is working if there is a JSON with multiple types of each object in the file
+        // This also has the fields in a variety of orders to make sure that the order doesn't affect it.
+        JSON log = new JSON();
+        Model model = new Model();
+        Model expected = new Model();
+        expected.add(new User(createUuid("1.1074501217"), "Krager", Time.fromMs(4098590)));
+        expected.add(new User(createUuid("1.3566231147"), "FakeUserName1234", Time.fromMs(48574)));
+        expected.add(new ConversationHeader(createUuid("1.3959833157"), createUuid("1.1074501217"),  Time.fromMs(98094), "Chat1"), new ConversationPayload( createUuid("1.3959833157"), createUuid("1.3350517446"), createUuid("1.1516759239")));
+        expected.add(new ConversationHeader(createUuid("1.3959833157"), createUuid("1.1074501217"),  Time.fromMs(59485), "Chat2"), new ConversationPayload( createUuid("1.3959833157"), createUuid("1.3350517446"), createUuid("1.1516759239")));
+        expected.add(new Message(createUuid("1.3928689216"), createUuid("1.1516759239"), createUuid("0"), Time.fromMs(49589), createUuid("1.1074501217"),   "I'm so alone"));
+        expected.add(new Message(createUuid("1.2016074193"), createUuid("1.1516759239"), createUuid("0"), Time.fromMs(9485), createUuid("1.1074501217"),   "I need friends"));
+        expected.add(new Message(createUuid("1.384992272"), createUuid("1.1516759239"), createUuid("0"), Time.fromMs(5098), createUuid("1.1074501217"),   "Julia'sFixesAreNotImplementedYetCanYouTell?"));
+
+        try {
+            // Path used by Priyanka:
+            model = log.readFromFile("/Users/HMCLoaner/Desktop/CodeU/test/codeu/chat/server/input6.json");
+            // The path can vary from device, so this may not compile if it's not the correct path for your project
+            // set up. A suggested path is as follows
+            //model = log.readFromFile("CodeU/test/codeu/chat/server/input4.json");
+        } catch (IOException e) {
+            System.out.println("File not handled properly");
+        }
+        compareModels(model,expected);
     }
 
     public Uuid createUuid(String id)

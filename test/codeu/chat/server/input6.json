@@ -1,7 +1,7 @@
 {
   "users" : [ {
-    "name" : "Krager",
     "uuid" : "1.1074501217",
+    "name" : "Krager",
     "creationTime" : 4098590
   }, {
     "name" : "FakeUserName1234",
@@ -18,29 +18,29 @@
   }, {
     "title" : "Chat2",
     "uuid" : "1.3959833157",
-    "ownerUUID" : "1.1074501217",
     "creationTime" : 59485,
+    "ownerUUID" : "1.1074501217",
     "firstMessageUUID" : "1.3350517446",
     "lastMessageUUID" : "1.1516759239"
   } ],
   "messages" : [ {
     "content" : "I'm so alone",
-    "uuid" : "1.3928689216",
     "authorUUID" : "1.1074501217",
     "creationTime" : 49589,
+    "uuid" : "1.3928689216",
     "nextUUID" : "1.1516759239",
     "previousUUID" : "0"
   }, {
+    "authorUUID" : "1.1074501217",
     "content" : "I need friends",
     "uuid" : "1.2016074193",
-    "authorUUID" : "1.1074501217",
     "creationTime" : 9485,
     "nextUUID" : "1.1516759239",
     "previousUUID" : "0"
   }, {
-    "content" : "Julia'sFixesAreNotImplementedYetCanYouTell?",
     "uuid" : "1.384992272",
     "authorUUID" : "1.1074501217",
+    "content" : "Julia'sFixesAreNotImplementedYetCanYouTell?",
     "creationTime" : 5098,
     "nextUUID" : "1.1516759239",
     "previousUUID" : "0"
