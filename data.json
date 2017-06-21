@@ -3,6 +3,10 @@
     "name" : "K",
     "uuid" : "1.2508628340",
     "creationTime" : 1498009702116
+  }, {
+    "name" : "K",
+    "uuid" : "1.243934420",
+    "creationTime" : 1498012756173
   } ],
   "conversations" : [ {
     "title" : "T",
@@ -10,7 +14,7 @@
     "ownerUUID" : "1.2508628340",
     "creationTime" : 1498009718225,
     "firstMessageUUID" : "1.2771886907",
-    "lastMessageUUID" : "1.2570859711"
+    "lastMessageUUID" : "1.730652018"
   } ],
   "messages" : [ {
     "content" : "M1",
@@ -36,9 +40,16 @@
   }, {
     "content" : "M4",
     "uuid" : "1.2570859711",
-    "nextUUID" : "0",
     "previousUUID" : "0",
     "authorUUID" : "1.2508628340",
+    "nextUUID" : "1.730652018",
     "creationTime" : 1498009732572
+  }, {
+    "content" : "M5",
+    "uuid" : "1.730652018",
+    "previousUUID" : "0",
+    "authorUUID" : "1.2508628340",
+    "nextUUID" : "0",
+    "creationTime" : 1498012782727
   } ]
 }
