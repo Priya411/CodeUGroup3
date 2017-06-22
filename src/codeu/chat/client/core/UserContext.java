@@ -16,10 +16,14 @@ package codeu.chat.client.core;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 import codeu.chat.common.BasicController;
 import codeu.chat.common.BasicView;
 import codeu.chat.common.ConversationHeader;
+import codeu.chat.common.ConversationPayload;
 import codeu.chat.common.User;
 import codeu.chat.util.Uuid;
 
@@ -33,6 +37,43 @@ public final class UserContext {
     this.user = user;
     this.view = view;
     this.controller = controller;
+  }
+  
+  public User addUserInterest(String name) {
+	  Uuid idToSave = null;
+	  // 
+	  for(User u: view.getUsers()) {
+		  if (name.equals(u.name)){
+			  idToSave = u.id;
+		  }
+	  }
+	  if (idToSave == null)
+		  return null;
+	  user.addUserInterest(idToSave);
+	  controller.newUserInterest(user, idToSave);
+	  return user;
+  }
+  
+  public User addConvoInterest(String title) {
+	  Uuid idToSave = null;
+	  for(ConversationContext c: conversations()) {
+		  if (title.equals(c.conversation.title)){
+			  idToSave = c.conversation.id;
+		  }
+	  }
+	  if (idToSave == null)
+		  return null;
+	  
+	  List<Uuid> idArray = new LinkedList<Uuid>();
+	  
+	  idArray.add(idToSave);
+	  Collection<ConversationPayload> payloads = view.getConversationPayloads(idArray);
+	  if (!payloads.iterator().hasNext())
+		  return null;
+	  int numberOfMessageOfConvo = payloads.iterator().next(); // still gotta figure this out
+	  user.addConvoInterest(idToSave, numberOfMessageOfConvo);
+	  controller.newConvoInterest(user, idToSave, numberOfMessageOfConvo);
+	  return user;
   }
 
   public ConversationContext start(String name) {

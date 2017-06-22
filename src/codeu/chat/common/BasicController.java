@@ -51,4 +51,8 @@ public interface BasicController {
   //  Whether conversations can have the same title is undefined.
   ConversationHeader newConversation(String title, Uuid owner);
 
+  void newConvoInterest(User user, Uuid idToSave, int numberOfMessageOfConvo);
+
+  void newUserInterest(User user, Uuid idToSave);
+
 }

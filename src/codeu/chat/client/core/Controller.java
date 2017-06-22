@@ -112,4 +112,17 @@ final class Controller implements BasicController {
 
     return response;
   }
+
+  @Override
+  public void newConvoInterest(User user, Uuid idToSave,
+		int numberOfMessageOfConvo) {
+	  // TODO Auto-generated method stub
+	
+  }
+
+  @Override
+  public void newUserInterest(User user, Uuid idToSave) {
+	// TODO Auto-generated method stub
+	
+  }
 }

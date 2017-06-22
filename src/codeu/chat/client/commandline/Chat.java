@@ -423,6 +423,31 @@ public final class Chat {
 				return null;
 			}
 		});
+		
+		
+		// Interest commands
+		// 
+		panel.register("i-add-user", new Panel.Command() {
+			public void invoke(List<String> args) {
+				
+				if (user.addUserInterest(args.get(0)) == null){
+					System.out.println("Oh no! Something terrible has happened! Try again");
+				}else {
+					System.out.println("Thanks for expressing your interest!");
+				}
+			}
+		});
+		
+		panel.register("i-add-convo", new Panel.Command() {
+			public void invoke(List<String> args) {
+				if (user.addConvoInterest(args.get(0)) == null){
+					System.out.println("Oh no! Something terrible has happened! Try again");
+				}else {
+					System.out.println("Thanks for expressing your interest!");
+				}
+			}
+			
+		});
 
 		// INFO
 		//
