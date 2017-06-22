@@ -1,26 +1,35 @@
 package codeu.chat.server;
-import static org.junit.Assert.*;
 
+import static org.junit.Assert.*;
 import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.ConversationPayload;
 import codeu.chat.common.Message;
 import codeu.chat.common.ServerInfo;
 import codeu.chat.common.User;
 import codeu.chat.util.Uuid;
+
 import org.junit.Ignore;
 import org.junit.Test;
+
 import static org.junit.Assert.*;
+
 import java.io.IOException;
+
 import codeu.chat.util.store.Store;
+
 import java.lang.Iterable;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Iterator;
+import java.util.List;
+
 import codeu.chat.util.Time;
 
 /**
- * This class tests the JSON class in the server folder
- * The purpose of this test is to ensure that the user is able to
- * access the transaction log and that the transaction log is
- * being saved properly.
+ * This class tests the JSON class in the server folder The purpose of this test
+ * is to ensure that the user is able to access the transaction log and that the
+ * transaction log is being saved properly.
  */
 public class JSONTest {
 
@@ -243,5 +252,56 @@ public class JSONTest {
         assertEquals(
                 compare(model.messageByTime().all().iterator(), expected.messageByTime().all().iterator()), true);
     }
+    
+    // Writing Tests
+ 	private String stringRepresentationOf(String fileName) throws IOException {
+ 		String toReturn = "";
+ 		int index = 0;
+ 		List<String> lines = Files.readAllLines(Paths.get("", fileName));
+ 		for (String s: lines) {
+ 			// if not last item, add \n after
+ 			if (index != lines.size() - 1) 
+ 				toReturn += s +"\n";
+ 			else
+ 				toReturn += s;
+ 			index++;
+ 		}
+ 		return toReturn;
+ 	}
 
+	@Test
+	public void writeBlankArray() {
+		JSON log = new JSON("test.json");
+		log.clearFile();
+		// just accept this is valid JSON
+		String expected = "{\n  \"users\" : [ ],\n  \"conversations\" : [ ],\n  \"messages\" : [ ]\n}";
+		try {
+			assertEquals(stringRepresentationOf("test.json"), expected);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void writeObjects() {
+		JSON log = new JSON("test.json");
+		log.clearFile();
+		log.save(new User(createUuid("1.1074501217"), "Krager", Time
+				.fromMs(4309509)));
+		log.save(new Message(createUuid("1.3928689216"), Uuid.NULL,
+				Uuid.NULL, Time.fromMs(49584908), createUuid("1.1074501217"),
+				"I'm so alone"));
+		log.save(new ConversationHeader(createUuid("1.3959833157"),
+				createUuid("1.1074501217"), Time.fromMs(59408509), "Chat1"));
+		// just accept this is valid JSON
+		String expected = "{\n  \"users\" : [ {\n    \"name\" : \"Krager\",\n    \"uuid\" : \"1.1074501217\",\n    \"creationTime\" : \"31-Dec-1969 17:11:49.509\"\n  } ],\n  \"conversations\" : [ {\n    \"title\" : \"Chat1\",\n"
+				+ "    \"uuid\" : \"1.3959833157\",\n    \"ownerUUID\" : \"1.1074501217\",\n    \"creationTime\" : \"01-Jan-1970 08:30:08.509\"\n  } ],\n"
+				+ "  \"messages\" : [ {\n    \"content\" : \"I'm so alone\",\n    \"authorUUID\" : \"1.1074501217\",\n    \"uuid\" : \"1.3928689216\",\n    \"creationTime\" : \"01-Jan-1970 05:46:24.908\"\n  } ]\n}";
+		try {
+			System.out.println(stringRepresentationOf("test.json"));
+			assertEquals(stringRepresentationOf("test.json"), expected);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

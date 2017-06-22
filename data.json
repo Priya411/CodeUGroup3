@@ -1,0 +1,55 @@
+{
+  "users" : [ {
+    "name" : "K",
+    "uuid" : "1.2508628340",
+    "creationTime" : 1498009702116
+  }, {
+    "name" : "K",
+    "uuid" : "1.243934420",
+    "creationTime" : 1498012756173
+  } ],
+  "conversations" : [ {
+    "title" : "T",
+    "uuid" : "1.3401638043",
+    "ownerUUID" : "1.2508628340",
+    "creationTime" : 1498009718225,
+    "firstMessageUUID" : "1.2771886907",
+    "lastMessageUUID" : "1.730652018"
+  } ],
+  "messages" : [ {
+    "content" : "M1",
+    "uuid" : "1.2771886907",
+    "nextUUID" : "1.1677697813",
+    "previousUUID" : "0",
+    "authorUUID" : "1.2508628340",
+    "creationTime" : 1498009722944
+  }, {
+    "content" : "M2",
+    "uuid" : "1.1677697813",
+    "nextUUID" : "1.3893534555",
+    "previousUUID" : "0",
+    "authorUUID" : "1.2508628340",
+    "creationTime" : 1498009728888
+  }, {
+    "content" : "M3",
+    "uuid" : "1.3893534555",
+    "nextUUID" : "1.2570859711",
+    "previousUUID" : "0",
+    "authorUUID" : "1.2508628340",
+    "creationTime" : 1498009730673
+  }, {
+    "content" : "M4",
+    "uuid" : "1.2570859711",
+    "previousUUID" : "0",
+    "authorUUID" : "1.2508628340",
+    "nextUUID" : "1.730652018",
+    "creationTime" : 1498009732572
+  }, {
+    "content" : "M5",
+    "uuid" : "1.730652018",
+    "previousUUID" : "0",
+    "authorUUID" : "1.2508628340",
+    "nextUUID" : "0",
+    "creationTime" : 1498012782727
+  } ]
+}

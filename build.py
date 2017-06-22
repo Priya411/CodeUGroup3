@@ -45,7 +45,10 @@ CONFIG = {
   'src' : [ 'src', 'test' ],
   'libraries' : [
     'third_party/junit4-4.11.jar',
-    'third_party/hamcrest-core-1.3.jar'
+    'third_party/hamcrest-core-1.3.jar',
+    'third_party/jackson-core-2.9.0.pr3.jar',
+    'third_party/jackson-databind-2.9.0.pr3.jar',
+    'third_party/jackson-annotations-2.9.0.pr3.jar'
   ],
   'separators' : {
     'nt' : ';',
