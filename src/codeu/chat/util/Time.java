@@ -68,6 +68,17 @@ public final class Time implements Comparable<Time> {
 		return formatter.format(date);
 	}
 
+	//time in just hours and minutes
+  	public final String HMtime(){
+  		try { 
+  			return formatter.format(date).substring(12,17); 
+  		}
+  		catch(Exception e) { 
+  			System.out.println("Invalid Input: Date is not valid");
+  		}
+  		return null; 
+  	} 
+
 	public static Time fromMs(long ms) { return new Time(ms); }
 
 	public static Time now() { return Time.fromMs(System.currentTimeMillis()); }
