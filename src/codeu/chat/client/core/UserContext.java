@@ -41,7 +41,7 @@ public final class UserContext {
   
   public User addUserInterest(String name) {
 	  Uuid idToSave = null;
-	  // 
+	  // find the user with the same name as the one given 
 	  for(User u: view.getUsers()) {
 		  if (name.equals(u.name)){
 			  idToSave = u.id;
@@ -49,7 +49,9 @@ public final class UserContext {
 	  }
 	  if (idToSave == null)
 		  return null;
+	  // adds to the current user object stored on client
 	  user.addUserInterest(idToSave);
+	  // sends info to model to be saved also
 	  controller.newUserInterest(user, idToSave);
 	  return user;
   }
@@ -70,10 +72,40 @@ public final class UserContext {
 	  Collection<ConversationPayload> payloads = view.getConversationPayloads(idArray);
 	  if (!payloads.iterator().hasNext())
 		  return null;
-	  int numberOfMessageOfConvo = payloads.iterator().next(); // still gotta figure this out
+	  ConversationPayload convoPayload = payloads.iterator().next(); // still gotta figure out how to get message count
+	  int numberOfMessageOfConvo = convoPayload.getNumberOfMessages();
 	  user.addConvoInterest(idToSave, numberOfMessageOfConvo);
 	  controller.newConvoInterest(user, idToSave, numberOfMessageOfConvo);
 	  return user;
+  }
+  
+  public Object removeUserInterest(String name) {
+	  Uuid idToSave = null;
+	  // find the user with the same name as the one given 
+	  for(User u: view.getUsers()) {
+		  if (name.equals(u.name)){
+			  idToSave = u.id;
+		  }
+	  }
+	  if (idToSave == null)
+		  return null;
+	  user.removeUserInterest(idToSave);
+	  controller.removeUserInterest(user, idToSave);
+	  return user;
+  }
+  
+  public Object removeConvoInterest(String title) {
+	  Uuid idToRemove = null;
+	  for(ConversationContext c: conversations()) {
+		  if (title.equals(c.conversation.title)){
+			  idToRemove = c.conversation.id;
+		  }
+	  }
+	  if (idToRemove == null)
+		  return null;
+	  user.removeConvoInterest(idToRemove);
+	  controller.removeConvoInterest(user, idToRemove);
+      return user;
   }
 
   public ConversationContext start(String name) {

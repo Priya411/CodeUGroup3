@@ -112,4 +112,13 @@ public final class User {
   public void addConvoInterest(Uuid id, int messagesInConvoAtTimeOfCreation) {
 	     
   }
+  
+  public void removeUserInterest(Uuid id) {
+	     
+  }
+  
+  public void removeConvoInterest(Uuid id) {
+	     
+  }
+  
 }

@@ -54,5 +54,9 @@ public interface BasicController {
   void newConvoInterest(User user, Uuid idToSave, int numberOfMessageOfConvo);
 
   void newUserInterest(User user, Uuid idToSave);
+  
+  void removeConvoInterest(User user, Uuid idToSave);
+
+  void removeUserInterest(User user, Uuid idToSave);
 
 }

@@ -115,14 +115,79 @@ final class Controller implements BasicController {
 
   @Override
   public void newConvoInterest(User user, Uuid idToSave,
-		int numberOfMessageOfConvo) {
-	  // TODO Auto-generated method stub
-	
+	int numberOfMessagesInConvo) {
+	try (final Connection connection = source.connect()) {
+
+      Serializers.INTEGER.write(connection.out(), NetworkCode.NEW_CONVO_INTEREST_REQUEST);
+	  Uuid.SERIALIZER.write(connection.out(), user.id);
+	  Uuid.SERIALIZER.write(connection.out(), idToSave);
+      Serializers.INTEGER.write(connection.out(), numberOfMessagesInConvo);
+
+      if (Serializers.INTEGER.read(connection.in()) == NetworkCode.NEW_CONVO_INTEREST_RESPONSE) {
+	    // just acknowledge request
+	  } else {
+	    LOG.error("Response from server failed.");
+	  }
+	} catch (Exception ex) {
+	  System.out.println("ERROR: Exception during call on server. Check log for details.");
+	  LOG.error(ex, "Exception during call on server.");
+	}
   }
 
   @Override
   public void newUserInterest(User user, Uuid idToSave) {
-	// TODO Auto-generated method stub
+	try (final Connection connection = source.connect()) {
+
+      Serializers.INTEGER.write(connection.out(), NetworkCode.NEW_USER_INTEREST_REQUEST);
+	  Uuid.SERIALIZER.write(connection.out(), user.id);
+      Uuid.SERIALIZER.write(connection.out(), idToSave);
+
+      if (Serializers.INTEGER.read(connection.in()) == NetworkCode.NEW_USER_INTEREST_RESPONSE) {
+    	// just acknowledge request
+      } else {
+        LOG.error("Response from server failed.");
+      }
+    } catch (Exception ex) {
+	  System.out.println("ERROR: Exception during call on server. Check log for details.");
+	  LOG.error(ex, "Exception during call on server.");
+    }
 	
+  }
+
+  @Override
+  public void removeConvoInterest(User user, Uuid idToSave) {
+	  try (final Connection connection = source.connect()) {
+
+		Serializers.INTEGER.write(connection.out(), NetworkCode.REM_CONVO_INTEREST_REQUEST);
+        Uuid.SERIALIZER.write(connection.out(), user.id);
+	    Uuid.SERIALIZER.write(connection.out(), idToSave);
+
+		if (Serializers.INTEGER.read(connection.in()) == NetworkCode.REM_CONVO_INTEREST_RESPONSE) {
+		  // just acknowledge request
+		} else {
+		  LOG.error("Response from server failed.");
+		}
+	  } catch (Exception ex) {
+		System.out.println("ERROR: Exception during call on server. Check log for details.");
+		LOG.error(ex, "Exception during call on server.");
+	  }
+  }
+
+  @Override
+  public void removeUserInterest(User user, Uuid idToSave) {
+	try (final Connection connection = source.connect()) {
+
+	  Serializers.INTEGER.write(connection.out(), NetworkCode.REM_CONVO_INTEREST_REQUEST);
+      Uuid.SERIALIZER.write(connection.out(), user.id);
+	  Uuid.SERIALIZER.write(connection.out(), idToSave);
+  	  if (Serializers.INTEGER.read(connection.in()) == NetworkCode.REM_CONVO_INTEREST_RESPONSE) {
+	    // just acknowledge request
+	  } else {
+	    LOG.error("Response from server failed.");
+	  }
+	} catch (Exception ex) {
+      System.out.println("ERROR: Exception during call on server. Check log for details.");
+	  LOG.error(ex, "Exception during call on server.");
+	}	
   }
 }

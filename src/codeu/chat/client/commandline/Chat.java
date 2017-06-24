@@ -427,6 +427,7 @@ public final class Chat {
 		
 		// Interest commands
 		// 
+		// Add
 		panel.register("i-add-user", new Panel.Command() {
 			public void invoke(List<String> args) {
 				
@@ -446,7 +447,27 @@ public final class Chat {
 					System.out.println("Thanks for expressing your interest!");
 				}
 			}
-			
+		});
+		// Remove
+		panel.register("i-remove-user", new Panel.Command() {
+			public void invoke(List<String> args) {
+				
+				if (user.removeUserInterest(args.get(0)) == null){
+					System.out.println("Oh no! Something terrible has happened! Try again");
+				}else {
+					System.out.println("Thanks for expressing your interest!");
+				}
+			}
+		});
+		
+		panel.register("i-remove-convo", new Panel.Command() {
+			public void invoke(List<String> args) {
+				if (user.removeConvoInterest(args.get(0)) == null){
+					System.out.println("Oh no! Something terrible has happened! Try again");
+				}else {
+					System.out.println("Thanks for expressing your interest!");
+				}
+			}
 		});
 
 		// INFO

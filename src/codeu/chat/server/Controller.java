@@ -178,4 +178,29 @@ public final class Controller implements RawController, BasicController {
 
   private boolean isIdFree(Uuid id) { return !isIdInUse(id); }
 
+  @Override
+  public void newConvoInterest(User user, Uuid idToSave,
+		  int numberOfMessageOfConvo) {
+	  // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public void newUserInterest(User user, Uuid idToSave) {
+	  // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public void removeConvoInterest(User user, Uuid idToSave) {
+	  // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public void removeUserInterest(User user, Uuid idToSave) {
+	  // TODO Auto-generated method stub
+
+  }
+
 }
