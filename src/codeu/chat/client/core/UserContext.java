@@ -15,7 +15,10 @@
 package codeu.chat.client.core;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.UUID;
 
 import codeu.chat.common.BasicController;
 import codeu.chat.common.BasicView;
@@ -52,5 +55,12 @@ public final class UserContext {
     }
 
     return all;
+  }
+  
+
+  // USERstatusUpdate()
+  public HashMap<Uuid, ArrayList<ArrayList<String>>> USERstatusUpdate(){ 
+	  HashMap<Uuid, ArrayList<ArrayList<String>>> userUpdates = this.user.USERstatusUpdate(this.conversations()); 
+	  return userUpdates; 
   }
 }
