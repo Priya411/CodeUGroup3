@@ -105,7 +105,7 @@ public final class Chat {
 					conversation.conversation.creation.HMtime(), conversation.conversation.id);
 				
 				for (MessageContext message = conversation.firstMessage(); message != null; message = message.next()) {
-					System.out.format("\nMESSAGE: %s | %s: \"%s\" || UUID: %s \n", 
+					System.out.format("\tMESSAGE: %s | %s: \"%s\" || UUID: %s \n", 
 						message.message.creation.HMtime(), allUsers.get(message.message.author),  
 						message.message.content, message.message.id);	
 					LOG.info("\nMESSAGE: %s | %s: \"%s\" || UUID: %s \n", 
@@ -437,6 +437,29 @@ public final class Chat {
 				System.out.format("  Id   : UUID:%s\n", user.user.id);
 			}
 		});
+		
+//		// VIEW STATUS 
+//		// 
+//		// Allows user to see status update
+//		// A status update includes : 
+//		// 1) The number of messages that have been send in each of the user's 
+//		//    conversation interests since the last updates 
+//		// 2) A list of conversations created and conversations added to by each 
+//		//    of the user's user intersests 
+//		// 
+//		panel.register("view-status", new Panel.Command() { 
+//			@Override
+//			public void invoke(List<String> args) { 
+//				// Saving USER updates 
+//				for (user : user.userInterests)
+//			
+//				
+//				// All of the print statements to view update 
+//				System.out.println("Status Update:\n");
+//				System.out.println("Conversations:");
+//				System.out.println("Users:");
+//			}
+//		});
 
 		// Now that the panel has all its commands registered, return the panel
 		// so that it can be used.
