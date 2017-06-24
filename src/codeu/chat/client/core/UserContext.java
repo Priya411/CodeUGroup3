@@ -15,6 +15,7 @@
 package codeu.chat.client.core;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -24,6 +25,7 @@ import codeu.chat.common.BasicController;
 import codeu.chat.common.BasicView;
 import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.ConversationPayload;
+import codeu.chat.common.Message;
 import codeu.chat.common.User;
 import codeu.chat.util.Uuid;
 
@@ -49,6 +51,7 @@ public final class UserContext {
 	  }
 	  if (idToSave == null)
 		  return null;
+	  System.out.println("ID TO SAVE" + idToSave);
 	  // adds to the current user object stored on client
 	  user.addUserInterest(idToSave);
 	  // sends info to model to be saved also
@@ -57,29 +60,23 @@ public final class UserContext {
   }
   
   public User addConvoInterest(String title) {
-	  Uuid idToSave = null;
+	  ConversationContext convoToSave = null;
 	  for(ConversationContext c: conversations()) {
 		  if (title.equals(c.conversation.title)){
-			  idToSave = c.conversation.id;
-		  }
+			  convoToSave = c;
+		  }	
 	  }
-	  if (idToSave == null)
+	  if (convoToSave == null)
 		  return null;
 	  
-	  List<Uuid> idArray = new LinkedList<Uuid>();
-	  
-	  idArray.add(idToSave);
-	  Collection<ConversationPayload> payloads = view.getConversationPayloads(idArray);
-	  if (!payloads.iterator().hasNext())
-		  return null;
-	  ConversationPayload convoPayload = payloads.iterator().next(); // still gotta figure out how to get message count
-	  int numberOfMessageOfConvo = convoPayload.getNumberOfMessages();
-	  user.addConvoInterest(idToSave, numberOfMessageOfConvo);
-	  controller.newConvoInterest(user, idToSave, numberOfMessageOfConvo);
+	  int numberOfMessageOfConvo = convoToSave.getMessageCount();
+	  user.addConvoInterest(convoToSave.conversation.id, numberOfMessageOfConvo);
+	  System.out.println("ID " + convoToSave.conversation.id + " num of messages " + numberOfMessageOfConvo);
+	  controller.newConvoInterest(user, convoToSave.conversation.id, numberOfMessageOfConvo);
 	  return user;
   }
-  
-  public Object removeUserInterest(String name) {
+
+public Object removeUserInterest(String name) {
 	  Uuid idToSave = null;
 	  // find the user with the same name as the one given 
 	  for(User u: view.getUsers()) {
