@@ -333,6 +333,14 @@ public final class Chat {
 				System.out.println("  c-join <title>");
 				System.out
 						.println("    Join the conversation as the current user.");
+				System.out.println("i-add-user <name>");
+				System.out.println("Add requested user to interests");
+				System.out.println("i-add-convo <title>");
+				System.out.println("Add requested convo to interests");
+				System.out.println("i-remove-user <name>");
+				System.out.println("Removes requested user from interests");
+				System.out.println("i-remove-convo <title>");
+				System.out.println("Removes requested convo from interests");
 				System.out.println("  info");
 				System.out.println("    Display all info for the current user");
 				System.out.println("  back");
