@@ -122,7 +122,7 @@ final class Controller implements BasicController {
 	  Uuid.SERIALIZER.write(connection.out(), userId);
 	  Uuid.SERIALIZER.write(connection.out(), idToSave);
       Serializers.INTEGER.write(connection.out(), numberOfMessagesInConvo);
-
+      
       if (Serializers.INTEGER.read(connection.in()) == NetworkCode.NEW_CONVO_INTEREST_RESPONSE) {
 	    // just acknowledge request
 	  } else {
@@ -141,7 +141,6 @@ final class Controller implements BasicController {
       Serializers.INTEGER.write(connection.out(), NetworkCode.NEW_USER_INTEREST_REQUEST);
 	  Uuid.SERIALIZER.write(connection.out(), userId);
       Uuid.SERIALIZER.write(connection.out(), idToSave);
-
       if (Serializers.INTEGER.read(connection.in()) == NetworkCode.NEW_USER_INTEREST_RESPONSE) {
     	// just acknowledge request
       } else {
@@ -161,7 +160,6 @@ final class Controller implements BasicController {
 		Serializers.INTEGER.write(connection.out(), NetworkCode.REM_CONVO_INTEREST_REQUEST);
         Uuid.SERIALIZER.write(connection.out(), userId);
 	    Uuid.SERIALIZER.write(connection.out(), idToSave);
-
 		if (Serializers.INTEGER.read(connection.in()) == NetworkCode.REM_CONVO_INTEREST_RESPONSE) {
 		  // just acknowledge request
 		} else {

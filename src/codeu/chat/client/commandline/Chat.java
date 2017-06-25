@@ -333,14 +333,14 @@ public final class Chat {
 				System.out.println("  c-join <title>");
 				System.out
 						.println("    Join the conversation as the current user.");
-				System.out.println("i-add-user <name>");
-				System.out.println("Add requested user to interests");
-				System.out.println("i-add-convo <title>");
-				System.out.println("Add requested convo to interests");
-				System.out.println("i-remove-user <name>");
-				System.out.println("Removes requested user from interests");
-				System.out.println("i-remove-convo <title>");
-				System.out.println("Removes requested convo from interests");
+				System.out.println("  i-add-user <name>");
+				System.out.println("    Add requested user to interests");
+				System.out.println("  i-add-convo <title>");
+				System.out.println("    Add requested convo to interests");
+				System.out.println("  i-remove-user <name>");
+				System.out.println("    Removes requested user from interests");
+				System.out.println("  i-remove-convo <title>");
+				System.out.println("    Removes requested convo from interests");
 				System.out.println("  info");
 				System.out.println("    Display all info for the current user");
 				System.out.println("  back");
@@ -438,42 +438,61 @@ public final class Chat {
 		// Add
 		panel.register("i-add-user", new Panel.Command() {
 			public void invoke(List<String> args) {
-				
-				if (user.addUserInterest(args.get(0)) == null){
-					System.out.println("Oh no! Something terrible has happened! Try again");
+				String name = !args.isEmpty() ? String.join(" ", args).trim() : "";
+				if (!name.isEmpty()) {
+					if (user.addUserInterest(args.get(0)) == null){
+						System.out.println("Oh no! Something terrible has happened! Try again");
+					}else {
+						System.out.println("Thanks for expressing your interest!");
+					}
 				}else {
-					System.out.println("Thanks for expressing your interest!");
+					System.out.println("Not a valid name");
 				}
 			}
 		});
 		
 		panel.register("i-add-convo", new Panel.Command() {
 			public void invoke(List<String> args) {
-				if (user.addConvoInterest(args.get(0)) == null){
-					System.out.println("Oh no! Something terrible has happened! Try again");
+				
+				String name = !args.isEmpty() ? String.join(" ", args).trim() : "";
+				if (!name.isEmpty()) {
+					if (user.addConvoInterest(args.get(0)) == null){
+						System.out.println("Oh no! Something terrible has happened! Try again");
+					}else {
+						System.out.println("Thanks for expressing your interest!");
+					}
 				}else {
-					System.out.println("Thanks for expressing your interest!");
+					System.out.println("Not a valid name");
 				}
 			}
 		});
 		// Remove
 		panel.register("i-remove-user", new Panel.Command() {
 			public void invoke(List<String> args) {
-				
-				if (user.removeUserInterest(args.get(0)) == null){
-					System.out.println("Oh no! Something terrible has happened! Try again");
-				}else {
-					System.out.println("Thanks for expressing your interest!");
-				}
+				String name = !args.isEmpty() ? String.join(" ", args).trim() : "";
+				if (!name.isEmpty()) {
+				  if (user.removeUserInterest(args.get(0)) == null){
+					System.out.println("Oh no! Something terrible has happened! Check the name is correct and try again!");
+				  }else {
+					System.out.println("Interest == gone!");
+				  }
+			    }else {
+			    	System.out.println("Not a valid name");
+			    }
 			}
 		});
 		
 		panel.register("i-remove-convo", new Panel.Command() {
 			public void invoke(List<String> args) {
-				if (user.removeConvoInterest(args.get(0)) == null){
-					System.out.println("Oh no! Something terrible has happened! Try again");
+				String name = !args.isEmpty() ? String.join(" ", args).trim() : "";
+				if (!name.isEmpty()) {
+					if (user.removeConvoInterest(args.get(0)) == null){
+						System.out.println("Oh no! Something terrible has happened! Try again");
+					}else {
+						System.out.println("Interest == gone!");
+					}
 				}else {
-					System.out.println("Thanks for expressing your interest!");
+					System.out.println("Not a valid name");
 				}
 			}
 		});
