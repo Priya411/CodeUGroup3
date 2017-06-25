@@ -71,9 +71,9 @@ public final class User {
   // userInterests keeps track of user's USER interests 
   // ASSUMPTION getters/setters will be added by Priyanka 
   public ArrayList<Uuid> userInterests = new ArrayList<Uuid>(); 
-  // convoInterests keeps track of user's CONVO interests with convo's uuid
+  // conversationInterests keeps track of user's CONVO interests with convo's uuid
   // and the message count at the time of the last update 
-  public HashMap<Uuid, Integer> convoInterests = new HashMap<Uuid, Integer>();
+  public HashMap<Uuid, Integer> conversationInterests = new HashMap<Uuid, Integer>();
   // time of user's last update recorded as a long 
   public long lastUpdateTime; 
   
@@ -198,16 +198,16 @@ public final class User {
 	  
 	  for (ConversationContext convo : conversations) {
 		  // iterates through all the convos
-		  if (this.convoInterests.keySet().contains(convo.conversation.id)) { 
+		  if (this.conversationInterests.keySet().contains(convo.conversation.id)) { 
 			  // if the convo is one of interest, 
 			  // first add the conversation and the number of messages 
-			  // since last update to convoUpdates
+			  // since last update to conversationInterests
 			  totalNumMessages = convo.getMessageCount(); 
-			  numNewMessages = totalNumMessages - this.convoInterests.get(convo.conversation.id); 
+			  numNewMessages = totalNumMessages - this.conversationInterests.get(convo.conversation.id); 
 			  convoUpdates.put(convo.conversation.title, numNewMessages); 
 			  
-			  // then update the value for the number of messages at lastUpdate in convoInterests
-			  this.convoInterests.put(convo.conversation.id, totalNumMessages); 
+			  // then update the value for the number of messages at lastUpdate in conversationInterests
+			  this.conversationInterests.put(convo.conversation.id, totalNumMessages); 
 		  }
 	  }
 	  return convoUpdates; 
