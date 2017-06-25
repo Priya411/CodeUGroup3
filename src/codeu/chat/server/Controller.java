@@ -177,5 +177,10 @@ public final class Controller implements RawController, BasicController {
   }
 
   private boolean isIdFree(Uuid id) { return !isIdInUse(id); }
+  
+  @Override 
+  public Time statusUpdate() { 
+	  return null; 
+  }
 
 }
