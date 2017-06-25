@@ -59,15 +59,13 @@ public final class UserContext {
   
 
   // USERstatusUpdate()
-  public HashMap<Uuid, ArrayList<ArrayList<String>>> USERstatusUpdate(){ 
-	  HashMap<Uuid, ArrayList<ArrayList<String>>> userUpdates = this.user.USERstatusUpdate(this.conversations(), controller.statusUpdate()); 
-	  return userUpdates; 
+  public HashMap<Uuid, ArrayList<ArrayList<String>>> userStatusUpdate(){ 
+	  return this.user.userStatusUpdate(this.conversations(), controller.statusUpdate()); 
   }
   
   // CONVOstatusUpdate() 
-  public HashMap<String, Integer> CONVOstatusUpdate(){ 
-	  HashMap<String, Integer> convoUpdates = this.user.CONVOstatusUpdate(this.conversations());
-	  return convoUpdates; 
+  public HashMap<String, Integer> convoStatusUpdate(){ 
+	  return this.user.convoStatusUpdate(this.conversations());
   }
 
 }
