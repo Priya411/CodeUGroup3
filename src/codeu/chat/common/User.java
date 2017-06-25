@@ -77,7 +77,8 @@ public final class User {
   // time of user's last update recorded as a long
   // initially set to user's creation time 
   public long lastUpdateTime = Time.now().inMs(); 
-  
+  public static int CONVOS_CREATED_ARRAY = 0; 
+  public static int CONVOS_CONTRIBUTED_TO_ARRAY = 1; 
 
   public User(Uuid id, String name, Time creation) {
     this.id = id;
@@ -123,7 +124,7 @@ public final class User {
     return hash;
   }
   
-  // USERstatusUpdate()
+  // userStatusUpdate()
   // 
   // Returns all the user updates in an dictionary 
   // where keys are the user's user interests (UUIDs) 
@@ -132,13 +133,12 @@ public final class User {
   // newly created conversations (CONVOS_CREATED_ARRAY) and the second arraylist keeps 
   // track of the conversations the userinterest has contributed messages to (CONVOS_CONTRIBUTED_TO_ARRAY)
   //
-  public HashMap<Uuid, ArrayList<ArrayList<String>>> USERstatusUpdate(Iterable<ConversationContext> conversations, Time updateTime){ 
+  public HashMap<Uuid, ArrayList<ArrayList<String>>> userStatusUpdate(Iterable<ConversationContext> conversations, Time updateTime){ 
 	  // ASSUMPTION: all of the names saved in userInterests are indeed 
 	  //			 valid users in the system 
 	  
 	  HashMap<Uuid, ArrayList<ArrayList<String>>> userUpdates = new HashMap<Uuid, ArrayList<ArrayList<String>>>(); 
-	  int CONVOS_CREATED_ARRAY = 0; 
-	  int CONVOS_CONTRIBUTED_TO_ARRAY = 1; 
+
 
 	  // creating the dictionary userUpdates
 	  for (Uuid uuid : this.userInterests){
@@ -187,14 +187,14 @@ public final class User {
   	}
   
   
-  // CONVOstatusUpdate 
+  // convoStatusUpdate 
   //
   // returns the conversation updates in a dictionary 
   // where the name of the convo is the key 
   // and the number of messages sent since the last update is 
   // the value 
   // 
-  public HashMap<String, Integer> CONVOstatusUpdate(Iterable<ConversationContext> conversations){ 
+  public HashMap<String, Integer> convoStatusUpdate(Iterable<ConversationContext> conversations){ 
 	  HashMap<String, Integer> convoUpdates = new HashMap<String, Integer>(); 
 	  int totalNumMessages, numNewMessages; 
 	  
