@@ -51,7 +51,6 @@ public final class UserContext {
 	  }
 	  if (idToSave == null)
 		  return null;
-	  System.out.println("ID TO SAVE" + idToSave);
 	  // adds to the current user object stored on client
 	  user.addUserInterest(idToSave);
 	  // sends info to model to be saved also
@@ -71,7 +70,6 @@ public final class UserContext {
 	  
 	  int numberOfMessageOfConvo = convoToSave.getMessageCount();
 	  user.addConvoInterest(convoToSave.conversation.id, numberOfMessageOfConvo);
-	  System.out.println("ID " + convoToSave.conversation.id + " num of messages " + numberOfMessageOfConvo);
 	  controller.newConvoInterest(user.id, convoToSave.conversation.id, numberOfMessageOfConvo);
 	  return user;
   }

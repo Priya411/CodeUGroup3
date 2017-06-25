@@ -61,11 +61,4 @@ public final class ConversationPayload {
     this.firstMessage = firstMessage;
     this.lastMessage = lastMessage;
   }
-
-  public int getNumberOfMessages() {
-	int toReturn = 0;
-	//Message currentMessage = firstMessage;
-	//while()
-	return toReturn;
-  }
 }

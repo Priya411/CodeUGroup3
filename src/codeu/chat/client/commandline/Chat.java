@@ -438,6 +438,7 @@ public final class Chat {
 		// Add
 		panel.register("i-add-user", new Panel.Command() {
 			public void invoke(List<String> args) {
+				// append the name by space from args and send to usercontext
 				String name = !args.isEmpty() ? String.join(" ", args).trim() : "";
 				if (!name.isEmpty()) {
 					if (user.addUserInterest(name) == null){
