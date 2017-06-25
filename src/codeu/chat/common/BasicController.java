@@ -14,6 +14,7 @@
 
 package codeu.chat.common;
 
+import codeu.chat.util.Time;
 import codeu.chat.util.Uuid;
 
 // BASIC CONTROLLER
@@ -50,5 +51,10 @@ public interface BasicController {
   //  representing the full state of the conversation on the server.
   //  Whether conversations can have the same title is undefined.
   ConversationHeader newConversation(String title, Uuid owner);
+
+  // STATUS UPDATE 
+  Time statusUpdate(); 
+
+
 
 }
