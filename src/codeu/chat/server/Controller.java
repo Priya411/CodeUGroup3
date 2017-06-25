@@ -143,6 +143,26 @@ public final class Controller implements RawController, BasicController {
     return conversation;
   }
 
+  public void newConvoInterest(User user, Uuid idToSave, int numberOfMessageOfConvo)
+  {
+    user.addConvoInterest(idToSave,numberOfMessageOfConvo);
+  }
+
+  public void newUserInterest(User user, Uuid idToSave)
+  {
+    user.addUserInterest(idToSave);
+  }
+
+  public void removeConvoInterest(User user, Uuid idToSave)
+  {
+    user.remConvoInterest(idToSave);
+  }
+
+  public void removeUserInterest(User user, Uuid idToSave)
+  {
+    user.remUserInterest(idToSave);
+  }
+
   private Uuid createId() {
 
     Uuid candidate;
