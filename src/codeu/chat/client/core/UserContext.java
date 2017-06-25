@@ -63,4 +63,11 @@ public final class UserContext {
 	  HashMap<Uuid, ArrayList<ArrayList<String>>> userUpdates = this.user.USERstatusUpdate(this.conversations()); 
 	  return userUpdates; 
   }
+  
+  // CONVOstatusUpdate() 
+  public HashMap<String, Integer> CONVOstatusUpdate(){ 
+	  HashMap<String, Integer> convoUpdates = this.user.CONVOstatusUpdate(this.conversations());
+	  return convoUpdates; 
+  }
+
 }
