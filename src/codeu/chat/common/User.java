@@ -74,8 +74,9 @@ public final class User {
   // conversationInterests keeps track of user's CONVO interests with convo's uuid
   // and the message count at the time of the last update 
   public HashMap<Uuid, Integer> conversationInterests = new HashMap<Uuid, Integer>();
-  // time of user's last update recorded as a long 
-  public long lastUpdateTime; 
+  // time of user's last update recorded as a long
+  // initially set to user's creation time 
+  public long lastUpdateTime = Time.now().inMs(); 
   
 
   public User(Uuid id, String name, Time creation) {
@@ -132,7 +133,6 @@ public final class User {
   // track of the conversations the userinterest has contributed messages to (CONVOS_CONTRIBUTED_TO_ARRAY)
   //
   public HashMap<Uuid, ArrayList<ArrayList<String>>> USERstatusUpdate(Iterable<ConversationContext> conversations, Time updateTime){ 
-	  // ASSUMPTION: saving user interests by UUID 
 	  // ASSUMPTION: all of the names saved in userInterests are indeed 
 	  //			 valid users in the system 
 	  
@@ -140,11 +140,13 @@ public final class User {
 	  int CONVOS_CREATED_ARRAY = 0; 
 	  int CONVOS_CONTRIBUTED_TO_ARRAY = 1; 
 
+	  // creating the dictionary userUpdates
 	  for (Uuid uuid : this.userInterests){
 		  userUpdates.put(uuid, new ArrayList<ArrayList<String>>(Arrays.asList(
 				  new ArrayList<String>() {}, new ArrayList<String>() {}))); 
 	  }
 	  
+	  // looping through every conversation in the chat to organize updates 
 	  for (ConversationContext convo : conversations){
 		  MessageContext lastmessage = convo.lastMessage(); 
 		  
@@ -170,7 +172,7 @@ public final class User {
 				  // we need to look at it to see if it was contributed by a user 
 				  // of interest. 
 				  // If so, we add it to the user's CONVOS_CONTRIBUTED_TO_ARRAY, 
-				  // otherwise we continue parsing through the messages in the convo 
+				  // otherwise we continue iterating through the messages in the convo 
 				  if (this.userInterests.contains(currentmessage.message.author) && 
 						  !userUpdates.get(convo.conversation.owner.id()).get(CONVOS_CONTRIBUTED_TO_ARRAY).contains(convo.conversation.title)){
 					  // Also checks to make sure that conversation hasn't already been added to CONVOS_CONTRIBUTED_TO_ARRAY
