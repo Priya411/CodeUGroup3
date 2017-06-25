@@ -112,4 +112,20 @@ final class Controller implements BasicController {
 
     return response;
   }
+  
+  public void statusUpdate() {
+	try (final Connection connection = source.connect()) {
+
+	  Serializers.INTEGER.write(connection.out(), NetworkCode.STATUS_UPDATE_REQUEST);
+	  
+  	  if (Serializers.INTEGER.read(connection.in()) == NetworkCode.STATUS_UPDATE_RESPONSE) {
+	    //DO SOMETHING? 
+	  } else {
+	    LOG.error("Response from server failed.");
+	  }
+	} catch (Exception ex) {
+      System.out.println("ERROR: Exception during call on server. Check log for details.");
+	  LOG.error(ex, "Exception during call on server.");
+	}	
+ }
 }
