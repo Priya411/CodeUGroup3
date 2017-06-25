@@ -16,6 +16,7 @@ package codeu.chat.client.commandline;
 
 import java.util.List;
 import java.util.Stack;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import codeu.chat.client.core.Context;
@@ -333,6 +334,8 @@ public final class Chat {
 				System.out.println("  c-join <title>");
 				System.out
 						.println("    Join the conversation as the current user.");
+				System.out.println("  status-update");
+				System.out.println("  	Displays updates for user's conversation and user interests");
 				System.out.println("  info");
 				System.out.println("    Display all info for the current user");
 				System.out.println("  back");
@@ -438,28 +441,42 @@ public final class Chat {
 			}
 		});
 		
-//		// VIEW STATUS 
-//		// 
-//		// Allows user to see status update
-//		// A status update includes : 
-//		// 1) The number of messages that have been send in each of the user's 
-//		//    conversation interests since the last updates 
-//		// 2) A list of conversations created and conversations added to by each 
-//		//    of the user's user intersests 
-//		// 
-//		panel.register("view-status", new Panel.Command() { 
-//			@Override
-//			public void invoke(List<String> args) { 
-//				// Saving USER updates 
-//				for (user : user.userInterests)
-//			
-//				
-//				// All of the print statements to view update 
-//				System.out.println("Status Update:\n");
-//				System.out.println("Conversations:");
-//				System.out.println("Users:");
-//			}
-//		});
+		// STATUS UPDATE
+		// 
+		// Allows user to see status update
+		// A status update includes : 
+		// 1) The number of messages that have been send in each of the user's 
+		//    conversation interests since the last updates 
+		// 2) A list of conversations created and conversations added to by each 
+		//    of the user's user interests 
+		// 
+		panel.register("status-update", new Panel.Command() { 
+			@Override
+			public void invoke(List<String> args) { 
+				HashMap<String, Integer> convoUpdates = user.CONVOstatusUpdate(); 
+				HashMap<Uuid, ArrayList<ArrayList<String>>> userUpdates = user.USERstatusUpdate();
+				int CONVOS_CREATED_ARRAY = 0; 
+				int CONVOS_CONTRIBUTED_TO_ARRAY = 1; 
+			
+				// All of the print statements to view update 
+				System.out.println("Status Update:\n");
+				System.out.println("Conversations:");
+				for (String convoName : convoUpdates.keySet()) { 
+					System.out.format("\t%s : %d \n", convoName, convoUpdates.get(convoName));
+				}
+				System.out.println("Users:");
+				for (Uuid userID : userUpdates.keySet()) { 
+					System.out.format("\t%s :\n", userID.toString());
+					System.out.println("Conversations created: "); 
+					String convosCreated = String.join("\n\t", userUpdates.get(userID).get(CONVOS_CREATED_ARRAY)); 
+					System.out.format("\t%s", convosCreated);
+
+					System.out.println("Conversations contributed to: "); 
+					String convosContributed = String.join("\n\t", userUpdates.get(userID).get(CONVOS_CONTRIBUTED_TO_ARRAY)); 
+					System.out.format("\t%s", convosContributed);
+				}
+			}
+		});
 
 		// Now that the panel has all its commands registered, return the panel
 		// so that it can be used.
