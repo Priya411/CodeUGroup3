@@ -440,7 +440,7 @@ public final class Chat {
 			public void invoke(List<String> args) {
 				String name = !args.isEmpty() ? String.join(" ", args).trim() : "";
 				if (!name.isEmpty()) {
-					if (user.addUserInterest(args.get(0)) == null){
+					if (user.addUserInterest(name) == null){
 						System.out.println("Oh no! I can't find that user! Try again");
 					}else {
 						System.out.println("Thanks for expressing your interest!");
@@ -456,7 +456,7 @@ public final class Chat {
 				
 				String name = !args.isEmpty() ? String.join(" ", args).trim() : "";
 				if (!name.isEmpty()) {
-					if (user.addConvoInterest(args.get(0)) == null){
+					if (user.addConvoInterest(name) == null){
 						System.out.println("Oh no! I can't find that convo! Try again");
 					}else {
 						System.out.println("Thanks for expressing your interest!");
@@ -471,7 +471,7 @@ public final class Chat {
 			public void invoke(List<String> args) {
 				String name = !args.isEmpty() ? String.join(" ", args).trim() : "";
 				if (!name.isEmpty()) {
-				  if (user.removeUserInterest(args.get(0)) == null){
+				  if (user.removeUserInterest(name) == null){
 					System.out.println("Oh no! I can't find that user! Try again!");
 				  }else {
 					System.out.println("Interest == gone!");
@@ -486,7 +486,7 @@ public final class Chat {
 			public void invoke(List<String> args) {
 				String name = !args.isEmpty() ? String.join(" ", args).trim() : "";
 				if (!name.isEmpty()) {
-					if (user.removeConvoInterest(args.get(0)) == null){
+					if (user.removeConvoInterest(name) == null){
 						System.out.println("Oh no! I can't find that convo! Try again");
 					}else {
 						System.out.println("Interest == gone!");
