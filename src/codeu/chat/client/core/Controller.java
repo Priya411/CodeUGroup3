@@ -22,9 +22,11 @@ import codeu.chat.common.BasicController;
 import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.Message;
 import codeu.chat.common.NetworkCode;
+import codeu.chat.common.ServerInfo;
 import codeu.chat.common.User;
 import codeu.chat.util.Logger;
 import codeu.chat.util.Serializers;
+import codeu.chat.util.Time;
 import codeu.chat.util.Uuid;
 import codeu.chat.util.connections.Connection;
 import codeu.chat.util.connections.ConnectionSource;
@@ -113,13 +115,14 @@ final class Controller implements BasicController {
     return response;
   }
   
-  public void statusUpdate() {
+  public Time statusUpdate() {
+	Time updateTime = null;
 	try (final Connection connection = source.connect()) {
 
 	  Serializers.INTEGER.write(connection.out(), NetworkCode.STATUS_UPDATE_REQUEST);
 	  
   	  if (Serializers.INTEGER.read(connection.in()) == NetworkCode.STATUS_UPDATE_RESPONSE) {
-	    //DO SOMETHING? 
+  		  updateTime = Time.SERIALIZER.read(connection.in());
 	  } else {
 	    LOG.error("Response from server failed.");
 	  }
@@ -127,5 +130,11 @@ final class Controller implements BasicController {
       System.out.println("ERROR: Exception during call on server. Check log for details.");
 	  LOG.error(ex, "Exception during call on server.");
 	}	
- }
+	
+    if(updateTime!=null) {
+    	return updateTime;
+    }
+    // If we get here it means something went wrong and null should be returned
+    return null;
+  }
 }
