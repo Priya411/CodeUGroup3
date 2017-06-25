@@ -131,7 +131,7 @@ public final class User {
   // newly created conversations (CONVOS_CREATED_ARRAY) and the second arraylist keeps 
   // track of the conversations the userinterest has contributed messages to (CONVOS_CONTRIBUTED_TO_ARRAY)
   //
-  public HashMap<Uuid, ArrayList<ArrayList<String>>> USERstatusUpdate(Iterable<ConversationContext> conversations){ 
+  public HashMap<Uuid, ArrayList<ArrayList<String>>> USERstatusUpdate(Iterable<ConversationContext> conversations, Time updateTime){ 
 	  // ASSUMPTION: saving user interests by UUID 
 	  // ASSUMPTION: all of the names saved in userInterests are indeed 
 	  //			 valid users in the system 
@@ -177,9 +177,10 @@ public final class User {
 					  userUpdates.get(convo.conversation.owner.id()).get(CONVOS_CONTRIBUTED_TO_ARRAY).add(convo.conversation.title); 
 				  }
 			  }
-		   }
-		  
+		   }	  
 	  	}
+	  // updates the lastUpdateTime for the user 
+	  this.lastUpdateTime = updateTime.inMs(); 
 	  return userUpdates; 
   	}
   
