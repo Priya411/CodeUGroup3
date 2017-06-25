@@ -17,6 +17,8 @@ package codeu.chat.common;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.ArrayList;
 
 import codeu.chat.util.Serializer;
 import codeu.chat.util.Serializers;
@@ -24,6 +26,11 @@ import codeu.chat.util.Time;
 import codeu.chat.util.Uuid;
 
 public final class User {
+
+  public Time updateTime = Time.now();
+  HashMap<Uuid, Integer> conversationInterests
+          = new HashMap<>();
+  ArrayList<Uuid> userInterests = new ArrayList<Uuid>();
 
   public static final Serializer<User> SERIALIZER = new Serializer<User>() {
 
@@ -87,5 +94,30 @@ public final class User {
     hash+=user.name.hashCode();
     hash+=user.creation.hashCode();
     return hash;
+  }
+
+  public void addUserInterest(Uuid user)
+  {
+    userInterests.add(user);
+  }
+
+  public void addConvoInterest(Uuid conversation, int messagesAmount)
+  {
+    conversationInterests.put(conversation, new Integer(messagesAmount));
+  }
+
+  public void remUserInterest(Uuid user)
+  {
+    userInterests.remove(user);
+  }
+
+  public void remConvoInterest(Uuid conversation)
+  {
+    conversationInterests.remove(conversation);
+  }
+
+  public void setUpdateTime(Time time)
+  {
+    this.updateTime = time;
   }
 }
