@@ -55,7 +55,7 @@ public final class UserContext {
 	  // adds to the current user object stored on client
 	  user.addUserInterest(idToSave);
 	  // sends info to model to be saved also
-	  controller.newUserInterest(user, idToSave);
+	  controller.newUserInterest(user.id, idToSave);
 	  return user;
   }
   
@@ -72,7 +72,7 @@ public final class UserContext {
 	  int numberOfMessageOfConvo = convoToSave.getMessageCount();
 	  user.addConvoInterest(convoToSave.conversation.id, numberOfMessageOfConvo);
 	  System.out.println("ID " + convoToSave.conversation.id + " num of messages " + numberOfMessageOfConvo);
-	  controller.newConvoInterest(user, convoToSave.conversation.id, numberOfMessageOfConvo);
+	  controller.newConvoInterest(user.id, convoToSave.conversation.id, numberOfMessageOfConvo);
 	  return user;
   }
 
@@ -87,7 +87,7 @@ public Object removeUserInterest(String name) {
 	  if (idToSave == null)
 		  return null;
 	  user.removeUserInterest(idToSave);
-	  controller.removeUserInterest(user, idToSave);
+	  controller.removeUserInterest(user.id, idToSave);
 	  return user;
   }
   
@@ -101,7 +101,7 @@ public Object removeUserInterest(String name) {
 	  if (idToRemove == null)
 		  return null;
 	  user.removeConvoInterest(idToRemove);
-	  controller.removeConvoInterest(user, idToRemove);
+	  controller.removeConvoInterest(user.id, idToRemove);
       return user;
   }
 
