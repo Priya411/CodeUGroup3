@@ -60,7 +60,7 @@ public final class UserContext {
 
   // USERstatusUpdate()
   public HashMap<Uuid, ArrayList<ArrayList<String>>> USERstatusUpdate(){ 
-	  HashMap<Uuid, ArrayList<ArrayList<String>>> userUpdates = this.user.USERstatusUpdate(this.conversations()); 
+	  HashMap<Uuid, ArrayList<ArrayList<String>>> userUpdates = this.user.USERstatusUpdate(this.conversations(), controller.statusUpdate()); 
 	  return userUpdates; 
   }
   
