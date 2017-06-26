@@ -174,9 +174,9 @@ public final class User {
 				  // If so, we add it to the user's CONVOS_CONTRIBUTED_TO_ARRAY, 
 				  // otherwise we continue iterating through the messages in the convo 
 				  if (this.userInterests.contains(currentmessage.message.author) && 
-						  !userUpdates.get(convo.conversation.owner.id()).get(CONVOS_CONTRIBUTED_TO_ARRAY).contains(convo.conversation.title)){
+						  !userUpdates.get(convo.conversation.owner).get(CONVOS_CONTRIBUTED_TO_ARRAY).contains(convo.conversation.title)){
 					  // Also checks to make sure that conversation hasn't already been added to CONVOS_CONTRIBUTED_TO_ARRAY
-					  userUpdates.get(convo.conversation.owner.id()).get(CONVOS_CONTRIBUTED_TO_ARRAY).add(convo.conversation.title); 
+					  userUpdates.get(convo.conversation.owner).get(CONVOS_CONTRIBUTED_TO_ARRAY).add(convo.conversation.title); 
 				  }
 			  }
 		   }	  
