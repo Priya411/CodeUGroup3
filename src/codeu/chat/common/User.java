@@ -27,7 +27,7 @@ import codeu.chat.util.Uuid;
 
 public final class User {
 
-  public Time updateTime = Time.now();
+  public long updateTime = Time.now().inMs();
   public HashMap<Uuid, Integer> conversationInterests = new HashMap<>();
   public ArrayList<Uuid> userInterests = new ArrayList<Uuid>();
 
@@ -127,8 +127,11 @@ public final class User {
     conversationInterests.remove(conversationId);
   }
 
-  public void setUpdateTime(Time time)
+  public void setUpdateTime(long time)
   {
+    // This updates the time, updateTime
+    // This is used to indicate the last time the user
+    // called for a status update on interested fields
     this.updateTime = time;
   }
 }
