@@ -40,7 +40,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown=true)
 public final class User {
   
-  public long updateTime = Time.now().inMs();
   public HashMap<Uuid, Integer> conversationInterests = new HashMap<>();
   public ArrayList<Uuid> userInterests = new ArrayList<Uuid>();
 	
@@ -75,12 +74,6 @@ public final class User {
   @JsonIgnore
   public final Time creation;
   
-  // userInterests keeps track of user's USER interests 
-  // ASSUMPTION getters/setters will be added by Priyanka 
-  public ArrayList<Uuid> userInterests = new ArrayList<Uuid>(); 
-  // conversationInterests keeps track of user's CONVO interests with convo's uuid
-  // and the message count at the time of the last update 
-  public HashMap<Uuid, Integer> conversationInterests = new HashMap<Uuid, Integer>();
   // time of user's last update recorded as a long
   // initially set to user's creation time 
   public long lastUpdateTime = Time.now().inMs(); 
@@ -259,7 +252,7 @@ public final class User {
     // This updates the time, updateTime
     // This is used to indicate the last time the user
     // called for a status update on interested fields
-    this.updateTime = time;
+    this.lastUpdateTime = time;
   }
 
 }
