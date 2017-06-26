@@ -15,6 +15,7 @@
 package codeu.chat.common;
 
 import java.io.IOException;
+
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -23,8 +24,16 @@ import codeu.chat.util.Serializers;
 import codeu.chat.util.Time;
 import codeu.chat.util.Uuid;
 
-public final class Message {
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+// ignore anything that may cause problems when converting to JSON
+// prevents crashes for items that cant be serialized.
+@JsonIgnoreProperties(ignoreUnknown=true)
+public final class Message {
+	
+  // no need to serialize the serializer when converting to JOSN
+  @JsonIgnore
   public static final Serializer<Message> SERIALIZER = new Serializer<Message>() {
 
     @Override
@@ -53,12 +62,18 @@ public final class Message {
 
     }
   };
-
+  //ignore objects that aren't built-in types (string, int, etc)
+  // Jackon will default to the getters since instance vars are ignored
+  @JsonIgnore
   public final Uuid id;
+  @JsonIgnore
   public final Uuid previous;
+  @JsonIgnore
   public final Time creation;
+  @JsonIgnore
   public final Uuid author;
   public final String content;
+  @JsonIgnore
   public Uuid next;
 
   public Message(Uuid id, Uuid next, Uuid previous, Time creation, Uuid author, String content) {
@@ -70,6 +85,26 @@ public final class Message {
     this.author = author;
     this.content = content;
 
+  }
+  
+  public String getUUID() {
+	  return id.toString();
+  }
+  
+  public String getNextUUID() {
+	  return next.toString();
+  }
+  
+  public String getPreviousUUID() {
+	  return previous.toString();
+  }
+  
+  public String getAuthorUUID() {
+	  return author.toString();
+  }
+  
+  public long getCreationTime() {
+	  return creation.inMs();
   }
 
   @Override

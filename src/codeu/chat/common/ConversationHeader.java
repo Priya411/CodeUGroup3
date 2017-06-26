@@ -19,13 +19,18 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import codeu.chat.util.Serializer;
 import codeu.chat.util.Serializers;
 import codeu.chat.util.Time;
 import codeu.chat.util.Uuid;
 
+@JsonIgnoreProperties(ignoreUnknown=true)
 public final class ConversationHeader {
 
+  // no need to serialize the serializer when converting to JOSN
   public static final Serializer<ConversationHeader> SERIALIZER = new Serializer<ConversationHeader>() {
 
     @Override
@@ -50,9 +55,14 @@ public final class ConversationHeader {
 
     }
   };
-
+  
+  //ignore objects that aren't built-in types (string, int, etc)
+  // Jackon will default to the getters since instance vars are ignored
+  @JsonIgnore
   public final Uuid id;
+  @JsonIgnore
   public final Uuid owner;
+  @JsonIgnore
   public final Time creation;
   public final String title;
 
@@ -64,7 +74,19 @@ public final class ConversationHeader {
     this.title = title;
 
   }
-
+  
+  public String getUUID() {
+	  return id.toString();
+  }
+  
+  public String getOwnerUUID() {
+	  return owner.toString();
+  }
+  
+  public long getCreationTime() {
+	  return creation.inMs();
+  }
+  
   @Override
   public boolean equals(Object toCompare)
   {

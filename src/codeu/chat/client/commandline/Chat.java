@@ -16,6 +16,7 @@ package codeu.chat.client.commandline;
 
 import java.util.List;
 import java.util.Stack;
+import java.util.HashMap;
 
 import codeu.chat.client.core.Context;
 import codeu.chat.client.core.ConversationContext;
@@ -23,7 +24,12 @@ import codeu.chat.client.core.MessageContext;
 import codeu.chat.client.core.UserContext;
 import codeu.chat.common.ServerInfo;
 import codeu.chat.util.CommandTokenizer;
+import codeu.chat.util.Logger;
 import codeu.chat.util.Time;
+import codeu.chat.util.Uuid;
+import java.util.Iterator;
+import java.io.IOException;
+
 
 public final class Chat {
 
@@ -36,9 +42,83 @@ public final class Chat {
 	// panel all it needs to do is pop the top panel.
 	private final Stack<Panel> panels = new Stack<>();
 
+	private static final Logger.Log LOG = Logger.newLog(Chat.class);
+
 	public Chat(Context context) {
 		this.panels.push(createRootPanel(context));
 	}
+
+	//CONSTRUCTOR FOR TESTING ONLY: 
+	public Chat(){
+
+	}
+
+	// RECREATE 
+	//
+	// Recreates the server's last known state to display for the client 
+	// upon relaunching the client 
+	// Will not display anything if there was no information saved 
+	//
+	//
+	public void recreate(Context context) {
+
+		// HashMap keeps track of users and UUIDs for easy access 
+		HashMap<Uuid, String> allUsers = new HashMap<Uuid, String>();
+		// HashMap keeps track of all the conversations that exist 
+		HashMap<Uuid, ConversationContext> allConvos = new HashMap<Uuid, ConversationContext>();
+
+		// this function only does something if there was at least one user saved from the 
+		// last session 
+		if (context.allUsers().iterator().hasNext()) {
+
+			try {
+			  Logger.enableFileOutput("chat_history_log.log");
+			} catch (IOException ex) {
+			  LOG.error(ex, "Failed to set logger to write to file");
+			}
+			LOG.info("============================= START OF SERVER HISTORY =============================");
+
+			Iterator<UserContext> users = context.allUsers().iterator(); 
+			UserContext user;
+			System.out.format("USERS: \n");
+
+			while (users.hasNext()){
+				user = users.next(); 
+				System.out.format("\t\"%s\" Added at %s || UUID: %s\n", 
+				user.user.name, user.user.creation.HMtime(), user.user.id);
+				allUsers.put(user.user.id, user.user.name); 
+				LOG.info("\nUSER: \"%s\" Added at %s || UUID: %s\n", 
+				user.user.name, user.user.creation.HMtime(), user.user.id);
+				allUsers.put(user.user.id, user.user.name);
+				for (final ConversationContext conversation : user.conversations()) {
+					allConvos.put(conversation.conversation.id, conversation);
+				}
+			}
+
+			for (Uuid convoUUID : allConvos.keySet()){
+				ConversationContext conversation = allConvos.get(convoUUID); 
+				System.out.format("\nCONVERSATION: \"%s\" Created by %s at %s || UUID: %s \n",
+					conversation.conversation.title, allUsers.get(conversation.conversation.owner),
+					conversation.conversation.creation.HMtime(), conversation.conversation.id);
+				LOG.info("\nCONVERSATION: \"%s\" Created by %s at %s || UUID: %s \n",
+					conversation.conversation.title, allUsers.get(conversation.conversation.owner),
+					conversation.conversation.creation.HMtime(), conversation.conversation.id);
+				
+				for (MessageContext message = conversation.firstMessage(); message != null; message = message.next()) {
+					System.out.format("\nMESSAGE: %s | %s: \"%s\" || UUID: %s \n", 
+						message.message.creation.HMtime(), allUsers.get(message.message.author),  
+						message.message.content, message.message.id);	
+					LOG.info("\nMESSAGE: %s | %s: \"%s\" || UUID: %s \n", 
+						message.message.creation.HMtime(), allUsers.get(message.message.author),  
+						message.message.content, message.message.id);	 
+				}
+			}
+
+			LOG.info("============================= END OF SERVER HISTORY =============================");
+			
+		}	
+	}
+
 
 	// HANDLE COMMAND
 	//
@@ -107,15 +187,13 @@ public final class Chat {
 			public void invoke(List<String> args) {
 				System.out.println("ROOT MODE");
 				System.out.println("  info");
-				System.out
-						.println("    Provides server information including version number and up time.");
+				System.out.println("    Provides server information including version number and up time.");
 				System.out.println("  u-list");
 				System.out.println("    List all users.");
 				System.out.println("  u-add <name>");
 				System.out.println("    Add a new user with the given name.");
 				System.out.println("  u-sign-in <name>");
-				System.out
-						.println("    Sign in as the user with the given name.");
+				System.out.println("    Sign in as the user with the given name.");
 				System.out.println("  exit");
 				System.out.println("    Exit the program.");
 			}
@@ -174,11 +252,13 @@ public final class Chat {
 		//
 		// Add a command to add and sign-in as a new user when the user enters
 		// "u-add" while on the root panel.
+		// uses the entire list args as the argument since the user name may 
+		// be longer than a single word 
 		//
 		panel.register("u-add", new Panel.Command() {
 			@Override
 			public void invoke(List<String> args) {
-				final String name = !args.isEmpty() ? args.get(0).trim() : "";
+				final String name = !args.isEmpty() ? String.join(" ", args).trim() : "";
 				if (name.length() > 0) {
 					if (context.create(name) == null) {
 						System.out.println("ERROR: Failed to create new user");
@@ -193,11 +273,13 @@ public final class Chat {
 		//
 		// Add a command to sign-in as a user when the user enters "u-sign-in"
 		// while on the root panel.
+		// uses the entire list args as the argument since the user name may 
+		// be longer than a single word 
 		//
 		panel.register("u-sign-in", new Panel.Command() {
 			@Override
 			public void invoke(List<String> args) {
-				final String name = !args.isEmpty() ? args.get(0).trim() : "";
+				final String name = !args.isEmpty() ? String.join(" ", args).trim() : "";
 				if (name.length() > 0) {
 					final UserContext user = findUser(name);
 					if (user == null) {
@@ -282,11 +364,13 @@ public final class Chat {
 		// Add a command that will create and join a new conversation when the
 		// user
 		// enters "c-add" while on the user panel.
+		// uses the entire list args as the argument since the conversation name 
+		// may be longer than a single word 
 		//
 		panel.register("c-add", new Panel.Command() {
 			@Override
 			public void invoke(List<String> args) {
-				final String name = !args.isEmpty() ? args.get(0).trim() : "";
+				final String name = !args.isEmpty() ? String.join(" ", args).trim() : "";
 				if (name.length() > 0) {
 					final ConversationContext conversation = user.start(name);
 					if (conversation == null) {
@@ -305,11 +389,13 @@ public final class Chat {
 		//
 		// Add a command that will joing a conversation when the user enters
 		// "c-join" while on the user panel.
+		// uses the entire list args as the argument since the conversation name 
+		// may be longer than a single word 
 		//
 		panel.register("c-join", new Panel.Command() {
 			@Override
 			public void invoke(List<String> args) {
-				final String name = !args.isEmpty() ? args.get(0).trim() : "";
+				final String name = !args.isEmpty() ? String.join(" ", args).trim() : "";
 				if (name.length() > 0) {
 					final ConversationContext conversation = find(name);
 					if (conversation == null) {
@@ -414,12 +500,13 @@ public final class Chat {
 		// Add a command to add a new message to the current conversation when
 		// the
 		// user enters "m-add" while on the conversation panel.
+		// uses the entire list args as the argument since messages are likely to 
+		// be longer than a single string 
 		//
 		panel.register("m-add", new Panel.Command() {
 			@Override
 			public void invoke(List<String> args) {
-				final String message = !args.isEmpty() ? args.get(0).trim()
-						: "";
+				final String message = !args.isEmpty() ? String.join(" ", args).trim() : "";
 				if (message.length() > 0) {
 					conversation.add(message);
 				} else {

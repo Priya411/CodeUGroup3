@@ -66,6 +66,8 @@ public final class Controller implements RawController, BasicController {
 
       message = new Message(id, Uuid.NULL, Uuid.NULL, creationTime, author, body);
       model.add(message);
+      
+      
       LOG.info("Message added: %s", message.id);
 
       // Find and update the previous "last" message so that it's "next" value
@@ -80,6 +82,8 @@ public final class Controller implements RawController, BasicController {
       } else {
         final Message lastMessage = model.messageById().first(foundConversation.lastMessage);
         lastMessage.next = message.id;
+        new JSON().save(lastMessage);
+        
       }
 
       // If the first message points to NULL it means that the conversation was empty and that
@@ -94,8 +98,12 @@ public final class Controller implements RawController, BasicController {
       // Update the conversation to point to the new last message as it has changed.
 
       foundConversation.lastMessage = message.id;
+      
+      new JSON().save(foundConversation);
+      new JSON().save(message);
     }
 
+    
     return message;
   }
 
@@ -108,6 +116,7 @@ public final class Controller implements RawController, BasicController {
 
       user = new User(id, name, creationTime);
       model.add(user);
+      new JSON().save(user);
 
       LOG.info(
           "newUser success (user.id=%s user.name=%s user.time=%s)",
@@ -137,6 +146,7 @@ public final class Controller implements RawController, BasicController {
     if (foundOwner != null && isIdFree(id)) {
       conversation = new ConversationHeader(id, owner, creationTime, title);
       model.add(conversation);
+      new JSON().save(conversation);
       LOG.info("Conversation added: " + id);
     }
 
@@ -191,5 +201,10 @@ public final class Controller implements RawController, BasicController {
   }
 
   private boolean isIdFree(Uuid id) { return !isIdInUse(id); }
+  
+  @Override 
+  public Time statusUpdate() { 
+	  return null; 
+  }
 
 }

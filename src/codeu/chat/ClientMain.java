@@ -47,13 +47,18 @@ final class ClientMain {
     final ConnectionSource source = new ClientConnectionSource(address.host, address.port);
 
     LOG.info("Creating client...");
-    final Chat chat = new Chat(new Context(source));
+    //final Chat chat = new Chat(new Context(source));
+    final Context context = new Context(source);
+    final Chat chat = new Chat(context);
 
     LOG.info("Created client");
 
     boolean keepRunning = true;
 
     try (final BufferedReader input = new BufferedReader(new InputStreamReader(System.in))) {
+      //to display all the last saved information from the JSON file 
+      chat.recreate(context); 
+
       while (keepRunning) {
         System.out.print(">>> ");
         keepRunning = chat.handleCommand(input.readLine().trim());
