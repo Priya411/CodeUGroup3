@@ -1,55 +1,50 @@
 {
   "users" : [ {
     "name" : "K",
-    "uuid" : "1.2508628340",
-    "creationTime" : 1498009702116
+    "uuid" : "1.3630241395",
+    "creationTime" : 1498337717688
   }, {
-    "name" : "K",
-    "uuid" : "1.243934420",
-    "creationTime" : 1498012756173
+    "name" : "K1",
+    "uuid" : "1.3849152428",
+    "creationTime" : 1498337724529
+  }, {
+    "name" : "K2",
+    "uuid" : "1.11145357",
+    "creationTime" : 1498337726369
   } ],
   "conversations" : [ {
     "title" : "T",
-    "uuid" : "1.3401638043",
-    "ownerUUID" : "1.2508628340",
-    "creationTime" : 1498009718225,
-    "firstMessageUUID" : "1.2771886907",
-    "lastMessageUUID" : "1.730652018"
+    "uuid" : "1.234761847",
+    "ownerUUID" : "1.3630241395",
+    "creationTime" : 1498337772979,
+    "firstMessageUUID" : "1.1126869100",
+    "lastMessageUUID" : "1.3212962674"
+  }, {
+    "title" : "T1",
+    "uuid" : "1.3357903759",
+    "ownerUUID" : "1.3630241395",
+    "creationTime" : 1498339327527
   } ],
   "messages" : [ {
     "content" : "M1",
-    "uuid" : "1.2771886907",
-    "nextUUID" : "1.1677697813",
+    "uuid" : "1.1126869100",
+    "nextUUID" : "1.473089087",
     "previousUUID" : "0",
-    "authorUUID" : "1.2508628340",
-    "creationTime" : 1498009722944
+    "authorUUID" : "1.3630241395",
+    "creationTime" : 1498337779661
   }, {
     "content" : "M2",
-    "uuid" : "1.1677697813",
-    "nextUUID" : "1.3893534555",
+    "uuid" : "1.473089087",
+    "nextUUID" : "1.3212962674",
     "previousUUID" : "0",
-    "authorUUID" : "1.2508628340",
-    "creationTime" : 1498009728888
+    "authorUUID" : "1.3630241395",
+    "creationTime" : 1498337781289
   }, {
     "content" : "M3",
-    "uuid" : "1.3893534555",
-    "nextUUID" : "1.2570859711",
-    "previousUUID" : "0",
-    "authorUUID" : "1.2508628340",
-    "creationTime" : 1498009730673
-  }, {
-    "content" : "M4",
-    "uuid" : "1.2570859711",
-    "previousUUID" : "0",
-    "authorUUID" : "1.2508628340",
-    "nextUUID" : "1.730652018",
-    "creationTime" : 1498009732572
-  }, {
-    "content" : "M5",
-    "uuid" : "1.730652018",
-    "previousUUID" : "0",
-    "authorUUID" : "1.2508628340",
+    "uuid" : "1.3212962674",
     "nextUUID" : "0",
-    "creationTime" : 1498012782727
+    "previousUUID" : "0",
+    "authorUUID" : "1.3630241395",
+    "creationTime" : 1498337782908
   } ]
 }
