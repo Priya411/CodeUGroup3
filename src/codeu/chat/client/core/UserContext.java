@@ -85,7 +85,7 @@ public Object removeUserInterest(String name) {
 	  }
 	  if (idToSave == null)
 		  return null;
-	  user.removeUserInterest(idToSave);
+	  user.remUserInterest(idToSave);
 	  controller.removeUserInterest(user.id, idToSave);
 	  return user;
   }
@@ -99,7 +99,7 @@ public Object removeUserInterest(String name) {
 	  }
 	  if (idToRemove == null)
 		  return null;
-	  user.removeConvoInterest(idToRemove);
+	  user.remConvoInterest(idToRemove);
 	  controller.removeConvoInterest(user.id, idToRemove);
       return user;
   }
