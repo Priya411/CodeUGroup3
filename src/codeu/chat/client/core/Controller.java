@@ -116,21 +116,27 @@ final class Controller implements BasicController {
   }
   
   public Time statusUpdate() {
-	Time updateTime = null;
-	try (final Connection connection = source.connect()) {
+    Time updateTime = null;
+    try (final Connection connection = source.connect()) {
 
-	  Serializers.INTEGER.write(connection.out(), NetworkCode.STATUS_UPDATE_REQUEST);
-	  
-  	  if (Serializers.INTEGER.read(connection.in()) == NetworkCode.STATUS_UPDATE_RESPONSE) {
-  		  updateTime = Time.SERIALIZER.read(connection.in());
-        	  if(updateTime!=null) {
-    			return updateTime;
-    		  }
-    		// If we get here it means something went wrong and null should be returned
-    		return null;
- 	}
-	}
- }
+      Serializers.INTEGER.write(connection.out(), NetworkCode.STATUS_UPDATE_REQUEST);
+      
+      if (Serializers.INTEGER.read(connection.in()) == NetworkCode.STATUS_UPDATE_RESPONSE) {
+          updateTime = Time.SERIALIZER.read(connection.in());
+      } else {
+        LOG.error("Response from server failed.");
+      }
+    } catch (Exception ex) {
+      System.out.println("ERROR: Exception during call on server. Check log for details.");
+      LOG.error(ex, "Exception during call on server.");
+    }   
+    
+    if(updateTime!=null) {
+        return updateTime;
+    }
+    // If we get here it means something went wrong and null should be returned
+    return null;
+  }
 
         
   @Override
