@@ -261,7 +261,8 @@ public final class Chat {
 				final String name = !args.isEmpty() ? String.join(" ", args).trim() : "";
 				if (name.length() > 0) {
 					if (context.create(name) == null) {
-						System.out.println("ERROR: Failed to create new user");
+						System.out.println("ERROR: Failed to create new user. ");
+						System.out.println("User with this name might already exist");
 					}
 				} else {
 					System.out.println("ERROR: Missing <username>");
