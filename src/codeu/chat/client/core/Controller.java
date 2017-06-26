@@ -123,12 +123,13 @@ final class Controller implements BasicController {
 	  
   	  if (Serializers.INTEGER.read(connection.in()) == NetworkCode.STATUS_UPDATE_RESPONSE) {
   		  updateTime = Time.SERIALIZER.read(connection.in());
-        if(updateTime!=null) {
-    	return updateTime;
-    }
-    // If we get here it means something went wrong and null should be returned
-    return null;
- }
+        	  if(updateTime!=null) {
+    			return updateTime;
+    		  }
+    		// If we get here it means something went wrong and null should be returned
+    		return null;
+ 	}
+	}
  }
 
         
