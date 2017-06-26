@@ -52,9 +52,15 @@ public interface BasicController {
   //  Whether conversations can have the same title is undefined.
   ConversationHeader newConversation(String title, Uuid owner);
 
+  void newConvoInterest(Uuid userId, Uuid idToSave, int numberOfMessageOfConvo);
+
+  void newUserInterest(Uuid userId, Uuid idToSave);
+  
+  void removeConvoInterest(Uuid userId, Uuid idToSave);
+
+  void removeUserInterest(Uuid userId, Uuid idToSave);
   // STATUS UPDATE 
   Time statusUpdate(); 
-
 
 
 }

@@ -207,4 +207,29 @@ public final class Controller implements RawController, BasicController {
 	  return null; 
   }
 
+  @Override
+  public void newConvoInterest(Uuid userId, Uuid idToSave,
+		  int numberOfMessageOfConvo) {
+	  // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public void newUserInterest(Uuid userId, Uuid idToSave) {
+	  // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public void removeConvoInterest(Uuid userId, Uuid idToSave) {
+	  // TODO Auto-generated method stub
+
+  }
+
+  @Override
+  public void removeUserInterest(Uuid userId, Uuid idToSave) {
+	  // TODO Auto-generated method stub
+
+  }
+
 }

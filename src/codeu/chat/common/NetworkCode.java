@@ -49,5 +49,4 @@ public final class NetworkCode {
       REM_CONVO_INTEREST_REQUEST = 41,
       REM_CONVO_INTEREST_RESPONSE = 42;
 
-
 }

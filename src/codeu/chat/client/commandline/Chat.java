@@ -261,7 +261,8 @@ public final class Chat {
 				final String name = !args.isEmpty() ? String.join(" ", args).trim() : "";
 				if (name.length() > 0) {
 					if (context.create(name) == null) {
-						System.out.println("ERROR: Failed to create new user");
+						System.out.println("ERROR: Failed to create new user. ");
+						System.out.println("User with this name might already exist");
 					}
 				} else {
 					System.out.println("ERROR: Missing <username>");
@@ -333,6 +334,14 @@ public final class Chat {
 				System.out.println("  c-join <title>");
 				System.out
 						.println("    Join the conversation as the current user.");
+				System.out.println("  i-add-user <name>");
+				System.out.println("    Add requested user to interests");
+				System.out.println("  i-add-convo <title>");
+				System.out.println("    Add requested convo to interests");
+				System.out.println("  i-remove-user <name>");
+				System.out.println("    Removes requested user from interests");
+				System.out.println("  i-remove-convo <title>");
+				System.out.println("    Removes requested convo from interests");
 				System.out.println("  info");
 				System.out.println("    Display all info for the current user");
 				System.out.println("  back");
@@ -421,6 +430,72 @@ public final class Chat {
 					}
 				}
 				return null;
+			}
+		});
+		
+		
+		// Interest commands
+		// 
+		// Add
+		panel.register("i-add-user", new Panel.Command() {
+			public void invoke(List<String> args) {
+				// append the name by space from args and send to usercontext
+				String name = !args.isEmpty() ? String.join(" ", args).trim() : "";
+				if (!name.isEmpty()) {
+					if (user.addUserInterest(name) == null){
+						System.out.println("Oh no! I can't find that user! Try again");
+					}else {
+						System.out.println("Thanks for expressing your interest!");
+					}
+				}else {
+					System.out.println("Not a valid name");
+				}
+			}
+		});
+		
+		panel.register("i-add-convo", new Panel.Command() {
+			public void invoke(List<String> args) {
+				
+				String name = !args.isEmpty() ? String.join(" ", args).trim() : "";
+				if (!name.isEmpty()) {
+					if (user.addConvoInterest(name) == null){
+						System.out.println("Oh no! I can't find that convo! Try again");
+					}else {
+						System.out.println("Thanks for expressing your interest!");
+					}
+				}else {
+					System.out.println("Not a valid name");
+				}
+			}
+		});
+		// Remove
+		panel.register("i-remove-user", new Panel.Command() {
+			public void invoke(List<String> args) {
+				String name = !args.isEmpty() ? String.join(" ", args).trim() : "";
+				if (!name.isEmpty()) {
+				  if (user.removeUserInterest(name) == null){
+					System.out.println("Oh no! I can't find that user! Try again!");
+				  }else {
+					System.out.println("Interest == gone!");
+				  }
+			    }else {
+			    	System.out.println("Not a valid name");
+			    }
+			}
+		});
+		
+		panel.register("i-remove-convo", new Panel.Command() {
+			public void invoke(List<String> args) {
+				String name = !args.isEmpty() ? String.join(" ", args).trim() : "";
+				if (!name.isEmpty()) {
+					if (user.removeConvoInterest(name) == null){
+						System.out.println("Oh no! I can't find that convo! Try again");
+					}else {
+						System.out.println("Interest == gone!");
+					}
+				}else {
+					System.out.println("Not a valid name");
+				}
 			}
 		});
 

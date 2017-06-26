@@ -151,4 +151,5 @@ public final class User {
     // called for a status update on interested fields
     this.updateTime = time;
   }
+
 }

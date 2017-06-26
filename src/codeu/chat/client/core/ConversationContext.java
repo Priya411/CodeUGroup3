@@ -66,6 +66,19 @@ public final class ConversationContext {
         null :
         getMessage(updated.firstMessage);
   }
+  
+  public int getMessageCount() {
+	  MessageContext currentMessage = firstMessage();
+	  if (currentMessage == null) {
+		  return 0;
+	  }
+	  int count = 1; // start with first message
+	  while(currentMessage != null && currentMessage.next() != null) {
+		  currentMessage = currentMessage.next();
+		  count++;
+	  }
+	  return count;
+  }
 
   public MessageContext lastMessage() {
 
