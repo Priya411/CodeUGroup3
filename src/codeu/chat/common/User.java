@@ -33,18 +33,19 @@ import codeu.chat.util.Uuid;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-  public long updateTime = Time.now().inMs();
-  public HashMap<Uuid, Integer> conversationInterests = new HashMap<>();
-  public ArrayList<Uuid> userInterests = new ArrayList<Uuid>();
+ 
 
 // ignore anything that may cause problems when converting to JSON
 // prevents crashes for items that cant be serialized.
 @JsonIgnoreProperties(ignoreUnknown=true)
 public final class User {
   
+  public long updateTime = Time.now().inMs();
+  public HashMap<Uuid, Integer> conversationInterests = new HashMap<>();
+  public ArrayList<Uuid> userInterests = new ArrayList<Uuid>();
+	
   // no need to serialize the serializer when converting to JOSN
   @JsonIgnore
-
   public static final Serializer<User> SERIALIZER = new Serializer<User>() {
 
     @Override
