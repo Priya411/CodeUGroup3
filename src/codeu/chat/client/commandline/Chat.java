@@ -16,6 +16,7 @@ package codeu.chat.client.commandline;
 
 import java.util.List;
 import java.util.Stack;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import codeu.chat.client.core.Context;
@@ -23,6 +24,7 @@ import codeu.chat.client.core.ConversationContext;
 import codeu.chat.client.core.MessageContext;
 import codeu.chat.client.core.UserContext;
 import codeu.chat.common.ServerInfo;
+import codeu.chat.common.User;
 import codeu.chat.util.CommandTokenizer;
 import codeu.chat.util.Logger;
 import codeu.chat.util.Time;
@@ -105,7 +107,7 @@ public final class Chat {
 					conversation.conversation.creation.HMtime(), conversation.conversation.id);
 				
 				for (MessageContext message = conversation.firstMessage(); message != null; message = message.next()) {
-					System.out.format("\nMESSAGE: %s | %s: \"%s\" || UUID: %s \n", 
+					System.out.format("\tMESSAGE: %s | %s: \"%s\" || UUID: %s \n", 
 						message.message.creation.HMtime(), allUsers.get(message.message.author),  
 						message.message.content, message.message.id);	
 					LOG.info("\nMESSAGE: %s | %s: \"%s\" || UUID: %s \n", 
@@ -334,6 +336,10 @@ public final class Chat {
 				System.out.println("  c-join <title>");
 				System.out
 						.println("    Join the conversation as the current user.");
+
+				System.out.println("  status-update");
+				System.out.println("  	Displays updates for user's conversation and user interests");
+
 				System.out.println("  i-add-user <name>");
 				System.out.println("    Add requested user to interests");
 				System.out.println("  i-add-convo <title>");
@@ -510,6 +516,41 @@ public final class Chat {
 				System.out.println("User Info:");
 				System.out.format("  Name : %s\n", user.user.name);
 				System.out.format("  Id   : UUID:%s\n", user.user.id);
+			}
+		});
+		
+		// STATUS UPDATE
+		// 
+		// Allows user to see status update
+		// A status update includes : 
+		// 1) The number of messages that have been send in each of the user's 
+		//    conversation interests since the last updates 
+		// 2) A list of conversations created and conversations added to by each 
+		//    of the user's user interests 
+		// 
+		panel.register("status-update", new Panel.Command() { 
+			@Override
+			public void invoke(List<String> args) { 
+				HashMap<String, Integer> convoUpdates = user.convoStatusUpdate(); 
+				HashMap<Uuid, ArrayList<ArrayList<String>>> userUpdates = user.userStatusUpdate();
+			
+				// All of the print statements to view update 
+				System.out.println("Status Update:\n");
+				System.out.println("Conversations:");
+				for (String convoName : convoUpdates.keySet()) { 
+					System.out.format("\t%s : %d \n", convoName, convoUpdates.get(convoName));
+				}
+				System.out.println("Users:");
+				for (Uuid userID : userUpdates.keySet()) { 
+					System.out.format("\t%s :\n", userID.toString());
+					System.out.println("Conversations created: "); 
+					String convosCreated = String.join("\n\t", userUpdates.get(userID).get(User.CONVOS_CREATED_ARRAY)); 
+					System.out.format("\t%s", convosCreated);
+
+					System.out.println("Conversations contributed to: "); 
+					String convosContributed = String.join("\n\t", userUpdates.get(userID).get(User.CONVOS_CONTRIBUTED_TO_ARRAY)); 
+					System.out.format("\t%s", convosContributed);
+				}
 			}
 		});
 
