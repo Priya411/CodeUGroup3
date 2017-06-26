@@ -207,8 +207,8 @@ public final class Server {
     		Time.SERIALIZER.write(out, info.getStartTime());
         }
       });
-      
-      
+
+
     // Allows user to request Server Info and handles this request, added by Priyanka Agarwal
     // Modeled after given code of:
     /* if (type == NetworkCode.SERVER_INFO_REQUEST) {
@@ -221,6 +221,53 @@ public final class Server {
       public void onMessage(InputStream in, OutputStream out) throws IOException {
         Serializers.INTEGER.write(out, NetworkCode.SERVER_VERSION_RESPONSE);
         Uuid.SERIALIZER.write(out, info.getVersion());
+      }
+    });
+
+      // Allows user to request that another user be added as an interest
+    this.commands.put(NetworkCode.NEW_USER_INTEREST_REQUEST, new Command() {
+      @Override
+      public void onMessage(InputStream in, OutputStream out) throws IOException {
+
+          final Uuid user = Uuid.SERIALIZER.read(in);
+          final Uuid idToSave = Uuid.SERIALIZER.read(in);
+          controller.newUserInterest(user, idToSave);
+          Serializers.INTEGER.write(out, NetworkCode.NEW_USER_INTEREST_RESPONSE);
+      }
+    });
+
+    // Allows user to request that a conversation be added as an interest
+    this.commands.put(NetworkCode.NEW_CONVO_INTEREST_REQUEST, new Command() {
+      @Override
+      public void onMessage(InputStream in, OutputStream out) throws IOException {
+          final Uuid user = Uuid.SERIALIZER.read(in);
+          final Uuid idToSave = Uuid.SERIALIZER.read(in);
+          final Integer numberOfMessage = Serializers.INTEGER.read(in);
+          controller.newConvoInterest(user, idToSave, numberOfMessage);
+          Serializers.INTEGER.write(out, NetworkCode.NEW_CONVO_INTEREST_RESPONSE);
+      }
+    });
+
+    // Allows user to request that another user be removed as an interest
+    this.commands.put(NetworkCode.REM_USER_INTEREST_REQUEST, new Command() {
+      @Override
+      public void onMessage(InputStream in, OutputStream out) throws IOException {
+
+          final Uuid user = Uuid.SERIALIZER.read(in);
+          final Uuid idToSave = Uuid.SERIALIZER.read(in);
+          controller.removeUserInterest(user, idToSave);
+          Serializers.INTEGER.write(out, NetworkCode.REM_USER_INTEREST_RESPONSE);
+      }
+    });
+
+      // Allows user to request that a conversation be removed as an interest
+    this.commands.put(NetworkCode.REM_CONVO_INTEREST_REQUEST, new Command() {
+      @Override
+      public void onMessage(InputStream in, OutputStream out) throws IOException {
+          final Uuid user = Uuid.SERIALIZER.read(in);
+          final Uuid idToSave = Uuid.SERIALIZER.read(in);
+          controller.removeConvoInterest(user, idToSave);
+          Serializers.INTEGER.write(out, NetworkCode.REM_CONVO_INTEREST_RESPONSE);
       }
     });
 

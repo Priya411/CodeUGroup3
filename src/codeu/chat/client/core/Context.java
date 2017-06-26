@@ -41,6 +41,12 @@ public final class Context {
   }
 
   public UserContext create(String name) {
+	// check if user with that name already exists
+	for(User u: view.getUsers()) {
+	  if (name.equals(u.name)){
+         return null;
+	  }
+	}
     final User user = controller.newUser(name);
     return user == null ?
             null :
