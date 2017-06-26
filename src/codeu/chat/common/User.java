@@ -95,24 +95,36 @@ public final class User {
     return hash;
   }
 
-  public void addUserInterest(Uuid user)
+  public void addUserInterest(Uuid userId)
   {
-    userInterests.add(user);
+    // This function is used to allow a User to add
+    // another user as an interest, and saves this
+    // user's id
+    userInterests.add(userId);
   }
 
-  public void addConvoInterest(Uuid conversation, int messagesAmount)
+  public void addConvoInterest(Uuid conversationId, int messagesAmount)
   {
-    conversationInterests.put(conversation, new Integer(messagesAmount));
+    // This function is used to allow a User to add
+    // another conversation as an interest, and saves this
+    // conversation's id
+    conversationInterests.put(conversationId, new Integer(messagesAmount));
   }
 
-  public void remUserInterest(Uuid user)
+  public void remUserInterest(Uuid userId)
   {
-    userInterests.remove(user);
+    // This function is used to allow a User to remove
+    // another user as an interest, and removes this
+    // user's id
+    userInterests.remove(userId);
   }
 
-  public void remConvoInterest(Uuid conversation)
+  public void remConvoInterest(Uuid conversationId)
   {
-    conversationInterests.remove(conversation);
+    // This function is used to allow a User to remove
+    // another conversation as an interest, and saves this
+    // conversation's id
+    conversationInterests.remove(conversationId);
   }
 
   public void setUpdateTime(Time time)
