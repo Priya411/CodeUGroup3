@@ -28,9 +28,8 @@ import codeu.chat.util.Uuid;
 public final class User {
 
   public Time updateTime = Time.now();
-  HashMap<Uuid, Integer> conversationInterests
-          = new HashMap<>();
-  ArrayList<Uuid> userInterests = new ArrayList<Uuid>();
+  public HashMap<Uuid, Integer> conversationInterests = new HashMap<>();
+  public ArrayList<Uuid> userInterests = new ArrayList<Uuid>();
 
   public static final Serializer<User> SERIALIZER = new Serializer<User>() {
 
