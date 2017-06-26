@@ -153,6 +153,30 @@ public final class Controller implements RawController, BasicController {
     return conversation;
   }
 
+  public void newConvoInterest(Uuid user, Uuid idToSave, int numberOfMessageOfConvo)
+  {
+    final User foundUser = model.userById().first(user);
+    foundUser.addConvoInterest(idToSave,numberOfMessageOfConvo);
+  }
+
+  public void newUserInterest(Uuid user, Uuid idToSave)
+  {
+    final User foundUser = model.userById().first(user);
+    foundUser.addUserInterest(idToSave);
+  }
+
+  public void removeConvoInterest(Uuid user, Uuid idToSave)
+  {
+    final User foundUser = model.userById().first(user);
+    foundUser.remConvoInterest(idToSave);
+  }
+
+  public void removeUserInterest(Uuid user, Uuid idToSave)
+  {
+    final User foundUser = model.userById().first(user);
+    foundUser.remUserInterest(idToSave);
+  }
+
   private Uuid createId() {
 
     Uuid candidate;

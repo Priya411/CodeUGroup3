@@ -17,6 +17,8 @@ package codeu.chat.common;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.ArrayList;
 
 import codeu.chat.util.Serializer;
 import codeu.chat.util.Serializers;
@@ -26,6 +28,10 @@ import codeu.chat.util.Uuid;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+  public long updateTime = Time.now().inMs();
+  public HashMap<Uuid, Integer> conversationInterests = new HashMap<>();
+  public ArrayList<Uuid> userInterests = new ArrayList<Uuid>();
+
 // ignore anything that may cause problems when converting to JSON
 // prevents crashes for items that cant be serialized.
 @JsonIgnoreProperties(ignoreUnknown=true)
@@ -33,6 +39,7 @@ public final class User {
   
   // no need to serialize the serializer when converting to JOSN
   @JsonIgnore
+
   public static final Serializer<User> SERIALIZER = new Serializer<User>() {
 
     @Override
@@ -105,20 +112,44 @@ public final class User {
     return hash;
   }
 
-  public void addUserInterest(Uuid id) {
-     
+  public void addUserInterest(Uuid userId)
+  {
+    // This function is used to allow a User to add
+    // another user as an interest, and saves this
+    // user's id
+    userInterests.add(userId);
   }
-  
-  public void addConvoInterest(Uuid id, int messagesInConvoAtTimeOfCreation) {
-	     
+
+  public void addConvoInterest(Uuid conversationId, int messagesAmount)
+  {
+    // This function is used to allow a User to add
+    // another conversation as an interest, and saves this
+    // conversation's id
+    conversationInterests.put(conversationId, new Integer(messagesAmount));
   }
-  
-  public void removeUserInterest(Uuid id) {
-	     
+
+  public void remUserInterest(Uuid userId)
+  {
+    // This function is used to allow a User to remove
+    // another user as an interest, and removes this
+    // user's id
+    userInterests.remove(userId);
   }
-  
-  public void removeConvoInterest(Uuid id) {
-	     
+
+  public void remConvoInterest(Uuid conversationId)
+  {
+    // This function is used to allow a User to remove
+    // another conversation as an interest, and saves this
+    // conversation's id
+    conversationInterests.remove(conversationId);
   }
-  
+
+  public void setUpdateTime(long time)
+  {
+    // This updates the time, updateTime
+    // This is used to indicate the last time the user
+    // called for a status update on interested fields
+    this.updateTime = time;
+  }
+
 }
