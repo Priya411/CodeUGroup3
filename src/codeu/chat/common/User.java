@@ -182,7 +182,7 @@ public final class User {
 		   }	  
 	  	}
 	  // updates the lastUpdateTime for the user 
-	  this.lastUpdateTime = updateTime.inMs(); 
+	  this.lastUpdateTime = Time.now().inMs();
 	  return userUpdates; 
   	}
   

@@ -535,21 +535,22 @@ public final class Chat {
 				HashMap<Uuid, ArrayList<ArrayList<String>>> userUpdates = user.userStatusUpdate();
 			
 				// All of the print statements to view update 
-				System.out.println("Status Update:\n");
+				System.out.println("Status Update:");
 				System.out.println("Conversations:");
 				for (String convoName : convoUpdates.keySet()) { 
 					System.out.format("\t%s : %d \n", convoName, convoUpdates.get(convoName));
 				}
 				System.out.println("Users:");
 				for (Uuid userID : userUpdates.keySet()) { 
-					System.out.format("\t%s :\n", userID.toString());
-					System.out.println("Conversations created: "); 
+					System.out.format("\t%s\n", userID.toString());
+					System.out.println("\tConversations created: "); 
 					String convosCreated = String.join("\n\t", userUpdates.get(userID).get(User.CONVOS_CREATED_ARRAY)); 
 					System.out.format("\t%s", convosCreated);
 
 					System.out.println("Conversations contributed to: "); 
 					String convosContributed = String.join("\n\t", userUpdates.get(userID).get(User.CONVOS_CONTRIBUTED_TO_ARRAY)); 
 					System.out.format("\t%s", convosContributed);
+					System.out.println("");
 				}
 			}
 		});
