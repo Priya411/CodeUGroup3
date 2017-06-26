@@ -157,10 +157,10 @@ public final class User {
 		  }
 		  
 		  if (convo.conversation.creation.inMs() > this.lastUpdateTime && 
-				  this.userInterests.contains(convo.conversation.owner.id())){ 
+				  this.userInterests.contains(convo.conversation.owner)){ 
 			  // if the convo was created by a user of interest, it will be added 
 			  // to that user's value's CONVOS_CREATED_ARRAY
-			  userUpdates.get(convo.conversation.owner.id()).get(CONVOS_CREATED_ARRAY).add(convo.conversation.title); 
+			  userUpdates.get(convo.conversation.owner).get(CONVOS_CREATED_ARRAY).add(convo.conversation.title); 
 		  }
 		  
 		  
