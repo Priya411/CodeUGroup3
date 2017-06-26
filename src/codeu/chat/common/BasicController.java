@@ -14,6 +14,7 @@
 
 package codeu.chat.common;
 
+import codeu.chat.util.Time;
 import codeu.chat.util.Uuid;
 
 // BASIC CONTROLLER
@@ -58,5 +59,8 @@ public interface BasicController {
   void removeConvoInterest(Uuid userId, Uuid idToSave);
 
   void removeUserInterest(Uuid userId, Uuid idToSave);
+  // STATUS UPDATE 
+  Time statusUpdate(); 
+
 
 }
