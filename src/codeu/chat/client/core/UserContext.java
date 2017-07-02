@@ -17,6 +17,7 @@ package codeu.chat.client.core;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -84,7 +85,7 @@ public Object removeUserInterest(String name) {
 	  }
 	  if (idToSave == null)
 		  return null;
-	  user.removeUserInterest(idToSave);
+	  user.remUserInterest(idToSave);
 	  controller.removeUserInterest(user.id, idToSave);
 	  return user;
   }
@@ -98,7 +99,7 @@ public Object removeUserInterest(String name) {
 	  }
 	  if (idToRemove == null)
 		  return null;
-	  user.removeConvoInterest(idToRemove);
+	  user.remConvoInterest(idToRemove);
 	  controller.removeConvoInterest(user.id, idToRemove);
       return user;
   }
@@ -121,4 +122,16 @@ public Object removeUserInterest(String name) {
 
     return all;
   }
+  
+
+  // USERstatusUpdate()
+  public HashMap<Uuid, ArrayList<ArrayList<String>>> userStatusUpdate(){ 
+	  return this.user.userStatusUpdate(this.conversations(), controller.statusUpdate()); 
+  }
+  
+  // CONVOstatusUpdate() 
+  public HashMap<String, Integer> convoStatusUpdate(){ 
+	  return this.user.convoStatusUpdate(this.conversations());
+  }
+
 }
