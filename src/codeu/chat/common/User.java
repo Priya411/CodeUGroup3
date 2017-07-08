@@ -19,12 +19,15 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.HashMap;
 import java.util.ArrayList;
 
 import codeu.chat.client.core.ConversationContext;
 import codeu.chat.client.core.MessageContext;
+import codeu.chat.client.core.UserContext;
 import codeu.chat.util.Serializer;
 import codeu.chat.util.Serializers;
 import codeu.chat.util.Time;
@@ -76,7 +79,7 @@ public final class User {
   
   // time of user's last update recorded as a long
   // initially set to user's creation time 
-  public long lastUpdateTime = Time.now().inMs(); 
+  public long lastUpdateTime; 
   public static int CONVOS_CREATED_ARRAY = 0; 
   public static int CONVOS_CONTRIBUTED_TO_ARRAY = 1; 
 
@@ -84,6 +87,7 @@ public final class User {
     this.id = id;
     this.name = name;
     this.creation = creation;
+    this.lastUpdateTime = creation.inMs(); 
   }
   
   public String getUUID() {
@@ -122,6 +126,64 @@ public final class User {
     hash+=user.name.hashCode();
     hash+=user.creation.hashCode();
     return hash;
+  }
+  
+  // NEW userStatusUpdate() 
+  // returns all the user updates in a list of UserInterest Objects 
+  // each UserInterst objects has two arraylists: 
+  // ConvosCreated and ConvosAddedTo
+  // which track the new convos a user created 
+  // and the convos a user has added messages to since the last update 
+  public HashMap<Uuid, UserInterest> userStatusUpdate(Iterable<ConversationContext> conversations, Collection<User> users){
+	  // HashMap keeps track of users and UUIDs for easy access 
+	  HashMap<Uuid, String> allUsers = new HashMap<Uuid, String>();	  
+
+	  for(User u: users) {
+		  allUsers.put(u.id, u.name); 
+	  }
+	  
+	  HashMap<Uuid, UserInterest> userUpdates = new HashMap<Uuid, UserInterest>(); 
+	  
+	  // creating the dictionary userUpdates
+	  for (Uuid uuid : this.userInterests){
+		  userUpdates.put(uuid, new UserInterest(uuid, allUsers.get(uuid))); 
+	  }
+	  
+	  // looping through every conversation in the chat to organize updates 
+	  for (ConversationContext convo : conversations){ 
+		  
+		  if (convo.lastMessage().message.getCreationTime() < this.lastUpdateTime){ 
+			  // if the last message in the conversation was sent before lastUpdateTime 
+			  // that means it was covered in the last status update and we can move on 
+			  continue;
+		  }
+		  
+		  if (convo.conversation.creation.inMs() > this.lastUpdateTime && 
+				  this.userInterests.contains(convo.conversation.owner)){ 
+			  // if the convo was created by a user of interest since the last update, 
+			  // it will be added to the userInterest's ConvosCreated arraylist 
+			  userUpdates.get(convo.conversation.owner).addConvoAddedTo(convo.conversation.title);
+		  }
+		  
+		  
+		  for (MessageContext currentmessage = convo.firstMessage(); 
+				  currentmessage != null; currentmessage = currentmessage.next()){ 
+			  // goes through all the messages in the conversation starting from the first one 
+			  if (currentmessage.message.getCreationTime() > this.lastUpdateTime){
+				  // if the currentmessage was created after the last update time 
+				  // and it was contributed by a user of interest. 
+				  // If so, we add it to the userInterest's convosAddedTo 
+				  // otherwise we continue iterating through the messages in the convo 
+				  if (this.userInterests.contains(currentmessage.message.author) && 
+						  !userUpdates.get(convo.conversation.owner).getConvosAddedTo().contains(convo.conversation.title)){
+					  // Also checks to make sure that conversation hasn't already been added to CONVOS_CONTRIBUTED_TO_ARRAY
+					  userUpdates.get(convo.conversation.owner).addConvoAddedTo(convo.conversation.title);
+				  }
+			  }
+		   }
+	  }
+	  this.lastUpdateTime = Time.now().inMs();
+	  return userUpdates; 
   }
   
   // userStatusUpdate()
