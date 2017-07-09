@@ -533,7 +533,7 @@ public final class Chat {
 			@Override
 			public void invoke(List<String> args) { 
 				HashMap<String, Integer> convoUpdates = user.convoStatusUpdate(); 
-				HashMap<Uuid, UserInterest> userUpdates = user.USERStatusUpdate();
+				HashMap<Uuid, UserInterest> userUpdates = user.userStatusUpdate();
 			
 				// All of the print statements to view update 
 				System.out.println("Conversations:");

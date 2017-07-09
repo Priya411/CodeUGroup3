@@ -180,68 +180,6 @@ public final class User {
 	  return userUpdates; 
   }
   
-  // userStatusUpdate()
-  // 
-  // Returns all the user updates in an dictionary 
-  // where keys are the user's user interests (UUIDs) 
-  // and a value is an arraylist of arraylists<String> 
-  // where the 1st arraylist keeps track of each userinterest's 
-  // newly created conversations (CONVOS_CREATED_ARRAY) and the second arraylist keeps 
-  // track of the conversations the userinterest has contributed messages to (CONVOS_CONTRIBUTED_TO_ARRAY)
-  //
-  public HashMap<Uuid, ArrayList<ArrayList<String>>> userStatusUpdate(Iterable<ConversationContext> conversations, Time updateTime){ 
-	  // ASSUMPTION: all of the names saved in userInterests are indeed 
-	  //			 valid users in the system 
-	  
-	  HashMap<Uuid, ArrayList<ArrayList<String>>> userUpdates = new HashMap<Uuid, ArrayList<ArrayList<String>>>(); 
-
-
-	  // creating the dictionary userUpdates
-	  for (Uuid uuid : this.userInterests){
-		  userUpdates.put(uuid, new ArrayList<ArrayList<String>>(Arrays.asList(
-				  new ArrayList<String>() {}, new ArrayList<String>() {}))); 
-	  }
-	  
-	  // looping through every conversation in the chat to organize updates 
-	  for (ConversationContext convo : conversations){
-		  MessageContext lastmessage = convo.lastMessage(); 
-		  
-		  if (lastmessage.message.getCreationTime() < this.lastUpdateTime){ 
-			  // if the last message in the conversation was sent before lastUpdateTime 
-			  // that means it was covered in the last status update and we can move on 
-			  continue;
-		  }
-		  
-		  if (convo.conversation.creation.inMs() > this.lastUpdateTime && 
-				  this.userInterests.contains(convo.conversation.owner)){ 
-			  // if the convo was created by a user of interest, it will be added 
-			  // to that user's value's CONVOS_CREATED_ARRAY
-			  userUpdates.get(convo.conversation.owner).get(CONVOS_CREATED_ARRAY).add(convo.conversation.title); 
-		  }
-		  
-		  
-		  for (MessageContext currentmessage = convo.firstMessage(); 
-				  currentmessage != null; currentmessage = currentmessage.next()){ 
-			  // goes through all the messages in the conversation starting from the first one 
-			  if (currentmessage.message.getCreationTime() > this.lastUpdateTime){
-				  // if the currentmessage was created after the last update time 
-				  // we need to look at it to see if it was contributed by a user 
-				  // of interest. 
-				  // If so, we add it to the user's CONVOS_CONTRIBUTED_TO_ARRAY, 
-				  // otherwise we continue iterating through the messages in the convo 
-				  if (this.userInterests.contains(currentmessage.message.author) && 
-						  !userUpdates.get(convo.conversation.owner).get(CONVOS_CONTRIBUTED_TO_ARRAY).contains(convo.conversation.title)){
-					  // Also checks to make sure that conversation hasn't already been added to CONVOS_CONTRIBUTED_TO_ARRAY
-					  userUpdates.get(convo.conversation.owner).get(CONVOS_CONTRIBUTED_TO_ARRAY).add(convo.conversation.title); 
-				  }
-			  }
-		   }	  
-	  	}
-	  // updates the lastUpdateTime for the user 
-	  this.lastUpdateTime = Time.now().inMs();
-	  return userUpdates; 
-  	}
-  
   
   // convoStatusUpdate 
   //

@@ -123,12 +123,9 @@ public Object removeUserInterest(String name) {
 
     return all;
   }
+
   
-  public HashMap<Uuid, ArrayList<ArrayList<String>>> userStatusUpdate(){ 
-	  return this.user.userStatusUpdate(this.conversations(), controller.statusUpdate()); 
-  }
-  
-  public HashMap<Uuid, UserInterest> USERStatusUpdate(){
+  public HashMap<Uuid, UserInterest> userStatusUpdate(){
 	  return this.user.userStatusUpdate(this.conversations(), view.getUsers());
   }
   
