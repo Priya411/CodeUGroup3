@@ -21,13 +21,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.HashMap;
-import java.util.ArrayList;
-
 import codeu.chat.client.core.ConversationContext;
 import codeu.chat.client.core.MessageContext;
-import codeu.chat.client.core.UserContext;
 import codeu.chat.util.Serializer;
 import codeu.chat.util.Serializers;
 import codeu.chat.util.Time;
@@ -176,7 +171,6 @@ public final class User {
 				  // otherwise we continue iterating through the messages in the convo 
 				  if (this.userInterests.contains(currentmessage.message.author) && 
 						  !userUpdates.get(convo.conversation.owner).getConvosAddedTo().contains(convo.conversation.title)){
-					  // Also checks to make sure that conversation hasn't already been added to CONVOS_CONTRIBUTED_TO_ARRAY
 					  userUpdates.get(convo.conversation.owner).addConvoAddedTo(convo.conversation.title);
 				  }
 			  }

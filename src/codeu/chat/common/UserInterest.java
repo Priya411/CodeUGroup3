@@ -3,8 +3,7 @@ package codeu.chat.common;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-
-import codeu.chat.util.Uuid;
+import codeu.chat.util.*;
 
 public class UserInterest {
 
