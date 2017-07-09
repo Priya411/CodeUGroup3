@@ -147,7 +147,7 @@ public final class User {
 	  // looping through every conversation in the chat to organize updates 
 	  for (ConversationContext convo : conversations){ 
 		  
-		  if (convo.lastMessage().message.getCreationTime() < this.lastUpdateTime){ 
+		  if (convo.lastMessage() != null && convo.lastMessage().message.getCreationTime() < this.lastUpdateTime){ 
 			  // if the last message in the conversation was sent before lastUpdateTime 
 			  // that means it was covered in the last status update and we can move on 
 			  continue;
@@ -157,7 +157,7 @@ public final class User {
 				  this.userInterests.contains(convo.conversation.owner)){ 
 			  // if the convo was created by a user of interest since the last update, 
 			  // it will be added to the userInterest's ConvosCreated arraylist 
-			  userUpdates.get(convo.conversation.owner).addConvoAddedTo(convo.conversation.title);
+			  userUpdates.get(convo.conversation.owner).addConvoCreated(convo.conversation.title);
 		  }
 		  
 		  

@@ -546,14 +546,15 @@ public final class Chat {
 					System.out.println("\tConversations created: "); 
 					String convosCreated = String.join("\n\t", userUpdates.get(userID).getConvosCreated()); 
 					System.out.format("\t%s", convosCreated);
-
-					System.out.println("Conversations contributed to: "); 
-					String convosContributed = String.join("\n\t", userUpdates.get(userID).getConvosAddedTo()); 
-					System.out.format("\t%s", convosContributed);
 					System.out.println("");
+					System.out.println("\tConversations contributed to: "); 
+					String convosContributed = String.join("\n\t", userUpdates.get(userID).getConvosAddedTo()); 
+					System.out.format("\t%s\n", convosContributed);
+					System.out.println(" ");
 				}
 			}
 		});
+	
 
 		// Now that the panel has all its commands registered, return the panel
 		// so that it can be used.
