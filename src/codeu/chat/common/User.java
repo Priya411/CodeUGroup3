@@ -82,7 +82,7 @@ public final class User {
     this.id = id;
     this.name = name;
     this.creation = creation;
-    this.lastUpdateTime = creation.inMs(); 
+    this.lastUpdateTime = Time.now().inMs(); 
   }
   
   public String getUUID() {
