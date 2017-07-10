@@ -33,226 +33,246 @@ import codeu.chat.util.Uuid;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
- 
-
 // ignore anything that may cause problems when converting to JSON
 // prevents crashes for items that cant be serialized.
-@JsonIgnoreProperties(ignoreUnknown=true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public final class User {
-  
-  public HashMap<Uuid, Integer> conversationInterests = new HashMap<>();
-  public ArrayList<Uuid> userInterests = new ArrayList<Uuid>();
+
+	public HashMap<Uuid, Integer> conversationInterests = new HashMap<>();
+	public ArrayList<Uuid> userInterests = new ArrayList<Uuid>();
+
+	// no need to serialize the serializer when converting to JOSN
+	@JsonIgnore
+	public static final Serializer<User> SERIALIZER = new Serializer<User>() {
+
+		@Override
+		public void write(OutputStream out, User value) throws IOException {
+
+			Uuid.SERIALIZER.write(out, value.id);
+			Serializers.STRING.write(out, value.name);
+			Time.SERIALIZER.write(out, value.creation);
+
+		}
+
+		@Override
+		public User read(InputStream in) throws IOException {
+			return new User(Uuid.SERIALIZER.read(in),
+					Serializers.STRING.read(in), Time.SERIALIZER.read(in));
+		}
+	};
+
+	// ignore objects that aren't built-in types (string, int, etc)
+	// Jackons will default to the getters since instance vars are ignored
+	@JsonIgnore
+	public final Uuid id;
+	public final String name;
+	@JsonIgnore
+	public final Time creation;
+
+	// time of user's last update recorded as a long
+	// initially set to user's creation time
+	public long lastUpdateTime = Time.now().inMs();
+	public static int CONVOS_CREATED_ARRAY = 0;
+	public static int CONVOS_CONTRIBUTED_TO_ARRAY = 1;
+
+	public User(Uuid id, String name, Time creation) {
+		this.id = id;
+		this.name = name;
+		this.creation = creation;
+	}
+
+	public String getUUID() {
+		return id.toString();
+	}
+
+	public long getCreationTime() {
+		return creation.inMs();
+	}
+
+	@Override
+	public boolean equals(Object toCompare) {
+		if (!(toCompare instanceof User)) {
+			return false;
+		}
+		User toCompareUser = (User) (toCompare);
+		if (!this.id.equals(toCompareUser.id)) {
+			return false;
+		}
+		if (!this.name.equals(toCompareUser.name)) {
+			return false;
+		}
+		if (!this.creation.equals(toCompareUser.creation)) {
+			return false;
+		}
+		return true;
+	}
+
+	public int hashCode() {
+		return hash(this);
+	}
+
+	private static int hash(User user) {
+		int hash = 0;
+		hash += user.id.hashCode();
+		hash += user.name.hashCode();
+		hash += user.creation.hashCode();
+		return hash;
+	}
+
+	// userStatusUpdate()
+	//
+	// Returns all the user updates in an dictionary
+	// where keys are the user's user interests (UUIDs)
+	// and a value is an arraylist of arraylists<String>
+	// where the 1st arraylist keeps track of each userinterest's
+	// newly created conversations (CONVOS_CREATED_ARRAY) and the second
+	// arraylist keeps
+	// track of the conversations the userinterest has contributed messages to
+	// (CONVOS_CONTRIBUTED_TO_ARRAY)
+	//
+	public HashMap<Uuid, ArrayList<ArrayList<String>>> userStatusUpdate(
+			Iterable<ConversationContext> conversations, Time updateTime) {
+		// ASSUMPTION: all of the names saved in userInterests are indeed
+		// valid users in the system
+
+		HashMap<Uuid, ArrayList<ArrayList<String>>> userUpdates = new HashMap<Uuid, ArrayList<ArrayList<String>>>();
+
+		// creating the dictionary userUpdates
+		for (Uuid uuid : this.userInterests) {
+			userUpdates.put(
+					uuid,
+					new ArrayList<ArrayList<String>>(Arrays.asList(
+							new ArrayList<String>() {
+							}, new ArrayList<String>() {
+							})));
+		}
+
+		// looping through every conversation in the chat to organize updates
+		for (ConversationContext convo : conversations) {
+			MessageContext lastmessage = convo.lastMessage();
+
+			if (lastmessage.message.getCreationTime() < this.lastUpdateTime) {
+				// if the last message in the conversation was sent before
+				// lastUpdateTime
+				// that means it was covered in the last status update and we
+				// can move on
+				continue;
+			}
+
+			if (convo.conversation.creation.inMs() > this.lastUpdateTime
+					&& this.userInterests.contains(convo.conversation.owner)) {
+				// if the convo was created by a user of interest, it will be
+				// added
+				// to that user's value's CONVOS_CREATED_ARRAY
+				userUpdates.get(convo.conversation.owner)
+						.get(CONVOS_CREATED_ARRAY)
+						.add(convo.conversation.title);
+			}
+
+			for (MessageContext currentmessage = convo.firstMessage(); currentmessage != null; currentmessage = currentmessage
+					.next()) {
+				// goes through all the messages in the conversation starting
+				// from the first one
+				if (currentmessage.message.getCreationTime() > this.lastUpdateTime) {
+					// if the currentmessage was created after the last update
+					// time
+					// we need to look at it to see if it was contributed by a
+					// user
+					// of interest.
+					// If so, we add it to the user's
+					// CONVOS_CONTRIBUTED_TO_ARRAY,
+					// otherwise we continue iterating through the messages in
+					// the convo
+					if (this.userInterests
+							.contains(currentmessage.message.author)
+							&& !userUpdates.get(convo.conversation.owner)
+									.get(CONVOS_CONTRIBUTED_TO_ARRAY)
+									.contains(convo.conversation.title)) {
+						// Also checks to make sure that conversation hasn't
+						// already been added to CONVOS_CONTRIBUTED_TO_ARRAY
+						userUpdates.get(convo.conversation.owner)
+								.get(CONVOS_CONTRIBUTED_TO_ARRAY)
+								.add(convo.conversation.title);
+					}
+				}
+			}
+		}
+		// updates the lastUpdateTime for the user
+		this.lastUpdateTime = Time.now().inMs();
+		return userUpdates;
+	}
+
+	// convoStatusUpdate
+	//
+	// returns the conversation updates in a dictionary
+	// where the name of the convo is the key
+	// and the number of messages sent since the last update is
+	// the value
+	//
+	public HashMap<String, Integer> convoStatusUpdate(
+			Iterable<ConversationContext> conversations) {
+		HashMap<String, Integer> convoUpdates = new HashMap<String, Integer>();
+		int totalNumMessages, numNewMessages;
+
+		for (ConversationContext convo : conversations) {
+			// iterates through all the convos
+			if (this.conversationInterests.keySet().contains(
+					convo.conversation.id)) {
+				// if the convo is one of interest,
+				// first add the conversation and the number of messages
+				// since last update to conversationInterests
+				totalNumMessages = convo.getMessageCount();
+				numNewMessages = totalNumMessages
+						- this.conversationInterests.get(convo.conversation.id);
+				convoUpdates.put(convo.conversation.title, numNewMessages);
+
+				// then update the value for the number of messages at
+				// lastUpdate in conversationInterests
+				this.conversationInterests.put(convo.conversation.id,
+						totalNumMessages);
+			}
+		}
+		return convoUpdates;
+	}
+
+	public void addUserInterest(Uuid userId) {
+		// This function is used to allow a User to add
+		// another user as an interest, and saves this
+		// user's id
+		userInterests.add(userId);
+	}
 	
-  // no need to serialize the serializer when converting to JOSN
-  @JsonIgnore
-  public static final Serializer<User> SERIALIZER = new Serializer<User>() {
+	// convenience method
+	public void addConvoInterest(ConvoInterest interest) {
+		this.addConvoInterest(interest.convoId, interest.messagesCount);
+	}
 
-    @Override
-    public void write(OutputStream out, User value) throws IOException {
+	public void addConvoInterest(Uuid conversationId, int messagesAmount) {
+		// This function is used to allow a User to add
+		// another conversation as an interest, and saves this
+		// conversation's id
+		conversationInterests.put(conversationId, new Integer(messagesAmount));
+	}
 
-      Uuid.SERIALIZER.write(out, value.id);
-      Serializers.STRING.write(out, value.name);
-      Time.SERIALIZER.write(out, value.creation);
+	public void remUserInterest(Uuid userId) {
+		// This function is used to allow a User to remove
+		// another user as an interest, and removes this
+		// user's id
+		userInterests.remove(userId);
+	}
 
-    }
+	public void remConvoInterest(Uuid conversationId) {
+		// This function is used to allow a User to remove
+		// another conversation as an interest, and saves this
+		// conversation's id
+		conversationInterests.remove(conversationId);
+	}
 
-    @Override
-    public User read(InputStream in) throws IOException {
-      return new User(
-          Uuid.SERIALIZER.read(in),
-          Serializers.STRING.read(in),
-          Time.SERIALIZER.read(in)
-      );
-    }
-  };
-
-  // ignore objects that aren't built-in types (string, int, etc)
-  // Jackons will default to the getters since instance vars are ignored
-  @JsonIgnore
-  public final Uuid id;
-  public final String name;
-  @JsonIgnore
-  public final Time creation;
-  
-  // time of user's last update recorded as a long
-  // initially set to user's creation time 
-  public long lastUpdateTime = Time.now().inMs(); 
-  public static int CONVOS_CREATED_ARRAY = 0; 
-  public static int CONVOS_CONTRIBUTED_TO_ARRAY = 1; 
-
-  public User(Uuid id, String name, Time creation) {
-    this.id = id;
-    this.name = name;
-    this.creation = creation;
-  }
-  
-  public String getUUID() {
-	  return id.toString();
-  }
-  
-  public long getCreationTime() {
-	  return creation.inMs();
-  }
-
-
-  @Override
-  public boolean equals (Object toCompare)
-  {
-    if(!(toCompare instanceof User)) {
-      return false;
-    }
-    User toCompareUser = (User)(toCompare);
-    if(!this.id.equals(toCompareUser.id)) {
-      return false;
-    }
-    if(!this.name.equals(toCompareUser.name)) {
-      return false;
-    }
-    if(!this.creation.equals(toCompareUser.creation)) {
-      return false;
-    }
-    return true;
-  }
-
-  public int hashCode() { return hash(this); }
-
-  private static int hash(User user) {
-    int hash = 0;
-    hash+=user.id.hashCode();
-    hash+=user.name.hashCode();
-    hash+=user.creation.hashCode();
-    return hash;
-  }
-  
-  // userStatusUpdate()
-  // 
-  // Returns all the user updates in an dictionary 
-  // where keys are the user's user interests (UUIDs) 
-  // and a value is an arraylist of arraylists<String> 
-  // where the 1st arraylist keeps track of each userinterest's 
-  // newly created conversations (CONVOS_CREATED_ARRAY) and the second arraylist keeps 
-  // track of the conversations the userinterest has contributed messages to (CONVOS_CONTRIBUTED_TO_ARRAY)
-  //
-  public HashMap<Uuid, ArrayList<ArrayList<String>>> userStatusUpdate(Iterable<ConversationContext> conversations, Time updateTime){ 
-	  // ASSUMPTION: all of the names saved in userInterests are indeed 
-	  //			 valid users in the system 
-	  
-	  HashMap<Uuid, ArrayList<ArrayList<String>>> userUpdates = new HashMap<Uuid, ArrayList<ArrayList<String>>>(); 
-
-
-	  // creating the dictionary userUpdates
-	  for (Uuid uuid : this.userInterests){
-		  userUpdates.put(uuid, new ArrayList<ArrayList<String>>(Arrays.asList(
-				  new ArrayList<String>() {}, new ArrayList<String>() {}))); 
-	  }
-	  
-	  // looping through every conversation in the chat to organize updates 
-	  for (ConversationContext convo : conversations){
-		  MessageContext lastmessage = convo.lastMessage(); 
-		  
-		  if (lastmessage.message.getCreationTime() < this.lastUpdateTime){ 
-			  // if the last message in the conversation was sent before lastUpdateTime 
-			  // that means it was covered in the last status update and we can move on 
-			  continue;
-		  }
-		  
-		  if (convo.conversation.creation.inMs() > this.lastUpdateTime && 
-				  this.userInterests.contains(convo.conversation.owner)){ 
-			  // if the convo was created by a user of interest, it will be added 
-			  // to that user's value's CONVOS_CREATED_ARRAY
-			  userUpdates.get(convo.conversation.owner).get(CONVOS_CREATED_ARRAY).add(convo.conversation.title); 
-		  }
-		  
-		  
-		  for (MessageContext currentmessage = convo.firstMessage(); 
-				  currentmessage != null; currentmessage = currentmessage.next()){ 
-			  // goes through all the messages in the conversation starting from the first one 
-			  if (currentmessage.message.getCreationTime() > this.lastUpdateTime){
-				  // if the currentmessage was created after the last update time 
-				  // we need to look at it to see if it was contributed by a user 
-				  // of interest. 
-				  // If so, we add it to the user's CONVOS_CONTRIBUTED_TO_ARRAY, 
-				  // otherwise we continue iterating through the messages in the convo 
-				  if (this.userInterests.contains(currentmessage.message.author) && 
-						  !userUpdates.get(convo.conversation.owner).get(CONVOS_CONTRIBUTED_TO_ARRAY).contains(convo.conversation.title)){
-					  // Also checks to make sure that conversation hasn't already been added to CONVOS_CONTRIBUTED_TO_ARRAY
-					  userUpdates.get(convo.conversation.owner).get(CONVOS_CONTRIBUTED_TO_ARRAY).add(convo.conversation.title); 
-				  }
-			  }
-		   }	  
-	  	}
-	  // updates the lastUpdateTime for the user 
-	  this.lastUpdateTime = Time.now().inMs();
-	  return userUpdates; 
-  	}
-  
-  
-  // convoStatusUpdate 
-  //
-  // returns the conversation updates in a dictionary 
-  // where the name of the convo is the key 
-  // and the number of messages sent since the last update is 
-  // the value 
-  // 
-  public HashMap<String, Integer> convoStatusUpdate(Iterable<ConversationContext> conversations){ 
-	  HashMap<String, Integer> convoUpdates = new HashMap<String, Integer>(); 
-	  int totalNumMessages, numNewMessages; 
-	  
-	  for (ConversationContext convo : conversations) {
-		  // iterates through all the convos
-		  if (this.conversationInterests.keySet().contains(convo.conversation.id)) { 
-			  // if the convo is one of interest, 
-			  // first add the conversation and the number of messages 
-			  // since last update to conversationInterests
-			  totalNumMessages = convo.getMessageCount(); 
-			  numNewMessages = totalNumMessages - this.conversationInterests.get(convo.conversation.id); 
-			  convoUpdates.put(convo.conversation.title, numNewMessages); 
-			  
-			  // then update the value for the number of messages at lastUpdate in conversationInterests
-			  this.conversationInterests.put(convo.conversation.id, totalNumMessages); 
-		  }
-	  }
-	  return convoUpdates; 
-  } 
-
-  public void addUserInterest(Uuid userId)
-  {
-    // This function is used to allow a User to add
-    // another user as an interest, and saves this
-    // user's id
-    userInterests.add(userId);
-  }
-
-  public void addConvoInterest(Uuid conversationId, int messagesAmount)
-  {
-    // This function is used to allow a User to add
-    // another conversation as an interest, and saves this
-    // conversation's id
-    conversationInterests.put(conversationId, new Integer(messagesAmount));
-  }
-
-  public void remUserInterest(Uuid userId)
-  {
-    // This function is used to allow a User to remove
-    // another user as an interest, and removes this
-    // user's id
-    userInterests.remove(userId);
-  }
-
-  public void remConvoInterest(Uuid conversationId)
-  {
-    // This function is used to allow a User to remove
-    // another conversation as an interest, and saves this
-    // conversation's id
-    conversationInterests.remove(conversationId);
-  }
-
-  public void setUpdateTime(long time)
-  {
-    // This updates the time, updateTime
-    // This is used to indicate the last time the user
-    // called for a status update on interested fields
-    this.lastUpdateTime = time;
-  }
+	public void setUpdateTime(long time) {
+		// This updates the time, updateTime
+		// This is used to indicate the last time the user
+		// called for a status update on interested fields
+		this.lastUpdateTime = time;
+	}
 
 }

@@ -14,11 +14,10 @@
 
 package codeu.chat.server;
 
-import java.util.Collection;
-
 import codeu.chat.common.BasicController;
 import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.ConversationPayload;
+import codeu.chat.common.ConvoInterest;
 import codeu.chat.common.Message;
 import codeu.chat.common.RandomUuidGenerator;
 import codeu.chat.common.RawController;
@@ -29,184 +28,225 @@ import codeu.chat.util.Uuid;
 
 public final class Controller implements RawController, BasicController {
 
-  private final static Logger.Log LOG = Logger.newLog(Controller.class);
+	private final static Logger.Log LOG = Logger.newLog(Controller.class);
 
-  private final Model model;
-  private final Uuid.Generator uuidGenerator;
+	private final Model model;
+	private final Uuid.Generator uuidGenerator;
 
-  public Controller(Uuid serverId, Model model) {
-    this.model = model;
-    this.uuidGenerator = new RandomUuidGenerator(serverId, System.currentTimeMillis());
-  }
+	public Controller(Uuid serverId, Model model) {
+		this.model = model;
+		this.uuidGenerator = new RandomUuidGenerator(serverId,
+				System.currentTimeMillis());
+	}
 
-  @Override
-  public Message newMessage(Uuid author, Uuid conversation, String body) {
-    return newMessage(createId(), author, conversation, body, Time.now());
-  }
+	@Override
+	public Message newMessage(Uuid author, Uuid conversation, String body) {
+		return newMessage(createId(), author, conversation, body, Time.now());
+	}
 
-  @Override
-  public User newUser(String name) {
-    return newUser(createId(), name, Time.now());
-  }
+	@Override
+	public User newUser(String name) {
+		return newUser(createId(), name, Time.now());
+	}
 
-  @Override
-  public ConversationHeader newConversation(String title, Uuid owner) {
-    return newConversation(createId(), title, owner, Time.now());
-  }
+	@Override
+	public ConversationHeader newConversation(String title, Uuid owner) {
+		return newConversation(createId(), title, owner, Time.now());
+	}
 
-  @Override
-  public Message newMessage(Uuid id, Uuid author, Uuid conversation, String body, Time creationTime) {
+	@Override
+	public Message newMessage(Uuid id, Uuid author, Uuid conversation,
+			String body, Time creationTime) {
 
-    final User foundUser = model.userById().first(author);
-    final ConversationPayload foundConversation = model.conversationPayloadById().first(conversation);
+		final User foundUser = model.userById().first(author);
+		final ConversationPayload foundConversation = model
+				.conversationPayloadById().first(conversation);
 
-    Message message = null;
+		Message message = null;
 
-    if (foundUser != null && foundConversation != null && isIdFree(id)) {
+		if (foundUser != null && foundConversation != null && isIdFree(id)) {
 
-      message = new Message(id, Uuid.NULL, Uuid.NULL, creationTime, author, body);
-      model.add(message);
-      
-      
-      LOG.info("Message added: %s", message.id);
+			message = new Message(id, Uuid.NULL, Uuid.NULL, creationTime,
+					author, body);
+			model.add(message);
 
-      // Find and update the previous "last" message so that it's "next" value
-      // will point to the new message.
+			LOG.info("Message added: %s", message.id);
 
-      if (Uuid.equals(foundConversation.lastMessage, Uuid.NULL)) {
+			// Find and update the previous "last" message so that it's "next"
+			// value
+			// will point to the new message.
 
-        // The conversation has no messages in it, that's why the last message is NULL (the first
-        // message should be NULL too. Since there is no last message, then it is not possible
-        // to update the last message's "next" value.
+			if (Uuid.equals(foundConversation.lastMessage, Uuid.NULL)) {
 
-      } else {
-        final Message lastMessage = model.messageById().first(foundConversation.lastMessage);
-        lastMessage.next = message.id;
-        new JSON().save(lastMessage);
-        
-      }
+				// The conversation has no messages in it, that's why the last
+				// message is NULL (the first
+				// message should be NULL too. Since there is no last message,
+				// then it is not possible
+				// to update the last message's "next" value.
 
-      // If the first message points to NULL it means that the conversation was empty and that
-      // the first message should be set to the new message. Otherwise the message should
-      // not change.
+			} else {
+				final Message lastMessage = model.messageById().first(
+						foundConversation.lastMessage);
+				lastMessage.next = message.id;
+				new JSON().save(lastMessage);
 
-      foundConversation.firstMessage =
-          Uuid.equals(foundConversation.firstMessage, Uuid.NULL) ?
-          message.id :
-          foundConversation.firstMessage;
+			}
 
-      // Update the conversation to point to the new last message as it has changed.
+			// If the first message points to NULL it means that the
+			// conversation was empty and that
+			// the first message should be set to the new message. Otherwise the
+			// message should
+			// not change.
 
-      foundConversation.lastMessage = message.id;
-      
-      new JSON().save(foundConversation);
-      new JSON().save(message);
-    }
+			foundConversation.firstMessage = Uuid.equals(
+					foundConversation.firstMessage, Uuid.NULL) ? message.id
+					: foundConversation.firstMessage;
 
-    
-    return message;
-  }
+			// Update the conversation to point to the new last message as it
+			// has changed.
 
-  @Override
-  public User newUser(Uuid id, String name, Time creationTime) {
+			foundConversation.lastMessage = message.id;
 
-    User user = null;
+			new JSON().save(foundConversation);
+			new JSON().save(message);
+		}
 
-    if (isIdFree(id)) {
+		return message;
+	}
 
-      user = new User(id, name, creationTime);
-      model.add(user);
-      new JSON().save(user);
+	@Override
+	public User newUser(Uuid id, String name, Time creationTime) {
 
-      LOG.info(
-          "newUser success (user.id=%s user.name=%s user.time=%s)",
-          id,
-          name,
-          creationTime);
+		User user = null;
 
-    } else {
+		if (isIdFree(id)) {
 
-      LOG.info(
-          "newUser fail - id in use (user.id=%s user.name=%s user.time=%s)",
-          id,
-          name,
-          creationTime);
-    }
+			user = new User(id, name, creationTime);
+			model.add(user);
+			new JSON().save(user);
 
-    return user;
-  }
+			LOG.info("newUser success (user.id=%s user.name=%s user.time=%s)",
+					id, name, creationTime);
 
-  @Override
-  public ConversationHeader newConversation(Uuid id, String title, Uuid owner, Time creationTime) {
+		} else {
 
-    final User foundOwner = model.userById().first(owner);
+			LOG.info(
+					"newUser fail - id in use (user.id=%s user.name=%s user.time=%s)",
+					id, name, creationTime);
+		}
 
-    ConversationHeader conversation = null;
+		return user;
+	}
 
-    if (foundOwner != null && isIdFree(id)) {
-      conversation = new ConversationHeader(id, owner, creationTime, title);
-      model.add(conversation);
-      new JSON().save(conversation);
-      LOG.info("Conversation added: " + id);
-    }
+	@Override
+	public ConversationHeader newConversation(Uuid id, String title,
+			Uuid owner, Time creationTime) {
 
-    return conversation;
-  }
+		final User foundOwner = model.userById().first(owner);
 
-  public void newConvoInterest(Uuid user, Uuid idToSave, int numberOfMessageOfConvo)
-  {
-    final User foundUser = model.userById().first(user);
-    foundUser.addConvoInterest(idToSave,numberOfMessageOfConvo);
-  }
+		ConversationHeader conversation = null;
 
-  public void newUserInterest(Uuid user, Uuid idToSave)
-  {
-    final User foundUser = model.userById().first(user);
-    foundUser.addUserInterest(idToSave);
-  }
+		if (foundOwner != null && isIdFree(id)) {
+			conversation = new ConversationHeader(id, owner, creationTime,
+					title);
+			model.add(conversation);
+			new JSON().save(conversation);
+			LOG.info("Conversation added: " + id);
+		}
 
-  public void removeConvoInterest(Uuid user, Uuid idToSave)
-  {
-    final User foundUser = model.userById().first(user);
-    foundUser.remConvoInterest(idToSave);
-  }
+		return conversation;
+	}
 
-  public void removeUserInterest(Uuid user, Uuid idToSave)
-  {
-    final User foundUser = model.userById().first(user);
-    foundUser.remUserInterest(idToSave);
-  }
+	public ConvoInterest newConvoInterest(Uuid user, String title) {
+		final User foundUser = model.userById().first(user);
 
-  private Uuid createId() {
+		// count the number of messages
+		// create header and payload objects from string title
+		final ConversationHeader convoHeader = model.conversationByText()
+				.first(title);
+		// return null if not ofund
+		if (convoHeader == null) {
+			return null;
+		}
+		final ConversationPayload convoPayload = model
+				.conversationPayloadById().first(convoHeader.id);
+		Message currentMessage = model.messageById().first(
+				convoPayload.firstMessage);
+		int count = 0;
+		while (currentMessage != null) {
+			currentMessage = model.messageById().first(currentMessage.next);
+			count++;
+		}
+		ConvoInterest interest = new ConvoInterest(convoPayload.id, count);
+		foundUser.addConvoInterest(interest);
+		return interest;
+	}
 
-    Uuid candidate;
+	public Uuid newUserInterest(Uuid user, String name) {
+		final User foundUser = model.userById().first(user);
+		final User userToSave = model.userByText().first(name);
+		if (userToSave == null) {
+			return null;
+		}
+		foundUser.addUserInterest(userToSave.id);
+		return userToSave.id;
+	}
 
-    for (candidate = uuidGenerator.make();
-         isIdInUse(candidate);
-         candidate = uuidGenerator.make()) {
+	public Uuid removeConvoInterest(Uuid user, String title) {
+		final User foundUser = model.userById().first(user);
+		// create header and payload objects from string title
+		final ConversationHeader convoHeader = model.conversationByText()
+				.first(title);
+		// return null if not found
+		if (convoHeader == null) {
+			return null;
+		}
+		final ConversationPayload convoPayload = model
+				.conversationPayloadById().first(convoHeader.id);
+		
+		foundUser.remConvoInterest(convoPayload.id);
+		return convoPayload.id;
+	}
 
-     // Assuming that "randomUuid" is actually well implemented, this
-     // loop should never be needed, but just incase make sure that the
-     // Uuid is not actually in use before returning it.
+	public Uuid removeUserInterest(Uuid user, String name) {
+		final User foundUser = model.userById().first(user);
+		final User userToSave = model.userByText().first(name);
+		if (userToSave == null) {
+			return null;
+		}
+		foundUser.remUserInterest(userToSave.id);
+		return userToSave.id;
+	}
 
-    }
+	private Uuid createId() {
 
-    return candidate;
-  }
+		Uuid candidate;
 
-  private boolean isIdInUse(Uuid id) {
-    return model.messageById().first(id) != null ||
-           model.conversationById().first(id) != null ||
-           model.userById().first(id) != null;
-  }
+		for (candidate = uuidGenerator.make(); isIdInUse(candidate); candidate = uuidGenerator
+				.make()) {
 
-  private boolean isIdFree(Uuid id) { return !isIdInUse(id); }
-  
-  @Override 
-  public Time statusUpdate() { 
-	  return null; 
-  }
+			// Assuming that "randomUuid" is actually well implemented, this
+			// loop should never be needed, but just incase make sure that the
+			// Uuid is not actually in use before returning it.
 
-  
+		}
+
+		return candidate;
+	}
+
+	private boolean isIdInUse(Uuid id) {
+		return model.messageById().first(id) != null
+				|| model.conversationById().first(id) != null
+				|| model.userById().first(id) != null;
+	}
+
+	private boolean isIdFree(Uuid id) {
+		return !isIdInUse(id);
+	}
+
+	@Override
+	public Time statusUpdate() {
+		return null;
+	}
 
 }

@@ -52,13 +52,21 @@ public interface BasicController {
   //  Whether conversations can have the same title is undefined.
   ConversationHeader newConversation(String title, Uuid owner);
 
-  void newConvoInterest(Uuid userId, Uuid idToSave, int numberOfMessageOfConvo);
+  // create new convo interest for the given userId, a ConvoInterest object is returned
+  ConvoInterest newConvoInterest(Uuid userId, String title);
 
-  void newUserInterest(Uuid userId, Uuid idToSave);
+  // adds user interset of a user with the given name to the userId supplied. 
+  // returns the uuid of the name of the user being added as an interest
+  Uuid newUserInterest(Uuid userId, String name);
   
-  void removeConvoInterest(Uuid userId, Uuid idToSave);
+  // removes convo with given title from user with given id
+  // returns id of the convo that was removed
+  Uuid removeConvoInterest(Uuid userId, String title);
 
-  void removeUserInterest(Uuid userId, Uuid idToSave);
+  // removes interest of user with given name from user with given id
+  // return id of user name who was removed
+  Uuid removeUserInterest(Uuid userId, String name);
+  
   // STATUS UPDATE 
   Time statusUpdate(); 
 

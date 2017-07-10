@@ -20,6 +20,7 @@ import java.lang.Thread;
 
 import codeu.chat.common.BasicController;
 import codeu.chat.common.ConversationHeader;
+import codeu.chat.common.ConvoInterest;
 import codeu.chat.common.Message;
 import codeu.chat.common.NetworkCode;
 import codeu.chat.common.ServerInfo;
@@ -140,17 +141,15 @@ final class Controller implements BasicController {
 
         
   @Override
-  public void newConvoInterest(Uuid userId, Uuid idToSave,
-	int numberOfMessagesInConvo) {
+  public ConvoInterest newConvoInterest(Uuid userId, String title) {
 	try (final Connection connection = source.connect()) {
 
       Serializers.INTEGER.write(connection.out(), NetworkCode.NEW_CONVO_INTEREST_REQUEST);
 	  Uuid.SERIALIZER.write(connection.out(), userId);
-	  Uuid.SERIALIZER.write(connection.out(), idToSave);
-      Serializers.INTEGER.write(connection.out(), numberOfMessagesInConvo);
+	  Serializers.STRING.write(connection.out(), title);
       
       if (Serializers.INTEGER.read(connection.in()) == NetworkCode.NEW_CONVO_INTEREST_RESPONSE) {
-	    // just acknowledge request
+	    return Serializers.nullable(ConvoInterest.SERIALIZER).read(connection.in());
 	  } else {
 	    LOG.error("Response from server failed.");
 	  }
@@ -158,17 +157,18 @@ final class Controller implements BasicController {
 	  System.out.println("ERROR: Exception during call on server. Check log for details.");
 	  LOG.error(ex, "Exception during call on server.");
 	}
+	return null;
   }
 
   @Override
-  public void newUserInterest(Uuid userId, Uuid idToSave) {
+  public Uuid newUserInterest(Uuid userId, String name) {
 	try (final Connection connection = source.connect()) {
 
       Serializers.INTEGER.write(connection.out(), NetworkCode.NEW_USER_INTEREST_REQUEST);
 	  Uuid.SERIALIZER.write(connection.out(), userId);
-      Uuid.SERIALIZER.write(connection.out(), idToSave);
+	  Serializers.STRING.write(connection.out(), name);
       if (Serializers.INTEGER.read(connection.in()) == NetworkCode.NEW_USER_INTEREST_RESPONSE) {
-    	// just acknowledge request
+    	return Serializers.nullable(Uuid.SERIALIZER).read(connection.in());
       } else {
         LOG.error("Response from server failed.");
       }
@@ -176,18 +176,18 @@ final class Controller implements BasicController {
 	  System.out.println("ERROR: Exception during call on server. Check log for details.");
 	  LOG.error(ex, "Exception during call on server.");
     }
-	
+	return null;
   }
 
   @Override
-  public void removeConvoInterest(Uuid userId, Uuid idToSave) {
+  public Uuid removeConvoInterest(Uuid userId, String name) {
 	  try (final Connection connection = source.connect()) {
 
 		Serializers.INTEGER.write(connection.out(), NetworkCode.REM_CONVO_INTEREST_REQUEST);
         Uuid.SERIALIZER.write(connection.out(), userId);
-	    Uuid.SERIALIZER.write(connection.out(), idToSave);
+        Serializers.STRING.write(connection.out(), name);
 		if (Serializers.INTEGER.read(connection.in()) == NetworkCode.REM_CONVO_INTEREST_RESPONSE) {
-		  // just acknowledge request
+			return Serializers.nullable(Uuid.SERIALIZER).read(connection.in());
 		} else {
 		  LOG.error("Response from server failed.");
 		}
@@ -195,17 +195,18 @@ final class Controller implements BasicController {
 		System.out.println("ERROR: Exception during call on server. Check log for details.");
 		LOG.error(ex, "Exception during call on server.");
 	  }
+	  return null;
   }
 
   @Override
-  public void removeUserInterest(Uuid userId, Uuid idToSave) {
+  public Uuid removeUserInterest(Uuid userId, String name) {
 	try (final Connection connection = source.connect()) {
 
-	  Serializers.INTEGER.write(connection.out(), NetworkCode.REM_CONVO_INTEREST_REQUEST);
+	  Serializers.INTEGER.write(connection.out(), NetworkCode.REM_USER_INTEREST_REQUEST);
       Uuid.SERIALIZER.write(connection.out(), userId);
-	  Uuid.SERIALIZER.write(connection.out(), idToSave);
-  	  if (Serializers.INTEGER.read(connection.in()) == NetworkCode.REM_CONVO_INTEREST_RESPONSE) {
-	    // just acknowledge request
+	  Serializers.STRING.write(connection.out(), name);
+  	  if (Serializers.INTEGER.read(connection.in()) == NetworkCode.REM_USER_INTEREST_RESPONSE) {
+  		return Serializers.nullable(Uuid.SERIALIZER).read(connection.in());
 	  } else {
 	    LOG.error("Response from server failed.");
 	  }
@@ -213,6 +214,6 @@ final class Controller implements BasicController {
       System.out.println("ERROR: Exception during call on server. Check log for details.");
 	  LOG.error(ex, "Exception during call on server.");
 	}	
-
+	return null;
   }
 }
