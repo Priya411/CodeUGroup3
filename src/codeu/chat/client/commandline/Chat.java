@@ -25,10 +25,12 @@ import codeu.chat.client.core.MessageContext;
 import codeu.chat.client.core.UserContext;
 import codeu.chat.common.ServerInfo;
 import codeu.chat.common.User;
+import codeu.chat.common.UserType;
 import codeu.chat.util.CommandTokenizer;
 import codeu.chat.util.Logger;
 import codeu.chat.util.Time;
 import codeu.chat.util.Uuid;
+
 import java.util.Iterator;
 import java.io.IOException;
 
@@ -647,6 +649,35 @@ public final class Chat {
 						conversation.conversation.id);
 				System.out.format("  Owner : %s\n",
 						conversation.conversation.owner);
+			}
+		});
+		
+		panel.register("m-assign-access", new Panel.Command() {
+			@Override
+			public void invoke(List<String> args) {
+				if (args.size() != 2) {
+					System.out.println("Invalid Args!");
+					System.out.println("m-assign-access <username> <role>");
+					return;
+				}
+				String username = args.get(0);
+				// default to MEMBER, will be set in try
+				UserType type = UserType.MEMBER;
+				// catch if string is not valid userType
+				try {
+					type = UserType.valueOf(args.get(1).toUpperCase());
+				} catch(Exception e) {
+					System.out.println("Not a valid UserType");
+					System.out.println("m-assign-access <username> <role>");
+					System.out.println("Here are your options: User, Owner, Creator");
+					return;
+				}
+				if (conversation.setAccessOf(username, type)) {
+					System.out.println("Access set!");
+				} else {
+					System.out.println("Could not find " + username);
+				}
+				
 			}
 		});
 

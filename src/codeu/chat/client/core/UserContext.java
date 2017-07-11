@@ -29,6 +29,7 @@ import codeu.chat.common.ConversationPayload;
 import codeu.chat.common.ConvoInterest;
 import codeu.chat.common.Message;
 import codeu.chat.common.User;
+import codeu.chat.common.UserType;
 import codeu.chat.util.Uuid;
 
 public final class UserContext {
@@ -95,6 +96,8 @@ public final class UserContext {
 	public ConversationContext start(String name) {
 		final ConversationHeader conversation = controller.newConversation(
 				name, user.id);
+		// sets creator's id to creator in hashmap
+		conversation.setAccessOf(user.id, UserType.CREATOR);
 		return conversation == null ? null : new ConversationContext(user,
 				conversation, view, controller);
 	}

@@ -34,6 +34,7 @@ import codeu.chat.common.NetworkCode;
 import codeu.chat.common.Relay;
 import codeu.chat.common.Secret;
 import codeu.chat.common.User;
+import codeu.chat.common.UserType;
 import codeu.chat.util.Logger;
 import codeu.chat.util.Serializers;
 import codeu.chat.util.Time;
@@ -272,6 +273,32 @@ public final class Server {
           final String name = Serializers.STRING.read(in);
           final Uuid idOfConvoToRemove = controller.removeConvoInterest(user, name);
           Serializers.INTEGER.write(out, NetworkCode.REM_CONVO_INTEREST_RESPONSE);
+          Serializers.nullable(Uuid.SERIALIZER).write(out, idOfConvoToRemove);
+      }
+    });
+    
+    // Allows user to request that a conversation be removed as an interest
+    this.commands.put(NetworkCode.CHANGE_ACCESS_CONTROL_REQUEST, new Command() {
+      @Override
+      public void onMessage(InputStream in, OutputStream out) throws IOException {
+          final Uuid userId = Uuid.SERIALIZER.read(in);
+          final Uuid convoId = Uuid.SERIALIZER.read(in);
+          final String name = Serializers.STRING.read(in);
+          final String typeString = Serializers.STRING.read(in);
+          
+          // default to member, will be set in try
+          UserType userType = UserType.MEMBER;
+          try {
+        	  userType = UserType.valueOf(typeString);
+          } catch (Exception e) {
+        	  // invalid user type, return null ( failed request )
+        	  Serializers.INTEGER.write(out, NetworkCode.CHANGE_ACCESS_CONTROL_RESPONSE);
+              Serializers.nullable(Uuid.SERIALIZER).write(out, null);
+              return;
+          }
+          System.out.println("id: " + userId + " convoId: " + convoId + " name " + name + " user type " + userType);
+          final Uuid idOfConvoToRemove = controller.changeAccessControl(userId, convoId, name, userType);
+          Serializers.INTEGER.write(out, NetworkCode.CHANGE_ACCESS_CONTROL_RESPONSE);
           Serializers.nullable(Uuid.SERIALIZER).write(out, idOfConvoToRemove);
       }
     });

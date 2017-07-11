@@ -38,8 +38,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public final class User {
 
-	private HashMap<Uuid, Integer> conversationInterests = new HashMap<>();
-	private ArrayList<Uuid> userInterests = new ArrayList<Uuid>();
+	public HashMap<Uuid, Integer> conversationInterests = new HashMap<>();
+	public ArrayList<Uuid> userInterests = new ArrayList<Uuid>();
 
 	// no need to serialize the serializer when converting to JOSN
 	@JsonIgnore
