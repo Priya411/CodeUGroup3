@@ -27,6 +27,7 @@ import java.util.Map;
 
 import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.ConversationPayload;
+import codeu.chat.common.ConvoInterest;
 import codeu.chat.common.LinearUuidGenerator;
 import codeu.chat.common.Message;
 import codeu.chat.common.NetworkCode;
@@ -230,9 +231,10 @@ public final class Server {
       public void onMessage(InputStream in, OutputStream out) throws IOException {
 
           final Uuid user = Uuid.SERIALIZER.read(in);
-          final Uuid idToSave = Uuid.SERIALIZER.read(in);
-          controller.newUserInterest(user, idToSave);
+          final String name = Serializers.STRING.read(in);
+          final Uuid idOfUserWithName = controller.newUserInterest(user, name);
           Serializers.INTEGER.write(out, NetworkCode.NEW_USER_INTEREST_RESPONSE);
+          Serializers.nullable(Uuid.SERIALIZER).write(out, idOfUserWithName);
       }
     });
 
@@ -241,10 +243,10 @@ public final class Server {
       @Override
       public void onMessage(InputStream in, OutputStream out) throws IOException {
           final Uuid user = Uuid.SERIALIZER.read(in);
-          final Uuid idToSave = Uuid.SERIALIZER.read(in);
-          final Integer numberOfMessage = Serializers.INTEGER.read(in);
-          controller.newConvoInterest(user, idToSave, numberOfMessage);
+          final String name = Serializers.STRING.read(in);
+          final ConvoInterest convoInterest = controller.newConvoInterest(user, name);
           Serializers.INTEGER.write(out, NetworkCode.NEW_CONVO_INTEREST_RESPONSE);
+          Serializers.nullable(ConvoInterest.SERIALIZER).write(out, convoInterest);
       }
     });
 
@@ -254,9 +256,11 @@ public final class Server {
       public void onMessage(InputStream in, OutputStream out) throws IOException {
 
           final Uuid user = Uuid.SERIALIZER.read(in);
-          final Uuid idToSave = Uuid.SERIALIZER.read(in);
-          controller.removeUserInterest(user, idToSave);
+          final String name = Serializers.STRING.read(in);
+          final Uuid idOfUserWithName = controller.removeUserInterest(user, name);
+          System.out.println(idOfUserWithName);
           Serializers.INTEGER.write(out, NetworkCode.REM_USER_INTEREST_RESPONSE);
+          Serializers.nullable(Uuid.SERIALIZER).write(out, idOfUserWithName);
       }
     });
 
@@ -265,9 +269,10 @@ public final class Server {
       @Override
       public void onMessage(InputStream in, OutputStream out) throws IOException {
           final Uuid user = Uuid.SERIALIZER.read(in);
-          final Uuid idToSave = Uuid.SERIALIZER.read(in);
-          controller.removeConvoInterest(user, idToSave);
+          final String name = Serializers.STRING.read(in);
+          final Uuid idOfConvoToRemove = controller.removeConvoInterest(user, name);
           Serializers.INTEGER.write(out, NetworkCode.REM_CONVO_INTEREST_RESPONSE);
+          Serializers.nullable(Uuid.SERIALIZER).write(out, idOfConvoToRemove);
       }
     });
 
@@ -285,9 +290,7 @@ public final class Server {
           }
 
         } catch (Exception ex) {
-
           LOG.error(ex, "Failed to read update from relay.");
-
         }
 
         timeline.scheduleIn(RELAY_REFRESH_MS, this);
