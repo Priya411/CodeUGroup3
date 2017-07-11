@@ -46,6 +46,7 @@ public final class UserContext {
 	public User addUserInterest(String name) {
 		Uuid idToAdd = controller.newUserInterest(user.id, name);
 		// is null when name is invalid
+		// ids are equal when name being added is the user
 		if (idToAdd == null || idToAdd.id() == user.id.id()) {
 			return null;
 		}
