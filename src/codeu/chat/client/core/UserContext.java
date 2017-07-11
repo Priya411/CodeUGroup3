@@ -45,6 +45,7 @@ public final class UserContext {
 
 	public User addUserInterest(String name) {
 		Uuid idToAdd = controller.newUserInterest(user.id, name);
+		// is null when name is invalid
 		if (idToAdd == null || idToAdd.id() == user.id.id()) {
 			return null;
 		}
@@ -56,6 +57,7 @@ public final class UserContext {
 
 	public User addConvoInterest(String title) {
 		ConvoInterest intersestToAdd = controller.newConvoInterest(user.id, title);
+		// is null when title is invalid
 		if (intersestToAdd == null) {
 			return null;
 		}
@@ -67,6 +69,7 @@ public final class UserContext {
 
 	public User removeUserInterest(String name) {
 		Uuid idToRemove = controller.removeUserInterest(user.id, name);
+		// is null when name is invalid
 		if (idToRemove == null) {
 			return null;
 		}
@@ -78,6 +81,7 @@ public final class UserContext {
 
 	public User removeConvoInterest(String title) {
 		Uuid idToRemove = controller.removeConvoInterest(user.id, title);
+		// is null when title is invalid
 		if (idToRemove == null) {
 			return null;
 		}
