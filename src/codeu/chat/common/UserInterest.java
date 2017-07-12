@@ -5,6 +5,12 @@ import java.util.Arrays;
 import java.util.HashMap;
 import codeu.chat.util.*;
 
+/**
+ * This class saves user interests by saving the 
+ * conversations the user has created and added messages 
+ * to since the last update 
+ * 
+ */
 public class UserInterest {
 
 	private Uuid userID; 
