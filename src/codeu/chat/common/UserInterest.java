@@ -7,29 +7,29 @@ import codeu.chat.util.*;
 
 public class UserInterest {
 
-	Uuid UserID; 
-	String name; 
-	private ArrayList<String> ConvosCreated; 
-	private ArrayList<String> ConvosAddedTo; 
+	private Uuid userID; 
+	private String name; 
+	private ArrayList<String> convosCreated; 
+	private ArrayList<String> convosAddedTo; 
 	
 	public UserInterest(Uuid userID, String name) {
-		this.UserID = userID;
+		this.userID = userID;
 		this.name = name; 
-		this.ConvosCreated = new ArrayList<String>(); 
-		this.ConvosAddedTo = new ArrayList<String>(); 
+		this.convosCreated = new ArrayList<String>(); 
+		this.convosAddedTo = new ArrayList<String>(); 
 	}
 
 
 	public void addConvoCreated(String convo){ 
-		this.ConvosCreated.add(convo);
+		this.convosCreated.add(convo);
 	}
 	
 	public void addConvoAddedTo(String convo){
-		this.ConvosAddedTo.add(convo);
+		this.convosAddedTo.add(convo);
 	}
 	
 	public Uuid getUserID() {
-		return UserID;
+		return userID;
 	}
 	
 	public String getname() { 
@@ -37,11 +37,11 @@ public class UserInterest {
 	}
 
 	public ArrayList<String> getConvosCreated() {
-		return ConvosCreated;
+		return convosCreated;
 	}
 
 	public ArrayList<String> getConvosAddedTo() {
-		return ConvosAddedTo;
+		return convosAddedTo;
 	}	
 	
 }
