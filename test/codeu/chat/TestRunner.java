@@ -33,7 +33,7 @@ public final class TestRunner {
 				codeu.chat.common.ServerInfoTest.class,
 				codeu.chat.util.CommandTokenizerTest.class,
 				codeu.chat.server.JSONTest.class,
-				codeu.chat.common.CAccessTest.class
+				codeu.chat.common.CstatusTest.class
 
 		);
 		for (final Failure failure : result.getFailures()) {

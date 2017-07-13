@@ -10,7 +10,7 @@ import org.junit.Test;
 import codeu.chat.util.Time;
 import codeu.chat.util.Uuid;
 
-public class CAccessTest {
+public class CstatusTest {
 
     @Test
     public void testGetAccessOf() {

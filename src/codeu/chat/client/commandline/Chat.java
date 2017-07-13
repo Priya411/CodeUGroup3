@@ -338,7 +338,7 @@ public final class Chat {
 				System.out.println("  c-join <title>");
 				System.out
 						.println("    Join the conversation as the current user.");
-				System.out.println("  c-access");
+				System.out.println("  c-status");
 				System.out.println("  	Displays access status for all conversations");
 
 				System.out.println("  status-update");
@@ -558,10 +558,10 @@ public final class Chat {
 			}
 		});
 		
-		// C-ACCESS
+		// C-STATUS
 		// allows user to see their access status in 
 		// every conversation they are currently a part of  
-		panel.register("c-access", new Panel.Command() { 
+		panel.register("c-status", new Panel.Command() { 
 			@Override
 			public void invoke(List<String> args) { 
 				// HashMap stores the name of every convo the user is a part of and the access level
