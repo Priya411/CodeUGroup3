@@ -338,6 +338,8 @@ public final class Chat {
 				System.out.println("  c-join <title>");
 				System.out
 						.println("    Join the conversation as the current user.");
+				System.out.println("  c-access");
+				System.out.println("  	Displays access status for all conversations");
 
 				System.out.println("  status-update");
 				System.out.println("  	Displays updates for user's conversation and user interests");
