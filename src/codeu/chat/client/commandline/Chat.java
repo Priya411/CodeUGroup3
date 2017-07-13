@@ -558,7 +558,7 @@ public final class Chat {
 			}
 		});
 		
-		// c-access
+		// C-ACCESS
 		// allows user to see their access status in 
 		// every conversation they are currently a part of  
 		panel.register("c-access", new Panel.Command() { 
