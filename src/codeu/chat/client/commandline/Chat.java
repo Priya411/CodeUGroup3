@@ -26,6 +26,7 @@ import codeu.chat.client.core.UserContext;
 import codeu.chat.common.ServerInfo;
 import codeu.chat.common.User;
 import codeu.chat.common.UserInterest;
+import codeu.chat.common.UserType;
 import codeu.chat.util.CommandTokenizer;
 import codeu.chat.util.Logger;
 import codeu.chat.util.Time;
@@ -551,6 +552,28 @@ public final class Chat {
 					String convosContributed = String.join("\n\t", userUpdates.get(userID).getConvosAddedTo()); 
 					System.out.format("\t%s\n", convosContributed);
 					System.out.println(" ");
+				}
+			}
+		});
+		
+		// c-access
+		// allows user to see their access status in 
+		// every conversation they are currently a part of  
+		panel.register("c-access", new Panel.Command() { 
+			@Override
+			public void invoke(List<String> args) { 
+				// HashMap stores the name of every convo the user is a part of and the access level
+				// for that conversation
+				HashMap<String, UserType> convoAccess = new HashMap<String, UserType>();  
+				// adds all convos to convo access with name of convo as key 
+				// and user's access status as value 
+				for (ConversationContext convo : user.conversations()){
+					convoAccess.put(convo.conversation.title, convo.conversation.getAccessOf(user.user.id));
+				}
+				// All of the print statements to view conversation access statuses 
+				System.out.println("Conversations:");
+				for (String convoName : convoAccess.keySet()){ 
+					System.out.format("\t%s: %s\n", convoName, convoAccess.get(convoName).toString()); 
 				}
 			}
 		});

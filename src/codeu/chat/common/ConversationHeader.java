@@ -119,4 +119,11 @@ public final class ConversationHeader {
     hash+=conv.title.hashCode();
     return hash;
   }
+  
+  //filled in by Matt's code 
+  public UserType getAccessOf(Uuid idOfUser) {
+	  UserType type = UserType.MEMBER; // placeholder 
+
+	  return type;
+  }
 }
