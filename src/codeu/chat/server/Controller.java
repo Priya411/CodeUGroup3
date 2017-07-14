@@ -26,6 +26,8 @@ import codeu.chat.common.User;
 import codeu.chat.util.Logger;
 import codeu.chat.util.Time;
 import codeu.chat.util.Uuid;
+import codeu.chat.common.UserType;
+
 
 public final class Controller implements RawController, BasicController {
 
@@ -207,6 +209,47 @@ public final class Controller implements RawController, BasicController {
 	  return null; 
   }
 
-  
+  public Uuid changeAccessControl(Uuid userID, Uuid convo, String username, UserType type)
+  {
+    // This function will update the UserType of the User with the User Name username
+    // If they have the right to. If not, it will not update and simply return null
+    if(model.conversationById().first(convo).getAccessOf(userID)== UserType.CREATOR)
+    {
+      User toUpdate = model.userByText().first(username);
+      if (toUpdate == null)
+      {
+        return null;
+      }
+      if(type == UserType.OWNER) {
+        model.conversationById().first(convo).setAccessOf(model.userByText().first(username).id, type);
+        return model.userByText().first(username).id;
+      }
+      else
+      {
+        return null;
+      }
+    }
+
+    if(model.conversationById().first(convo).getAccessOf(userID)== UserType.OWNER)
+    {
+      User toUpdate = model.userByText().first(username);
+      if (toUpdate == null)
+      {
+        return null;
+      }
+      if(type == UserType.MEMBER)
+      {
+        model.conversationById().first(convo).setAccessOf(model.userByText().first(username).id,type);
+        return model.userByText().first(username).id;
+      }
+      else
+      {
+        return null;
+      }
+
+    }
+
+    return null;
+  }
 
 }
