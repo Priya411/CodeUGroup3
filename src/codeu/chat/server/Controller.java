@@ -220,7 +220,7 @@ public final class Controller implements RawController, BasicController {
       {
         return null;
       }
-      if(type == UserType.OWNER) {
+      if(type == UserType.OWNER || type == UserType.MEMBER) {
         model.conversationById().first(convo).setAccessOf(model.userByText().first(username).id, type);
         return model.userByText().first(username).id;
       }
