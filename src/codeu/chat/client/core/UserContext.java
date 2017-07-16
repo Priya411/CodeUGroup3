@@ -26,6 +26,7 @@ import codeu.chat.common.BasicController;
 import codeu.chat.common.BasicView;
 import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.ConversationPayload;
+import codeu.chat.common.ConvoInterest;
 import codeu.chat.common.Message;
 import codeu.chat.common.User;
 import codeu.chat.common.UserType;
@@ -115,9 +116,8 @@ public final class UserContext {
 		return all;
 	}
 
-	public HashMap<Uuid, ArrayList<ArrayList<String>>> userStatusUpdate() {
-		return this.user.userStatusUpdate(this.conversations(),
-				controller.statusUpdate());
+	public HashMap<Uuid, UserInterest> userStatusUpdate() {
+		  return this.user.userStatusUpdate(this.conversations(), view.getUsers());
 	}
 
 	public HashMap<String, Integer> convoStatusUpdate() {
