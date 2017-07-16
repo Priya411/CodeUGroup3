@@ -25,6 +25,7 @@ import codeu.chat.client.core.MessageContext;
 import codeu.chat.client.core.UserContext;
 import codeu.chat.common.ServerInfo;
 import codeu.chat.common.User;
+import codeu.chat.common.UserInterest;
 import codeu.chat.common.UserType;
 import codeu.chat.util.CommandTokenizer;
 import codeu.chat.util.Logger;
@@ -338,6 +339,8 @@ public final class Chat {
 				System.out.println("  c-join <title>");
 				System.out
 						.println("    Join the conversation as the current user.");
+				System.out.println("  c-status");
+				System.out.println("  	Displays access status for all conversations");
 
 				System.out.println("  status-update");
 				System.out.println("  	Displays updates for user's conversation and user interests");
@@ -534,27 +537,50 @@ public final class Chat {
 			@Override
 			public void invoke(List<String> args) { 
 				HashMap<String, Integer> convoUpdates = user.convoStatusUpdate(); 
-				HashMap<Uuid, ArrayList<ArrayList<String>>> userUpdates = user.userStatusUpdate();
+				HashMap<Uuid, UserInterest> userUpdates = user.userStatusUpdate();
 			
 				// All of the print statements to view update 
-				System.out.println("Status Update:\n");
 				System.out.println("Conversations:");
 				for (String convoName : convoUpdates.keySet()) { 
 					System.out.format("\t%s : %d \n", convoName, convoUpdates.get(convoName));
 				}
 				System.out.println("Users:");
 				for (Uuid userID : userUpdates.keySet()) { 
-					System.out.format("\t%s :\n", userID.toString());
-					System.out.println("Conversations created: "); 
-					String convosCreated = String.join("\n\t", userUpdates.get(userID).get(User.CONVOS_CREATED_ARRAY)); 
+					System.out.format("\t%s\n", userUpdates.get(userID).getname());
+					System.out.println("\tConversations created: "); 
+					String convosCreated = String.join("\n\t", userUpdates.get(userID).getConvosCreated()); 
 					System.out.format("\t%s", convosCreated);
-
-					System.out.println("Conversations contributed to: "); 
-					String convosContributed = String.join("\n\t", userUpdates.get(userID).get(User.CONVOS_CONTRIBUTED_TO_ARRAY)); 
-					System.out.format("\t%s", convosContributed);
+					System.out.println("");
+					System.out.println("\tConversations contributed to: "); 
+					String convosContributed = String.join("\n\t", userUpdates.get(userID).getConvosAddedTo()); 
+					System.out.format("\t%s\n", convosContributed);
+					System.out.println(" ");
 				}
 			}
 		});
+		
+		// C-STATUS
+		// allows user to see their access status in 
+		// every conversation they are currently a part of  
+		panel.register("c-status", new Panel.Command() { 
+			@Override
+			public void invoke(List<String> args) { 
+				// HashMap stores the name of every convo the user is a part of and the access level
+				// for that conversation
+				HashMap<String, UserType> convoAccess = new HashMap<String, UserType>();  
+				// adds all convos to convo access with name of convo as key 
+				// and user's access status as value 
+				for (ConversationContext convo : user.conversations()){
+					convoAccess.put(convo.conversation.title, convo.conversation.getAccessOf(user.user.id));
+				}
+				// All of the print statements to view conversation access statuses 
+				System.out.println("Conversations:");
+				for (String convoName : convoAccess.keySet()){ 
+					System.out.format("\t%s: %s\n", convoName, convoAccess.get(convoName).toString()); 
+				}
+			}
+		});
+	
 
 		// Now that the panel has all its commands registered, return the panel
 		// so that it can be used.
