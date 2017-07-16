@@ -1,6 +1,7 @@
 package codeu.chat.common;
 
 public enum UserType {
+
 	MEMBER("Member"), 
 	OWNER("Owner"), 
 	CREATOR("Creator");

@@ -123,7 +123,7 @@ public final class User {
     return hash;
   }
   
-  // NEW userStatusUpdate() 
+  // userStatusUpdate() 
   // returns all the user updates in a list of UserInterest Objects 
   // each UserInterst objects has two arraylists: 
   // ConvosCreated and ConvosAddedTo

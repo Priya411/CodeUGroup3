@@ -26,49 +26,59 @@ import codeu.chat.util.Uuid;
 //   from the controller may have no effect on the server's state.
 public interface BasicController {
 
-  // NEW MESSAGE
-  //
-  //   Create a new message on the server. All parameters must be provided
-  //   or else the server won't apply the change. If the operation is
-  //   successful, a Message object will be returned representing the full
-  //   state of the message on the server.
-  Message newMessage(Uuid author, Uuid conversation, String body);
+	// NEW MESSAGE
+	//
+	// Create a new message on the server. All parameters must be provided
+	// or else the server won't apply the change. If the operation is
+	// successful, a Message object will be returned representing the full
+	// state of the message on the server.
+	Message newMessage(Uuid author, Uuid conversation, String body);
 
-  // NEW USER
-  //
-  //   Create a new user on the server. All parameters must be provided
-  //   or else the server won't apply the change. If the operation is
-  //   successful, a User object will be returned representing the full
-  //   state of the user on the server. Whether user names can be shared
-  //   is undefined.
-  User newUser(String name);
+	// NEW USER
+	//
+	// Create a new user on the server. All parameters must be provided
+	// or else the server won't apply the change. If the operation is
+	// successful, a User object will be returned representing the full
+	// state of the user on the server. Whether user names can be shared
+	// is undefined.
+	User newUser(String name);
 
-  // NEW CONVERSATION
-  //
-  //  Create a new conversation on the server. All parameters must be
-  //  provided or else the server won't apply the change. If the
-  //  operation is successful, a Conversation object will be returned
-  //  representing the full state of the conversation on the server.
-  //  Whether conversations can have the same title is undefined.
-  ConversationHeader newConversation(String title, Uuid owner);
+	// NEW CONVERSATION
+	//
+	// Create a new conversation on the server. All parameters must be
+	// provided or else the server won't apply the change. If the
+	// operation is successful, a Conversation object will be returned
+	// representing the full state of the conversation on the server.
+	// Whether conversations can have the same title is undefined.
+	ConversationHeader newConversation(String title, Uuid owner);
 
-  // create new convo interest for the given userId, a ConvoInterest object is returned
-  ConvoInterest newConvoInterest(Uuid userId, String title);
+	// create new convo interest for the given userId, a ConvoInterest object is
+	// returned
+	ConvoInterest newConvoInterest(Uuid userId, String title);
 
-  // adds user interset of a user with the given name to the userId supplied. 
-  // returns the uuid of the name of the user being added as an interest
-  Uuid newUserInterest(Uuid userId, String name);
-  
-  // removes convo with given title from user with given id
-  // returns id of the convo that was removed
-  Uuid removeConvoInterest(Uuid userId, String title);
+	// adds user interset of a user with the given name to the userId supplied.
+	// returns the uuid of the name of the user being added as an interest
+	Uuid newUserInterest(Uuid userId, String name);
 
-  // removes interest of user with given name from user with given id
-  // return id of user name who was removed
-  Uuid removeUserInterest(Uuid userId, String name);
-  
-  // STATUS UPDATE 
-  Time statusUpdate(); 
+	// removes convo with given title from user with given id
+	// returns id of the convo that was removed
+	Uuid removeConvoInterest(Uuid userId, String title);
 
+	// removes interest of user with given name from user with given id
+	// return id of user name who was removed
+	Uuid removeUserInterest(Uuid userId, String name);
+
+	// STATUS UPDATE
+	Time statusUpdate();
+
+	// sends the id of the user trying to change access of the user with given
+	// username to the given type
+	// this is sent to the server, id of the user with given username is
+	// returned if this is a valid request, if not, then null is returned
+	// null can be returned if username is invalid or if user with userID does
+	// not have access to change the userType of the user with the given
+	// username
+	// all of this is for convo with convoID
+	Uuid changeAccessControl(Uuid userID, Uuid convoId, String username, UserType type);
 
 }

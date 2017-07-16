@@ -22,6 +22,7 @@ import codeu.chat.common.Message;
 import codeu.chat.common.RandomUuidGenerator;
 import codeu.chat.common.RawController;
 import codeu.chat.common.User;
+import codeu.chat.common.UserType;
 import codeu.chat.util.Logger;
 import codeu.chat.util.Time;
 import codeu.chat.util.Uuid;
@@ -246,6 +247,14 @@ public final class Controller implements RawController, BasicController {
 
 	@Override
 	public Time statusUpdate() {
+		return null;
+	}
+
+	// needs to check if user with userId has permission to change the Type of user with username in given convo
+	// if so, update model, if not, return null
+	@Override
+	public Uuid changeAccessControl(Uuid userID, Uuid convo, String username, UserType type) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 
