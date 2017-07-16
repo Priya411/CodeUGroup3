@@ -24,6 +24,7 @@ import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.ConversationPayload;
 import codeu.chat.common.Message;
 import codeu.chat.common.User;
+import codeu.chat.common.UserType;
 import codeu.chat.util.Uuid;
 
 public final class ConversationContext {
@@ -90,6 +91,18 @@ public final class ConversationContext {
         null :
         getMessage(updated.lastMessage);
   }
+  
+  // sets access control level of user with given username to UserType type
+  // returns true if it was successful
+  public boolean setAccessOf(String username, UserType type) {
+	  Uuid idOfUser = controller.changeAccessControl(this.user.id, this.conversation.id, username, type);
+	  // null if user name is invalid
+	  if (idOfUser == null) {
+		  return false;
+	  }
+	  this.conversation.setAccessOf(idOfUser, type);
+	  return true;
+  }
 
   private ConversationPayload getUpdated() {
     final Collection<Uuid> ids = Arrays.asList(conversation.id);
@@ -101,4 +114,5 @@ public final class ConversationContext {
     final Iterator<Message> messages = view.getMessages(Arrays.asList(id)).iterator();
     return messages.hasNext() ? new MessageContext(messages.next(), view) : null;
   }
+
 }

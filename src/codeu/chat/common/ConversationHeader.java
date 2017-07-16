@@ -17,6 +17,7 @@ package codeu.chat.common;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -65,6 +66,11 @@ public final class ConversationHeader {
   @JsonIgnore
   public final Time creation;
   public final String title;
+  // default type a user is assigned when they call "c-join" on this convo
+  public UserType defaultType = UserType.MEMBER;
+  
+  // a hashmap with user id as key and their usertype as value
+  private HashMap<Uuid, UserType> userAccessRoles = new HashMap<Uuid, UserType>();
 
   public ConversationHeader(Uuid id, Uuid owner, Time creation, String title) {
 
@@ -118,5 +124,18 @@ public final class ConversationHeader {
     hash+=conv.creation.hashCode();
     hash+=conv.title.hashCode();
     return hash;
+  }
+  
+  public UserType getAccessOf(Uuid idOfUser) {
+	  UserType type = this.userAccessRoles.get(idOfUser);
+	  // if user is not in map, assign them default type
+	  if (type == null) {
+		  return this.defaultType;
+	  }
+	  return type;
+  }
+
+  public void setAccessOf(Uuid idOfUser, UserType type) {
+	  userAccessRoles.put(idOfUser, type);
   }
 }
