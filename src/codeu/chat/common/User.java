@@ -216,6 +216,12 @@ public final class User {
     // user's id
     userInterests.add(userId);
   }
+  
+  public void addConvoInterest(ConvoInterest interest)
+  {
+    // Convenience overload
+    conversationInterests.put(interest.convoId, interest.messagesCount);
+  }
 
   public void addConvoInterest(Uuid conversationId, int messagesAmount)
   {
