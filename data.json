@@ -24,6 +24,18 @@
     "uuid" : "1.3357903759",
     "ownerUUID" : "1.3630241395",
     "creationTime" : 1498339327527
+  }, {
+    "title" : "this",
+    "uuid" : "1.80755046",
+    "ownerUUID" : "1.3849152428",
+    "creationTime" : 1499481250758,
+    "firstMessageUUID" : "1.314541654",
+    "lastMessageUUID" : "1.314541654"
+  }, {
+    "title" : "hello",
+    "uuid" : "1.1582847019",
+    "ownerUUID" : "1.3849152428",
+    "creationTime" : 1499481400528
   } ],
   "messages" : [ {
     "content" : "M1",
@@ -46,5 +58,12 @@
     "previousUUID" : "0",
     "authorUUID" : "1.3630241395",
     "creationTime" : 1498337782908
+  }, {
+    "content" : "hello",
+    "uuid" : "1.314541654",
+    "nextUUID" : "0",
+    "previousUUID" : "0",
+    "authorUUID" : "1.3849152428",
+    "creationTime" : 1499481254448
   } ]
 }
