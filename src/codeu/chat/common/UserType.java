@@ -1,18 +1,27 @@
 package codeu.chat.common;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import codeu.chat.util.Serializer;
+import codeu.chat.util.Serializers;
+
 public enum UserType {
-
-	MEMBER("Member"), 
-	OWNER("Owner"), 
-	CREATOR("Creator");
 	
-    private final String textRepresentation;
+	MEMBER, 
+	OWNER, 
+	CREATOR;
+	
+	public static final Serializer<UserType> SERIALIZER = new Serializer<UserType>() {
+	    @Override
+	    public void write(OutputStream out, UserType value) throws IOException {
+	      Serializers.STRING.write(out, value.name());
+	    }
 
-    private UserType(String textRepresentation) {
-        this.textRepresentation = textRepresentation;
-    }
-
-    @Override public String toString() {
-         return textRepresentation;
-    }
+	    @Override
+	    public UserType read(InputStream in) throws IOException {
+	      return UserType.valueOf(Serializers.STRING.read(in));
+	    }
+	};
 }
