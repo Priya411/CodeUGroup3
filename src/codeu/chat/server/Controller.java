@@ -28,7 +28,6 @@ import codeu.chat.util.Time;
 import codeu.chat.util.Uuid;
 import codeu.chat.common.UserType;
 
-
 public final class Controller implements RawController, BasicController {
 
 	private final static Logger.Log LOG = Logger.newLog(Controller.class);
@@ -205,7 +204,7 @@ public final class Controller implements RawController, BasicController {
 		}
 		final ConversationPayload convoPayload = model
 				.conversationPayloadById().first(convoHeader.id);
-		
+
 		foundUser.remConvoInterest(convoPayload.id);
 		return convoPayload.id;
 	}
@@ -251,50 +250,53 @@ public final class Controller implements RawController, BasicController {
 		return null;
 	}
 
-	// needs to check if user with userId has permission to change the Type of user with username in given convo
+	// needs to check if user with userId has permission to change the Type of
+	// user with username in given convo
 	// if so, update model, if not, return null
 	@Override
-    public Uuid changeAccessControl(Uuid userID, Uuid convo, String username, UserType type)
-  {
-    // This function will update the UserType of the User with the User Name username
-    // If they have the right to. If not, it will not update and simply return null
-    if(model.conversationById().first(convo).getAccessOf(userID)== UserType.CREATOR)
-    {
-      User toUpdate = model.userByText().first(username);
-      if (toUpdate == null)
-      {
-        return null;
-      }
-      if(type == UserType.OWNER || type == UserType.MEMBER) {
-        model.conversationById().first(convo).setAccessOf(model.userByText().first(username).id, type);
-        return model.userByText().first(username).id;
-      }
-      else
-      {
-        return null;
-      }
-    }
+	public Uuid changeAccessControl(Uuid userID, Uuid convo, String username,
+			UserType type) {
+		System.out.println(model.conversationById().first(convo).getAccessOf(userID));
+		// This function will update the UserType of the User with the User Name
+		// username
+		// If they have the right to. If not, it will not update and simply
+		// return null
+		if (model.conversationById().first(convo).getAccessOf(userID) == UserType.CREATOR) {
+			System.out.println("CREATOR");
+			User toUpdate = model.userByText().first(username);
+			if (toUpdate == null) {
+				System.out.println("could not find " + username);
+				return null;
+			}
+			if (type == UserType.OWNER || type == UserType.MEMBER) {
+				model.conversationById()
+						.first(convo)
+						.setAccessOf(model.userByText().first(username).id,
+								type);
+				return model.userByText().first(username).id;
+			} else {
+				return null;
+			}
+		}
 
-    if(model.conversationById().first(convo).getAccessOf(userID)== UserType.OWNER)
-    {
-      User toUpdate = model.userByText().first(username);
-      if (toUpdate == null)
-      {
-        return null;
-      }
-      if(type == UserType.MEMBER)
-      {
-        model.conversationById().first(convo).setAccessOf(model.userByText().first(username).id,type);
-        return model.userByText().first(username).id;
-      }
-      else
-      {
-        return null;
-      }
+		if (model.conversationById().first(convo).getAccessOf(userID) == UserType.OWNER) {
+			User toUpdate = model.userByText().first(username);
+			if (toUpdate == null) {
+				return null;
+			}
+			if (type == UserType.MEMBER) {
+				model.conversationById()
+						.first(convo)
+						.setAccessOf(model.userByText().first(username).id,
+								type);
+				return model.userByText().first(username).id;
+			} else {
+				return null;
+			}
 
-    }
+		}
 
-    return null;
-  }
+		return null;
+	}
 
 }

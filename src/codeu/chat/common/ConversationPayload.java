@@ -19,7 +19,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import codeu.chat.util.Serializer;
-import codeu.chat.util.Serializers;
 import codeu.chat.util.Uuid;
 
 public final class ConversationPayload {
@@ -28,11 +27,9 @@ public final class ConversationPayload {
 
     @Override
     public void write(OutputStream out, ConversationPayload value) throws IOException {
-
       Uuid.SERIALIZER.write(out, value.id);
       Uuid.SERIALIZER.write(out, value.firstMessage);
       Uuid.SERIALIZER.write(out, value.lastMessage);
-
     }
 
     @Override
@@ -42,7 +39,6 @@ public final class ConversationPayload {
           Uuid.SERIALIZER.read(in),
           Uuid.SERIALIZER.read(in),
           Uuid.SERIALIZER.read(in));
-
     }
   };
 
