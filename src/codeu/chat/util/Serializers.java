@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 
 public final class Serializers {
 
@@ -150,6 +151,31 @@ public final class Serializers {
       }
     };
   }
+  
+  public static <K, V> Serializer<HashMap<K, V>> hashmap(final Serializer<K> keySerializer, final Serializer<V> valueSerializer) {
+
+	    return new Serializer<HashMap<K, V>>() {
+
+	      @Override
+	      public void write(OutputStream out, HashMap<K, V> value) throws IOException {
+	        INTEGER.write(out, value.size());
+	        for (final K key : value.keySet()) {
+	        	keySerializer.write(out, key);
+	        	valueSerializer.write(out, value.get(key));
+	        }
+	      }
+
+	      @Override
+	      public HashMap<K, V> read(InputStream in) throws IOException {
+	        final int size = INTEGER.read(in);
+	        HashMap<K, V> map = new HashMap<K, V>();
+	        for (int i = 0; i < size; i++) {
+	          map.put(keySerializer.read(in), valueSerializer.read(in));
+	        }
+	        return map;
+	      }
+	    };
+	  }
 
   public static <T> Serializer<T> nullable(final Serializer<T> serializer) {
 
