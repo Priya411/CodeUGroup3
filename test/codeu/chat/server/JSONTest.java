@@ -1,11 +1,8 @@
 package codeu.chat.server;
 
 import static org.junit.Assert.*;
-import codeu.chat.common.ConversationHeader;
-import codeu.chat.common.ConversationPayload;
-import codeu.chat.common.Message;
-import codeu.chat.common.ServerInfo;
-import codeu.chat.common.User;
+
+import codeu.chat.common.*;
 import codeu.chat.util.Uuid;
 
 import org.junit.Ignore;
@@ -39,8 +36,21 @@ public class JSONTest {
         Model model = new Model();
         JSON log = new JSON();
         Model expected = new Model();
-        expected.add(new User(createUuid("1.1074501217"), "Krager", Time.fromMs(4309509)));
-        expected.add(new ConversationHeader(createUuid("1.3959833157"), createUuid("1.1074501217"),  Time.fromMs(59408509), "Chat1"), new ConversationPayload( createUuid("1.3959833157"), createUuid("1.3350517446"), createUuid("1.1516759239")));
+        User user1 = new User(createUuid("1.1074501217"), "Krager", Time.fromMs(4309509));
+        user1.addConvoInterest(createUuid("1.243253453"),2);
+        user1.addConvoInterest(createUuid("1.14325223123453"),2);
+        user1.addConvoInterest(createUuid("1.943253213312453"),2);
+        user1.addUserInterest(createUuid("1.24342"));
+        user1.addUserInterest(createUuid("1.5634634"));
+        user1.addUserInterest(createUuid("1.5314132"));
+        user1.setUpdateTime(150026594);
+        expected.add(user1);
+        ConversationHeader conv1 = new ConversationHeader(createUuid("1.3959833157"), createUuid("1.1074501217"),  Time.fromMs(59408509), "Chat1");
+        conv1.setAccessOf(createUuid("1.243253453"), UserType.MEMBER);
+        conv1.setAccessOf(createUuid("1.14325223123453"), UserType.OWNER);
+        conv1.setAccessOf(createUuid("1.943253213312453"), UserType.MEMBER);
+        conv1.defaultType = UserType.MEMBER;
+        expected.add(conv1, new ConversationPayload( createUuid("1.3959833157"), createUuid("1.3350517446"), createUuid("1.1516759239")));
         expected.add(new Message(createUuid("1.3928689216"), createUuid("1.1516759239"), createUuid("0"), Time.fromMs(49584908), createUuid("1.1074501217"),   "I'm so alone"));
         try {
             // Path used by Priyanka:
@@ -60,7 +70,15 @@ public class JSONTest {
         Model model = new Model();
         JSON log = new JSON();
         Model expected = new Model();
-        expected.add(new User(createUuid("1.1074501217"), "Krager", Time.fromMs(12345)));
+        User user1 = new User(createUuid("1.1074501217"), "Krager", Time.fromMs(12345));
+        user1.addConvoInterest(createUuid("1.243253453"),2);
+        user1.addConvoInterest(createUuid("1.14325223123453"),2);
+        user1.addConvoInterest(createUuid("1.943253213312453"),2);
+        user1.addUserInterest(createUuid("1.24342"));
+        user1.addUserInterest(createUuid("1.5634634"));
+        user1.addUserInterest(createUuid("1.5314132"));
+        user1.setUpdateTime(150026594);
+        expected.add(user1);
         try {
             // Path used by Priyanka:
             model = log.readFromFile("/Users/HMCLoaner/Desktop/CodeU/test/codeu/chat/server/input2.json");
@@ -98,10 +116,36 @@ public class JSONTest {
         JSON log = new JSON();
         Model model = new Model();
         Model expected = new Model();
-        expected.add(new User(createUuid("1.1074501217"), "Krager", Time.fromMs(4098590)));
-        expected.add(new User(createUuid("1.3566231147"), "FakeUserName1234", Time.fromMs(48574)));
-        expected.add(new ConversationHeader(createUuid("1.3959833157"), createUuid("1.1074501217"),  Time.fromMs(98094), "Chat1"), new ConversationPayload( createUuid("1.3959833157"), createUuid("1.3350517446"), createUuid("1.1516759239")));
-        expected.add(new ConversationHeader(createUuid("1.3959833157"), createUuid("1.1074501217"),  Time.fromMs(59485), "Chat2"), new ConversationPayload( createUuid("1.3959833157"), createUuid("1.3350517446"), createUuid("1.1516759239")));
+        User user1 = new User(createUuid("1.1074501217"), "Krager", Time.fromMs(4098590));
+        user1.addConvoInterest(createUuid("1.243253453"),2);
+        user1.addConvoInterest(createUuid("1.14325223123453"),2);
+        user1.addConvoInterest(createUuid("1.943253213312453"),2);
+        user1.addUserInterest(createUuid("1.24342"));
+        user1.addUserInterest(createUuid("1.5634634"));
+        user1.addUserInterest(createUuid("1.5314132"));
+        user1.setUpdateTime(150026594);
+        expected.add(user1);
+        User user2 = new User(createUuid("1.3566231147"), "FakeUserName1234", Time.fromMs(48574));
+        user2.addConvoInterest(createUuid("1.243253453"),2);
+        user2.addConvoInterest(createUuid("1.14325223123453"),2);
+        user2.addConvoInterest(createUuid("1.943253213312453"),2);
+        user2.addUserInterest(createUuid("1.24342"));
+        user2.addUserInterest(createUuid("1.5634634"));
+        user2.addUserInterest(createUuid("1.5314132"));
+        user2.setUpdateTime(150026594);
+        expected.add(user2);
+        ConversationHeader conv1 = new ConversationHeader(createUuid("1.3959833157"), createUuid("1.1074501217"),  Time.fromMs(98094), "Chat1");
+        conv1.setAccessOf(createUuid("1.243253453"), UserType.MEMBER);
+        conv1.setAccessOf(createUuid("1.14325223123453"), UserType.OWNER);
+        conv1.setAccessOf(createUuid("1.943253213312453"), UserType.MEMBER);
+        conv1.defaultType = UserType.MEMBER;
+        expected.add(conv1, new ConversationPayload( createUuid("1.3959833157"), createUuid("1.3350517446"), createUuid("1.1516759239")));
+        ConversationHeader conv2 = new ConversationHeader(createUuid("1.3959833157"), createUuid("1.1074501217"),  Time.fromMs(59485), "Chat2");
+        conv2.setAccessOf(createUuid("1.243253453"), UserType.MEMBER);
+        conv2.setAccessOf(createUuid("1.14325223123453"), UserType.OWNER);
+        conv2.setAccessOf(createUuid("1.943253213312453"), UserType.MEMBER);
+        conv2.defaultType = UserType.MEMBER;
+        expected.add(conv2, new ConversationPayload( createUuid("1.3959833157"), createUuid("1.3350517446"), createUuid("1.1516759239")));
         expected.add(new Message(createUuid("1.3928689216"), createUuid("1.1516759239"), createUuid("0"), Time.fromMs(49589), createUuid("1.1074501217"),   "I'm so alone"));
         expected.add(new Message(createUuid("1.2016074193"), createUuid("1.1516759239"), createUuid("0"), Time.fromMs(9485), createUuid("1.1074501217"),   "I need friends"));
         expected.add(new Message(createUuid("1.384992272"), createUuid("1.1516759239"), createUuid("0"), Time.fromMs(5098), createUuid("1.1074501217"),   "Julia'sFixesAreNotImplementedYetCanYouTell?"));
@@ -187,10 +231,36 @@ public class JSONTest {
         JSON log = new JSON();
         Model model = new Model();
         Model expected = new Model();
-        expected.add(new User(createUuid("1.1074501217"), "Krager", Time.fromMs(4098590)));
-        expected.add(new User(createUuid("1.3566231147"), "FakeUserName1234", Time.fromMs(48574)));
-        expected.add(new ConversationHeader(createUuid("1.3959833157"), createUuid("1.1074501217"),  Time.fromMs(98094), "Chat1"), new ConversationPayload( createUuid("1.3959833157"), createUuid("1.3350517446"), createUuid("1.1516759239")));
-        expected.add(new ConversationHeader(createUuid("1.3959833157"), createUuid("1.1074501217"),  Time.fromMs(59485), "Chat2"), new ConversationPayload( createUuid("1.3959833157"), createUuid("1.3350517446"), createUuid("1.1516759239")));
+        User user1 = new User(createUuid("1.1074501217"), "Krager", Time.fromMs(4098590));
+        user1.addConvoInterest(createUuid("1.243253453"),2);
+        user1.addConvoInterest(createUuid("1.14325223123453"),2);
+        user1.addConvoInterest(createUuid("1.943253213312453"),2);
+        user1.addUserInterest(createUuid("1.24342"));
+        user1.addUserInterest(createUuid("1.5634634"));
+        user1.addUserInterest(createUuid("1.5314132"));
+        user1.setUpdateTime(150026594);
+        expected.add(user1);
+        User user2 = new User(createUuid("1.3566231147"), "FakeUserName1234", Time.fromMs(48574));
+        user2.addConvoInterest(createUuid("1.243253453"),2);
+        user2.addConvoInterest(createUuid("1.14325223123453"),2);
+        user2.addConvoInterest(createUuid("1.943253213312453"),2);
+        user2.addUserInterest(createUuid("1.24342"));
+        user2.addUserInterest(createUuid("1.5634634"));
+        user2.addUserInterest(createUuid("1.5314132"));
+        user2.setUpdateTime(150026594);
+        expected.add(user2);
+        ConversationHeader conv1 = new ConversationHeader(createUuid("1.3959833157"), createUuid("1.1074501217"),  Time.fromMs(98094), "Chat1");
+        conv1.setAccessOf(createUuid("1.243253453"), UserType.MEMBER);
+        conv1.setAccessOf(createUuid("1.14325223123453"), UserType.OWNER);
+        conv1.setAccessOf(createUuid("1.943253213312453"), UserType.MEMBER);
+        conv1.defaultType = UserType.MEMBER;
+        expected.add(conv1, new ConversationPayload( createUuid("1.3959833157"), createUuid("1.3350517446"), createUuid("1.1516759239")));
+        ConversationHeader conv2 = new ConversationHeader(createUuid("1.3959833157"), createUuid("1.1074501217"),  Time.fromMs(59485), "Chat2");
+        conv2.setAccessOf(createUuid("1.243253453"), UserType.MEMBER);
+        conv2.setAccessOf(createUuid("1.14325223123453"), UserType.OWNER);
+        conv2.setAccessOf(createUuid("1.943253213312453"), UserType.MEMBER);
+        conv2.defaultType = UserType.MEMBER;
+        expected.add(conv2, new ConversationPayload( createUuid("1.3959833157"), createUuid("1.3350517446"), createUuid("1.1516759239")));
         expected.add(new Message(createUuid("1.3928689216"), createUuid("1.1516759239"), createUuid("0"), Time.fromMs(49589), createUuid("1.1074501217"),   "I'm so alone"));
         expected.add(new Message(createUuid("1.2016074193"), createUuid("1.1516759239"), createUuid("0"), Time.fromMs(9485), createUuid("1.1074501217"),   "I need friends"));
         expected.add(new Message(createUuid("1.384992272"), createUuid("1.1516759239"), createUuid("0"), Time.fromMs(5098), createUuid("1.1074501217"),   "Julia'sFixesAreNotImplementedYetCanYouTell?"));
@@ -252,7 +322,7 @@ public class JSONTest {
         assertEquals(
                 compare(model.messageByTime().all().iterator(), expected.messageByTime().all().iterator()), true);
     }
-    
+    /*
     // Writing Tests
  	private String stringRepresentationOf(String fileName) throws IOException {
  		String toReturn = "";
@@ -303,5 +373,5 @@ public class JSONTest {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
+	}*/
 }
