@@ -3,7 +3,14 @@
     {
       "name": "Krager",
       "uuid": "1.1074501217",
-      "creationTime": 12345
+      "creationTime": 12345,
+      "conversationInterests" : {
+        "1.243253453": 2,
+        "1.14325223123453": 2,
+        "1.943253213312453": 2
+      },
+      "userInterests" : [1.24342, 1.5634634, 1.5314132 ],
+      "lastUpdateTime" : 1500265942681
     }],
   "conversations":[],
   "messages":[]
