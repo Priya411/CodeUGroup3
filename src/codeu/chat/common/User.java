@@ -110,6 +110,23 @@ public final class User {
     if(!this.creation.equals(toCompareUser.creation)) {
       return false;
     }
+    for (Uuid userID: userInterests) {
+        if(!(((User) toCompare).userInterests.contains(userID)))
+        {
+            return false;
+        }
+    }
+    for(Uuid convID: conversationInterests.keySet())
+    {
+        if(!(((User) toCompare).conversationInterests.get(convID).equals(conversationInterests.get(convID))))
+        {
+            return false;
+        }
+    }
+    if(this.lastUpdateTime!=((User) toCompare).lastUpdateTime)
+    {
+        return false;
+    }
     return true;
   }
 
