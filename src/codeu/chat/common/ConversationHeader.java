@@ -112,6 +112,17 @@ public final class ConversationHeader {
     if(!this.title.equals(toCompareConv.title)) {
       return false;
     }
+    if(!this.defaultType.equals(((ConversationHeader) toCompare).defaultType))
+    {
+      return false;
+    }
+    for(Uuid userID: userAccessRoles.keySet())
+    {
+      if(!(((ConversationHeader) toCompare).userAccessRoles.get(userID).equals(userAccessRoles.get(userID))))
+      {
+        return false;
+      }
+    }
     return true;
   }
 
