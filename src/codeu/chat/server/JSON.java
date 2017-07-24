@@ -3,11 +3,10 @@ package codeu.chat.server;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
-import codeu.chat.common.ConversationHeader;
-import codeu.chat.common.ConversationPayload;
-import codeu.chat.common.Message;
-import codeu.chat.common.User;
+import codeu.chat.common.*;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -28,7 +27,7 @@ import com.fasterxml.jackson.databind.*;
 
 /**
  * JSON class used to write and read from the given save file.
- * 
+ *
  * This file is to be used to allow the server to get a log of all actions completed
  * This class saves all inputted commands
  * It creates a new command so that the user can then access the log
@@ -49,7 +48,7 @@ public final class JSON {
 	/**
 	 * Writes empty arrays to the json file. Should be used to reset the file or
 	 * initialize basic backbone if file is blank
-	 * 
+	 *
 	 * @param mapper
 	 */
 	private JsonNode createNodeWithBlankArrays() {
@@ -63,7 +62,7 @@ public final class JSON {
 
 	/**
 	 * Saves the given object inside of the array with given arrayName
-	 * 
+	 *
 	 * @param obj
 	 *            Object to be saved
 	 * @param arrayName
@@ -102,20 +101,19 @@ public final class JSON {
 		final ArrayNode requestedArrayNode = (ArrayNode) fileNode.path(arrayName);
 		int index = 0;
 		boolean isAlreadyPresent = false;
-		// loop through to check that there are no same uuid already saved 
+		// loop through to check that there are no same uuid already saved
 		for (JsonNode curObj : requestedArrayNode ) {
 			if (UUID.equals(curObj.get("uuid").asText())) {
-				System.out.println("Found same UUID, updating existing object");
 				// if payload, keep same data, just added first and last
 				if (obj instanceof ConversationPayload) {
-					
+
 					ObjectNode nodeToSave = mapper.createObjectNode();
 					nodeToSave.setAll((ObjectNode)curObj);
 					nodeToSave.put("firstMessageUUID", ((ConversationPayload)obj).firstMessage.toString());
 					nodeToSave.put("lastMessageUUID", ((ConversationPayload)obj).lastMessage.toString());
 					requestedArrayNode.set(index, nodeToSave);
 				}else {
-					// if anything else, just rewrite with new version of object 
+					// if anything else, just rewrite with new version of object
 					JsonNode nodeToSave = mapper.convertValue(obj, JsonNode.class);
 					requestedArrayNode.set(index, nodeToSave);
 				}
@@ -124,7 +122,6 @@ public final class JSON {
 			index++;
 		}
 		if (!isAlreadyPresent) {
-			System.out.println("Adding for first itme");
 			requestedArrayNode.addPOJO(obj);
 		}
 		// save to the file
@@ -135,7 +132,7 @@ public final class JSON {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Used to erase all saved content and place a blank array
 	 */
@@ -150,7 +147,7 @@ public final class JSON {
 
 	/**
 	 * Appends a user to the json file
-	 * 
+	 *
 	 * @param user
 	 */
 	public void save(User user) {
@@ -160,7 +157,7 @@ public final class JSON {
 
 	/**
 	 * Appends a message to the json file
-	 * 
+	 *
 	 * @param message
 	 */
 	public void save(Message message) {
@@ -170,22 +167,22 @@ public final class JSON {
 
 	/**
 	 * Appends a conversation to the json file
-	 * 
+	 *
 	 * @param conversation
 	 */
 	public void save(ConversationHeader conversation) {
 		// save the object conversation into the array "conversations"
 		save(conversation, "conversations", conversation.getUUID());
 	}
-	
-	/** 
-	 * 
+
+	/**
+	 *
 	 * @return
 	 */
 	public void save(ConversationPayload foundConversation) {
 		save(foundConversation, "conversations", foundConversation.id.toString());
 	}
-	
+
     public Model createModelForServer()
     {
         // This function is to be used by the Server class
@@ -217,7 +214,6 @@ public final class JSON {
 
     public Model readFromFile (String file) throws IOException
     {
-    	System.out.println("Reading from File");
         Model model = new Model();
         JsonFactory jsonF = new JsonFactory();
         JsonParser jp = null;
@@ -250,10 +246,45 @@ public final class JSON {
                     Time time = null;
                     String name = "";
                     Uuid id = null;
+                    long updateTime = -1;
+                    HashMap<Uuid, Integer> conversationInterests = new HashMap<>();
+                    ArrayList<Uuid> userInterests = new ArrayList<Uuid>();
+                    boolean conversationInterestsRun = false;
+                    boolean userInterestsRun = false;
                     while (jp.nextToken() != JsonToken.END_ARRAY) {
                         if (jp.getText().equals("name")) {
                             jp.nextToken();
                             name = jp.getText();
+                        }
+                        if (jp.getText().equals("conversationInterests")) {
+                            conversationInterestsRun = true;
+                            jp.nextToken();
+                            while(jp.nextToken()!=JsonToken.END_OBJECT)
+                            {
+                                Uuid convoId = null;
+                                try {
+                                    convoId = Uuid.parse(jp.getText());
+                                } catch (IOException e) {
+                                    System.out.println("Invalid Uuid");
+                                }
+                                jp.nextToken();
+                                Integer conversationAmount = jp.getIntValue();
+                                conversationInterests.put(convoId,conversationAmount);
+                            }
+                        }
+                        if (jp.getText().equals("userInterests")) {
+                            userInterestsRun = true;
+                            jp.nextToken();
+                            while(jp.nextToken()!=JsonToken.END_ARRAY)
+                            {
+                                Uuid UserId = null;
+                                try {
+                                    UserId = Uuid.parse(jp.getText());
+                                } catch (IOException e) {
+                                    System.out.println("Invalid Uuid");
+                                }
+                                userInterests.add(UserId);
+                            }
                         }
                         if (jp.getText().equals("uuid")) {
                             jp.nextToken();
@@ -267,11 +298,29 @@ public final class JSON {
                             jp.nextToken();
                             time = Time.fromMs(jp.getLongValue());
                         }
-                        if (!(name.equals("")) && time != null && id != null) {
-                            model.add(new User(id, name, time));
+                        if (jp.getText().equals("lastUpdateTime")) {
+                            jp.nextToken();
+                            updateTime = jp.getLongValue();
+                        }
+                        if (!(name.equals("")) && time != null && id != null && userInterestsRun && conversationInterestsRun && updateTime!= -1) {
+                            User user = new User(id, name, time);
+                            user.setUpdateTime(updateTime);
+                            for (Uuid userID: userInterests) {
+                                user.addUserInterest(userID);
+                            }
+                            for(Uuid convID: conversationInterests.keySet())
+                            {
+                                user.addConvoInterest(convID, conversationInterests.get(convID));
+                            }
+                            model.add(user);
                             name = "";
                             time = null;
                             id = null;
+                            userInterestsRun = false;
+                            conversationInterestsRun = false;
+                            conversationInterests = new HashMap<>();
+                            userInterests = new ArrayList<Uuid>();
+                            updateTime = -1;
                         }
                     }
                     continue;
@@ -287,7 +336,26 @@ public final class JSON {
                     String title = "";
                     Uuid last = null;
                     Uuid first = null;
+                    boolean userRolesRun = false;
+                    UserType defaultType = null;
+                    HashMap<Uuid, UserType> userAccessRoles = new HashMap<Uuid, UserType>();
                     while(jp.nextToken()!=JsonToken.END_ARRAY) {
+                        if (jp.getText().equals("userAccessRoles")) {
+                            userRolesRun = true;
+                            jp.nextToken();
+                            while(jp.nextToken()!=JsonToken.END_OBJECT)
+                            {
+                                Uuid userId = null;
+                                try {
+                                    userId = Uuid.parse(jp.getText());
+                                } catch (IOException e) {
+                                    System.out.println("Invalid Uuid");
+                                }
+                                jp.nextToken();
+                                UserType type = UserType.valueOf(jp.getText());
+                                userAccessRoles.put(userId,type);
+                            }
+                        }
                         if (jp.getText().equals("title")) {
                             jp.nextToken();
                             title = jp.getText();
@@ -328,14 +396,25 @@ public final class JSON {
                             jp.nextToken();
                             creation = Time.fromMs(jp.getLongValue());
                         }
-                        if (!(title.equals("")) && id != null && owner != null && creation != null && last!=null && first!=null) {
-                            model.add(new ConversationHeader(id, owner, creation, title), new ConversationPayload(id,first,last));
+                        if (jp.getText().equals("defaultType")) {
+                            jp.nextToken();
+                            defaultType = UserType.valueOf(jp.getText());
+                        }
+                        if (!(title.equals("")) && id != null && owner != null && creation != null && last!=null && first!=null && userRolesRun && defaultType!=null) {
+                            ConversationHeader conv = new ConversationHeader(id, owner, creation, title);
+                            for(Uuid Uid: userAccessRoles.keySet())
+                            {
+                                conv.setAccessOf(Uid,userAccessRoles.get(Uid));
+                            }
+                            model.add(conv, new ConversationPayload(id,first,last));
                             title = "";
                             id= null;
                             owner = null;
                             creation = null;
                             first = null;
+                            userRolesRun = false;
                             last = null;
+                            defaultType = null;
                         }
                     }
                     continue;
