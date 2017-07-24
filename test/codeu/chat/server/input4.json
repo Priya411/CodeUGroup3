@@ -2,11 +2,25 @@
   "users" : [ {
     "name" : "Krager",
     "uuid" : "1.1074501217",
-    "creationTime" : 4098590
+    "creationTime" : 4098590,
+    "conversationInterests" : {
+      "1.243253453": 2,
+      "1.14325223123453": 2,
+      "1.943253213312453": 2
+    },
+    "userInterests" : [1.24342, 1.5634634, 1.5314132 ],
+    "lastUpdateTime" : 1500265942681
   }, {
     "name" : "FakeUserName1234",
     "uuid" : "1.3566231147",
-    "creationTime" : 48574
+    "creationTime" : 48574,
+    "conversationInterests" : {
+      "1.243253453": 2,
+      "1.14325223123453": 2,
+      "1.943253213312453": 2
+    },
+    "userInterests" : [1.24342, 1.5634634, 1.5314132 ],
+    "lastUpdateTime" : 1500265942681
   } ],
   "conversations" : [ {
     "title" : "Chat1",
@@ -14,14 +28,26 @@
     "ownerUUID" : "1.1074501217",
     "creationTime" : 98094,
     "firstMessageUUID" : "1.3350517446",
-    "lastMessageUUID" : "1.1516759239"
+    "lastMessageUUID" : "1.1516759239",
+    "defaultType": "MEMBER",
+    "userAccessRoles": {
+      "1.243253453": "MEMBER",
+      "1.14325223123453": "OWNER",
+      "1.943253213312453": "MEMBER"
+    }
   }, {
     "title" : "Chat2",
     "uuid" : "1.3959833157",
     "ownerUUID" : "1.1074501217",
     "creationTime" : 59485,
     "firstMessageUUID" : "1.3350517446",
-    "lastMessageUUID" : "1.1516759239"
+    "lastMessageUUID" : "1.1516759239",
+    "defaultType": "MEMBER",
+    "userAccessRoles": {
+      "1.243253453": "MEMBER",
+      "1.14325223123453": "OWNER",
+      "1.943253213312453": "MEMBER"
+    }
   } ],
   "messages" : [ {
     "content" : "I'm so alone",
