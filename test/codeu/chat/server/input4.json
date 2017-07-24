@@ -9,7 +9,7 @@
       "1.943253213312453": 2
     },
     "userInterests" : [1.24342, 1.5634634, 1.5314132 ],
-    "lastUpdateTime" : 1500265942681
+    "lastUpdateTime" : 150026594
   }, {
     "name" : "FakeUserName1234",
     "uuid" : "1.3566231147",
@@ -20,7 +20,7 @@
       "1.943253213312453": 2
     },
     "userInterests" : [1.24342, 1.5634634, 1.5314132 ],
-    "lastUpdateTime" : 1500265942681
+    "lastUpdateTime" : 150026594
   } ],
   "conversations" : [ {
     "title" : "Chat1",
