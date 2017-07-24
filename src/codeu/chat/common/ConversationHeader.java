@@ -22,6 +22,7 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import codeu.chat.util.Serializer;
 import codeu.chat.util.Serializers;
@@ -93,6 +94,19 @@ public final class ConversationHeader {
 
 	public long getCreationTime() {
 		return creation.inMs();
+	}
+	
+	public String getDefaultType() {
+		return defaultType.toString();
+	}
+	
+	@JsonProperty("userAccessRoles")
+	public HashMap<String, String> getUserAccessRolesStringFormat() {
+		HashMap<String, String> map = new HashMap<String, String>();
+		for (Uuid key: this.userAccessRoles.keySet()) {
+			map.put(key.toString(), this.userAccessRoles.get(key).toString());
+		}
+		return map;
 	}
 
 	@Override

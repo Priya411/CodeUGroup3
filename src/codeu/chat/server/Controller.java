@@ -171,6 +171,7 @@ public final class Controller implements RawController, BasicController {
 		}
 		final ConversationPayload convoPayload = model
 				.conversationPayloadById().first(convoHeader.id);
+		
 		Message currentMessage = model.messageById().first(
 				convoPayload.firstMessage);
 		int count = 0;
@@ -180,16 +181,19 @@ public final class Controller implements RawController, BasicController {
 		}
 		ConvoInterest interest = new ConvoInterest(convoPayload.id, count);
 		foundUser.addConvoInterest(interest);
+		new JSON().save(foundUser);
 		return interest;
 	}
 
 	public Uuid newUserInterest(Uuid user, String name) {
 		final User foundUser = model.userById().first(user);
 		final User userToSave = model.userByText().first(name);
+		System.out.println(userToSave);
 		if (userToSave == null) {
 			return null;
 		}
 		foundUser.addUserInterest(userToSave.id);
+		new JSON().save(foundUser);
 		return userToSave.id;
 	}
 
@@ -206,6 +210,7 @@ public final class Controller implements RawController, BasicController {
 				.conversationPayloadById().first(convoHeader.id);
 
 		foundUser.remConvoInterest(convoPayload.id);
+		new JSON().save(foundUser);
 		return convoPayload.id;
 	}
 
@@ -216,6 +221,7 @@ public final class Controller implements RawController, BasicController {
 			return null;
 		}
 		foundUser.remUserInterest(userToSave.id);
+		new JSON().save(foundUser);
 		return userToSave.id;
 	}
 
@@ -269,10 +275,11 @@ public final class Controller implements RawController, BasicController {
 				return null;
 			}
 			if (type == UserType.OWNER || type == UserType.MEMBER) {
-				model.conversationById()
-						.first(convo)
-						.setAccessOf(model.userByText().first(username).id,
+				ConversationHeader header = model.conversationById()
+						.first(convo);
+				header.setAccessOf(model.userByText().first(username).id,
 								type);
+				new JSON().save(header);
 				return model.userByText().first(username).id;
 			} else {
 				return null;
@@ -285,11 +292,11 @@ public final class Controller implements RawController, BasicController {
 				return null;
 			}
 			if (type == UserType.MEMBER) {
-				model.conversationById()
-						.first(convo)
-						.setAccessOf(model.userByText().first(username).id,
+				ConversationHeader header = model.conversationById()
+						.first(convo);
+				header.setAccessOf(model.userByText().first(username).id,
 								type);
-				return model.userByText().first(username).id;
+				new JSON().save(header);
 			} else {
 				return null;
 			}

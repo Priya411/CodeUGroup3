@@ -156,6 +156,7 @@ public final class Serializers {
 
 	    return new Serializer<HashMap<K, V>>() {
 
+	    	  // Writes array size followed by key value
 	      @Override
 	      public void write(OutputStream out, HashMap<K, V> value) throws IOException {
 	        INTEGER.write(out, value.size());
@@ -165,6 +166,7 @@ public final class Serializers {
 	        }
 	      }
 
+	      // recieves size of the hashmap then reads that many key-value pairs. 
 	      @Override
 	      public HashMap<K, V> read(InputStream in) throws IOException {
 	        final int size = INTEGER.read(in);
