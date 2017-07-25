@@ -166,7 +166,7 @@ public final class Serializers {
 	        }
 	      }
 
-	      // recieves size of the hashmap then reads that many key-value pairs. 
+	      // receives size of the hashmap then reads that many key-value pairs. 
 	      @Override
 	      public HashMap<K, V> read(InputStream in) throws IOException {
 	        final int size = INTEGER.read(in);
