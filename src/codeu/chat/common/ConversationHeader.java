@@ -14,10 +14,12 @@
 
 package codeu.chat.common;
 
+import java.awt.List;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -74,6 +76,8 @@ public final class ConversationHeader {
 
 	// a hashmap with user id as key and their usertype as value
 	private HashMap<Uuid, UserType> userAccessRoles = new HashMap<Uuid, UserType>();
+
+	public LinkedList<String> bots = new LinkedList<String>();
 
 	public ConversationHeader(Uuid id, Uuid owner, Time creation, String title) {
 

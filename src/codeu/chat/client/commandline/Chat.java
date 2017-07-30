@@ -35,7 +35,6 @@ import codeu.chat.util.Uuid;
 import java.util.Iterator;
 import java.io.IOException;
 
-
 public final class Chat {
 
 	// PANELS
@@ -53,77 +52,75 @@ public final class Chat {
 		this.panels.push(createRootPanel(context));
 	}
 
-	//CONSTRUCTOR FOR TESTING ONLY: 
-	public Chat(){
+	// CONSTRUCTOR FOR TESTING ONLY:
+	public Chat() {
 
 	}
 
-	// RECREATE 
+	// RECREATE
 	//
-	// Recreates the server's last known state to display for the client 
-	// upon relaunching the client 
-	// Will not display anything if there was no information saved 
+	// Recreates the server's last known state to display for the client
+	// upon relaunching the client
+	// Will not display anything if there was no information saved
 	//
 	//
 	public void recreate(Context context) {
 
-		// HashMap keeps track of users and UUIDs for easy access 
+		// HashMap keeps track of users and UUIDs for easy access
 		HashMap<Uuid, String> allUsers = new HashMap<Uuid, String>();
-		// HashMap keeps track of all the conversations that exist 
+		// HashMap keeps track of all the conversations that exist
 		HashMap<Uuid, ConversationContext> allConvos = new HashMap<Uuid, ConversationContext>();
 
-		// this function only does something if there was at least one user saved from the 
-		// last session 
+		// this function only does something if there was at least one user saved from
+		// the
+		// last session
 		if (context.allUsers().iterator().hasNext()) {
 
 			try {
-			  Logger.enableFileOutput("chat_history_log.log");
+				Logger.enableFileOutput("chat_history_log.log");
 			} catch (IOException ex) {
-			  LOG.error(ex, "Failed to set logger to write to file");
+				LOG.error(ex, "Failed to set logger to write to file");
 			}
 			LOG.info("============================= START OF SERVER HISTORY =============================");
 
-			Iterator<UserContext> users = context.allUsers().iterator(); 
+			Iterator<UserContext> users = context.allUsers().iterator();
 			UserContext user;
 			System.out.format("USERS: \n");
 
-			while (users.hasNext()){
-				user = users.next(); 
-				System.out.format("\t\"%s\" Added at %s || UUID: %s\n", 
-				user.user.name, user.user.creation.HMtime(), user.user.id);
-				allUsers.put(user.user.id, user.user.name); 
-				LOG.info("\nUSER: \"%s\" Added at %s || UUID: %s\n", 
-				user.user.name, user.user.creation.HMtime(), user.user.id);
+			while (users.hasNext()) {
+				user = users.next();
+				System.out.format("\t\"%s\" Added at %s || UUID: %s\n", user.user.name, user.user.creation.HMtime(),
+						user.user.id);
+				allUsers.put(user.user.id, user.user.name);
+				LOG.info("\nUSER: \"%s\" Added at %s || UUID: %s\n", user.user.name, user.user.creation.HMtime(),
+						user.user.id);
 				allUsers.put(user.user.id, user.user.name);
 				for (final ConversationContext conversation : user.conversations()) {
 					allConvos.put(conversation.conversation.id, conversation);
 				}
 			}
 
-			for (Uuid convoUUID : allConvos.keySet()){
-				ConversationContext conversation = allConvos.get(convoUUID); 
+			for (Uuid convoUUID : allConvos.keySet()) {
+				ConversationContext conversation = allConvos.get(convoUUID);
 				System.out.format("\nCONVERSATION: \"%s\" Created by %s at %s || UUID: %s \n",
-					conversation.conversation.title, allUsers.get(conversation.conversation.owner),
-					conversation.conversation.creation.HMtime(), conversation.conversation.id);
-				LOG.info("\nCONVERSATION: \"%s\" Created by %s at %s || UUID: %s \n",
-					conversation.conversation.title, allUsers.get(conversation.conversation.owner),
-					conversation.conversation.creation.HMtime(), conversation.conversation.id);
-				
+						conversation.conversation.title, allUsers.get(conversation.conversation.owner),
+						conversation.conversation.creation.HMtime(), conversation.conversation.id);
+				LOG.info("\nCONVERSATION: \"%s\" Created by %s at %s || UUID: %s \n", conversation.conversation.title,
+						allUsers.get(conversation.conversation.owner), conversation.conversation.creation.HMtime(),
+						conversation.conversation.id);
+
 				for (MessageContext message = conversation.firstMessage(); message != null; message = message.next()) {
-					System.out.format("\tMESSAGE: %s | %s: \"%s\" || UUID: %s \n", 
-						message.message.creation.HMtime(), allUsers.get(message.message.author),  
-						message.message.content, message.message.id);	
-					LOG.info("\nMESSAGE: %s | %s: \"%s\" || UUID: %s \n", 
-						message.message.creation.HMtime(), allUsers.get(message.message.author),  
-						message.message.content, message.message.id);	 
+					System.out.format("\tMESSAGE: %s | %s: \"%s\" || UUID: %s \n", message.message.creation.HMtime(),
+							allUsers.get(message.message.author), message.message.content, message.message.id);
+					LOG.info("\nMESSAGE: %s | %s: \"%s\" || UUID: %s \n", message.message.creation.HMtime(),
+							allUsers.get(message.message.author), message.message.content, message.message.id);
 				}
 			}
 
 			LOG.info("============================= END OF SERVER HISTORY =============================");
-			
-		}	
-	}
 
+		}
+	}
 
 	// HANDLE COMMAND
 	//
@@ -216,22 +213,18 @@ public final class Chat {
 				final ServerInfo info = context.getInfo();
 				final Time currentTime = Time.now();
 				if (info == null) {
-					System.out
-							.println("ERROR: Failed to retrieve server information");
+					System.out.println("ERROR: Failed to retrieve server information");
 				} else {
 					System.out.print("Your version number is: ");
 					System.out.println(info.toString());
 
-					long upTime = currentTime.inMs()
-							- info.getStartTime().inMs();
+					long upTime = currentTime.inMs() - info.getStartTime().inMs();
 					long[] HMS = Time.convertHMS(upTime);
 					long hours, mins, secs;
 					hours = HMS[0];
 					mins = HMS[1];
 					secs = HMS[2];
-					System.out.format(
-							"Up Time: %s hours %s minutes %s seconds", hours,
-							mins, secs);
+					System.out.format("Up Time: %s hours %s minutes %s seconds", hours, mins, secs);
 
 				}
 			}
@@ -247,8 +240,7 @@ public final class Chat {
 			@Override
 			public void invoke(List<String> args) {
 				for (final UserContext user : context.allUsers()) {
-					System.out.format("USER %s (UUID:%s)\n", user.user.name,
-							user.user.id);
+					System.out.format("USER %s (UUID:%s)\n", user.user.name, user.user.id);
 				}
 			}
 		});
@@ -257,8 +249,8 @@ public final class Chat {
 		//
 		// Add a command to add and sign-in as a new user when the user enters
 		// "u-add" while on the root panel.
-		// uses the entire list args as the argument since the user name may 
-		// be longer than a single word 
+		// uses the entire list args as the argument since the user name may
+		// be longer than a single word
 		//
 		panel.register("u-add", new Panel.Command() {
 			@Override
@@ -279,8 +271,8 @@ public final class Chat {
 		//
 		// Add a command to sign-in as a user when the user enters "u-sign-in"
 		// while on the root panel.
-		// uses the entire list args as the argument since the user name may 
-		// be longer than a single word 
+		// uses the entire list args as the argument since the user name may
+		// be longer than a single word
 		//
 		panel.register("u-sign-in", new Panel.Command() {
 			@Override
@@ -289,8 +281,7 @@ public final class Chat {
 				if (name.length() > 0) {
 					final UserContext user = findUser(name);
 					if (user == null) {
-						System.out.format("ERROR: Failed to sign in as '%s'\n",
-								name);
+						System.out.format("ERROR: Failed to sign in as '%s'\n", name);
 					} else {
 						panels.push(createUserPanel(user));
 					}
@@ -331,14 +322,11 @@ public final class Chat {
 			public void invoke(List<String> args) {
 				System.out.println("USER MODE");
 				System.out.println("  c-list");
-				System.out
-						.println("    List all conversations that the current user can interact with.");
+				System.out.println("    List all conversations that the current user can interact with.");
 				System.out.println("  c-add <title>");
-				System.out
-						.println("    Add a new conversation with the given title and join it as the current user.");
+				System.out.println("    Add a new conversation with the given title and join it as the current user.");
 				System.out.println("  c-join <title>");
-				System.out
-						.println("    Join the conversation as the current user.");
+				System.out.println("    Join the conversation as the current user.");
 				System.out.println("  c-status");
 				System.out.println("  	Displays access status for all conversations");
 
@@ -370,10 +358,8 @@ public final class Chat {
 		panel.register("c-list", new Panel.Command() {
 			@Override
 			public void invoke(List<String> args) {
-				for (final ConversationContext conversation : user
-						.conversations()) {
-					System.out.format("CONVERSATION %s (UUID:%s)\n",
-							conversation.conversation.title,
+				for (final ConversationContext conversation : user.conversations()) {
+					System.out.format("CONVERSATION %s (UUID:%s)\n", conversation.conversation.title,
 							conversation.conversation.id);
 				}
 			}
@@ -384,8 +370,8 @@ public final class Chat {
 		// Add a command that will create and join a new conversation when the
 		// user
 		// enters "c-add" while on the user panel.
-		// uses the entire list args as the argument since the conversation name 
-		// may be longer than a single word 
+		// uses the entire list args as the argument since the conversation name
+		// may be longer than a single word
 		//
 		panel.register("c-add", new Panel.Command() {
 			@Override
@@ -394,8 +380,7 @@ public final class Chat {
 				if (name.length() > 0) {
 					final ConversationContext conversation = user.start(name);
 					if (conversation == null) {
-						System.out
-								.println("ERROR: Failed to create new conversation");
+						System.out.println("ERROR: Failed to create new conversation");
 					} else {
 						panels.push(createConversationPanel(conversation));
 					}
@@ -409,8 +394,8 @@ public final class Chat {
 		//
 		// Add a command that will joing a conversation when the user enters
 		// "c-join" while on the user panel.
-		// uses the entire list args as the argument since the conversation name 
-		// may be longer than a single word 
+		// uses the entire list args as the argument since the conversation name
+		// may be longer than a single word
 		//
 		panel.register("c-join", new Panel.Command() {
 			@Override
@@ -419,9 +404,7 @@ public final class Chat {
 				if (name.length() > 0) {
 					final ConversationContext conversation = find(name);
 					if (conversation == null) {
-						System.out
-								.format("ERROR: No conversation with name '%s'\n",
-										name);
+						System.out.format("ERROR: No conversation with name '%s'\n", name);
 					} else {
 						panels.push(createConversationPanel(conversation));
 					}
@@ -434,8 +417,7 @@ public final class Chat {
 			// context.
 			// If no conversation has the given name, this will return null.
 			private ConversationContext find(String title) {
-				for (final ConversationContext conversation : user
-						.conversations()) {
+				for (final ConversationContext conversation : user.conversations()) {
 					if (title.equals(conversation.conversation.title)) {
 						return conversation;
 					}
@@ -443,38 +425,37 @@ public final class Chat {
 				return null;
 			}
 		});
-		
-		
+
 		// Interest commands
-		// 
+		//
 		// Add
 		panel.register("i-add-user", new Panel.Command() {
 			public void invoke(List<String> args) {
 				// append the name by space from args and send to usercontext
 				String name = !args.isEmpty() ? String.join(" ", args).trim() : "";
 				if (!name.isEmpty()) {
-					if (user.addUserInterest(name) == null){
+					if (user.addUserInterest(name) == null) {
 						System.out.println("Oh no! I can't find that user! Try again");
-					}else {
+					} else {
 						System.out.println("Thanks for expressing your interest!");
 					}
-				}else {
+				} else {
 					System.out.println("Not a valid name");
 				}
 			}
 		});
-		
+
 		panel.register("i-add-convo", new Panel.Command() {
 			public void invoke(List<String> args) {
-				
+
 				String name = !args.isEmpty() ? String.join(" ", args).trim() : "";
 				if (!name.isEmpty()) {
-					if (user.addConvoInterest(name) == null){
+					if (user.addConvoInterest(name) == null) {
 						System.out.println("Oh no! I can't find that convo! Try again");
-					}else {
+					} else {
 						System.out.println("Thanks for expressing your interest!");
 					}
-				}else {
+				} else {
 					System.out.println("Not a valid name");
 				}
 			}
@@ -484,27 +465,27 @@ public final class Chat {
 			public void invoke(List<String> args) {
 				String name = !args.isEmpty() ? String.join(" ", args).trim() : "";
 				if (!name.isEmpty()) {
-				  if (user.removeUserInterest(name) == null){
-					System.out.println("Oh no! I can't find that user! Try again!");
-				  }else {
-					System.out.println("Interest == gone!");
-				  }
-			    }else {
-			    	System.out.println("Not a valid name");
-			    }
+					if (user.removeUserInterest(name) == null) {
+						System.out.println("Oh no! I can't find that user! Try again!");
+					} else {
+						System.out.println("Interest == gone!");
+					}
+				} else {
+					System.out.println("Not a valid name");
+				}
 			}
 		});
-		
+
 		panel.register("i-remove-convo", new Panel.Command() {
 			public void invoke(List<String> args) {
 				String name = !args.isEmpty() ? String.join(" ", args).trim() : "";
 				if (!name.isEmpty()) {
-					if (user.removeConvoInterest(name) == null){
+					if (user.removeConvoInterest(name) == null) {
 						System.out.println("Oh no! I can't find that convo! Try again");
-					}else {
+					} else {
 						System.out.println("Interest == gone!");
 					}
-				}else {
+				} else {
 					System.out.println("Not a valid name");
 				}
 			}
@@ -523,64 +504,64 @@ public final class Chat {
 				System.out.format("  Id   : UUID:%s\n", user.user.id);
 			}
 		});
-		
+
 		// STATUS UPDATE
-		// 
+		//
 		// Allows user to see status update
-		// A status update includes : 
-		// 1) The number of messages that have been send in each of the user's 
-		//    conversation interests since the last updates 
-		// 2) A list of conversations created and conversations added to by each 
-		//    of the user's user interests 
-		// 
-		panel.register("status-update", new Panel.Command() { 
+		// A status update includes :
+		// 1) The number of messages that have been send in each of the user's
+		// conversation interests since the last updates
+		// 2) A list of conversations created and conversations added to by each
+		// of the user's user interests
+		//
+		panel.register("status-update", new Panel.Command() {
 			@Override
-			public void invoke(List<String> args) { 
-				HashMap<String, Integer> convoUpdates = user.convoStatusUpdate(); 
+			public void invoke(List<String> args) {
+				HashMap<String, Integer> convoUpdates = user.convoStatusUpdate();
 				HashMap<Uuid, UserInterest> userUpdates = user.userStatusUpdate();
-			
-				// All of the print statements to view update 
+
+				// All of the print statements to view update
 				System.out.println("Conversations:");
-				for (String convoName : convoUpdates.keySet()) { 
+				for (String convoName : convoUpdates.keySet()) {
 					System.out.format("\t%s : %d \n", convoName, convoUpdates.get(convoName));
 				}
 				System.out.println("Users:");
-				for (Uuid userID : userUpdates.keySet()) { 
+				for (Uuid userID : userUpdates.keySet()) {
 					System.out.format("\t%s\n", userUpdates.get(userID).getname());
-					System.out.println("\tConversations created: "); 
-					String convosCreated = String.join("\n\t", userUpdates.get(userID).getConvosCreated()); 
+					System.out.println("\tConversations created: ");
+					String convosCreated = String.join("\n\t", userUpdates.get(userID).getConvosCreated());
 					System.out.format("\t%s", convosCreated);
 					System.out.println("");
-					System.out.println("\tConversations contributed to: "); 
-					String convosContributed = String.join("\n\t", userUpdates.get(userID).getConvosAddedTo()); 
+					System.out.println("\tConversations contributed to: ");
+					String convosContributed = String.join("\n\t", userUpdates.get(userID).getConvosAddedTo());
 					System.out.format("\t%s\n", convosContributed);
 					System.out.println(" ");
 				}
 			}
 		});
-		
+
 		// C-STATUS
-		// allows user to see their access status in 
-		// every conversation they are currently a part of  
-		panel.register("c-status", new Panel.Command() { 
+		// allows user to see their access status in
+		// every conversation they are currently a part of
+		panel.register("c-status", new Panel.Command() {
 			@Override
-			public void invoke(List<String> args) { 
-				// HashMap stores the name of every convo the user is a part of and the access level
+			public void invoke(List<String> args) {
+				// HashMap stores the name of every convo the user is a part of and the access
+				// level
 				// for that conversation
-				HashMap<String, UserType> convoAccess = new HashMap<String, UserType>();  
-				// adds all convos to convo access with name of convo as key 
-				// and user's access status as value 
-				for (ConversationContext convo : user.conversations()){
+				HashMap<String, UserType> convoAccess = new HashMap<String, UserType>();
+				// adds all convos to convo access with name of convo as key
+				// and user's access status as value
+				for (ConversationContext convo : user.conversations()) {
 					convoAccess.put(convo.conversation.title, convo.conversation.getAccessOf(user.user.id));
 				}
-				// All of the print statements to view conversation access statuses 
+				// All of the print statements to view conversation access statuses
 				System.out.println("Conversations:");
-				for (String convoName : convoAccess.keySet()){ 
-					System.out.format("\t%s: %s\n", convoName, convoAccess.get(convoName).toString()); 
+				for (String convoName : convoAccess.keySet()) {
+					System.out.format("\t%s: %s\n", convoName, convoAccess.get(convoName).toString());
 				}
 			}
 		});
-	
 
 		// Now that the panel has all its commands registered, return the panel
 		// so that it can be used.
@@ -601,14 +582,13 @@ public final class Chat {
 			public void invoke(List<String> args) {
 				System.out.println("USER MODE");
 				System.out.println("  m-list");
-				System.out
-						.println("    List all messages in the current conversation.");
+				System.out.println("    List all messages in the current conversation.");
 				System.out.println("  m-add <message>");
-				System.out
-						.println("    Add a new message to the current conversation as the current user.");
+				System.out.println("    Add a new message to the current conversation as the current user.");
 				System.out.println("  info");
-				System.out
-						.println("    Display all info about the current conversation.");
+				System.out.println("    Display all info about the current conversation.");
+				System.out.println("  m-assign-access <Username> <Role>");
+				System.out.println("    assigns access to a given username");
 				System.out.println("  back");
 				System.out.println("    Go back to USER MODE.");
 				System.out.println("  exit");
@@ -626,8 +606,7 @@ public final class Chat {
 			@Override
 			public void invoke(List<String> args) {
 				System.out.println("--- start of conversation ---");
-				for (MessageContext message = conversation.firstMessage(); message != null; message = message
-						.next()) {
+				for (MessageContext message = conversation.firstMessage(); message != null; message = message.next()) {
 					System.out.println();
 					System.out.format("USER : %s\n", message.message.author);
 					System.out.format("SENT : %s\n", message.message.creation);
@@ -644,8 +623,8 @@ public final class Chat {
 		// Add a command to add a new message to the current conversation when
 		// the
 		// user enters "m-add" while on the conversation panel.
-		// uses the entire list args as the argument since messages are likely to 
-		// be longer than a single string 
+		// uses the entire list args as the argument since messages are likely to
+		// be longer than a single string
 		//
 		panel.register("m-add", new Panel.Command() {
 			@Override
@@ -669,15 +648,12 @@ public final class Chat {
 			@Override
 			public void invoke(List<String> args) {
 				System.out.println("Conversation Info:");
-				System.out.format("  Title : %s\n",
-						conversation.conversation.title);
-				System.out.format("  Id    : UUID:%s\n",
-						conversation.conversation.id);
-				System.out.format("  Owner : %s\n",
-						conversation.conversation.owner);
+				System.out.format("  Title : %s\n", conversation.conversation.title);
+				System.out.format("  Id    : UUID:%s\n", conversation.conversation.id);
+				System.out.format("  Owner : %s\n", conversation.conversation.owner);
 			}
 		});
-		
+
 		panel.register("m-assign-access", new Panel.Command() {
 			@Override
 			public void invoke(List<String> args) {
@@ -692,7 +668,7 @@ public final class Chat {
 				// catch if string is not valid userType
 				try {
 					type = UserType.valueOf(args.get(1).toUpperCase());
-				} catch(Exception e) {
+				} catch (Exception e) {
 					System.out.println("Not a valid UserType");
 					System.out.println("m-assign-access <username> <role>");
 					System.out.println("Here are your options: User, Owner, Creator");
@@ -703,12 +679,35 @@ public final class Chat {
 				} else {
 					System.out.println("Could not find " + username);
 				}
-				
+
 			}
 		});
 
-		// Now that the panel has all its commands registered, return the panel
-		// so that it can be used.
+		panel.register("bot-add <Bot-Name>", new Panel.Command() {
+			@Override
+			public void invoke(List<String> args) {
+				String botName = args.get(0);
+				if (conversation.addBot(botName)) {
+					System.out.println("Beep Bop! Bot succssfully added!");
+				} else {
+					System.out.println("Not A valid bot name! Check Bot-List Please!");
+				}
+
+			}
+		});
+		
+		panel.register("bot-remove <Bot-Name>", new Panel.Command() {
+			@Override
+			public void invoke(List<String> args) {
+				String botName = args.get(0);
+				if (conversation.removeBot(botName)) {
+					System.out.println("Beep Bop! Bot succssfully removed!");
+				} else {
+					System.out.println("Not A valid bot name! Check Bot-List Please!");
+				}
+
+			}
+		});
 		return panel;
 	}
 }

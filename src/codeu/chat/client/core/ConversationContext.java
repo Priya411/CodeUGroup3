@@ -115,4 +115,19 @@ public final class ConversationContext {
     return messages.hasNext() ? new MessageContext(messages.next(), view) : null;
   }
 
+  public boolean addBot(String botName) {	
+	if (controller.addBot(this.conversation.id, botName)) {
+	  this.conversation.bots.add(botName);
+	  return true;
+	}
+	return false;	
+  }
+
+  public boolean removeBot(String botName) {
+	if (controller.removeBot(this.conversation.id, botName)) {
+      this.conversation.bots.remove(botName);
+		return true;
+	  }
+	return false;
+  }
 }
