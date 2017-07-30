@@ -1,0 +1,57 @@
+{
+  "users" : [ {
+    "name" : "K",
+    "uuid" : "1.495319334",
+    "creationTime" : 1497935696951,
+    "conversationInterests" : {
+      "1.243253453": 2,
+      "1.14325223123453": 2,
+      "1.943253213312453": 2
+    },
+    "userInterests" : [1.24342, 1.5634634, 1.5314132 ],
+    "lastUpdateTime" : 1500265942681
+  } ],
+  "conversations" : [ {
+    "title" : "T",
+    "uuid" : "1.3394057727",
+    "ownerUUID" : "1.495319334",
+    "creationTime" : 1497935701083,
+    "firstMessageUUID" : "1.3350517446",
+    "lastMessageUUID" : "1.1516759239",
+    "defaultType": "MEMBER",
+    "userAccessRoles": {
+      "1.243253453": "MEMBER",
+      "1.14325223123453": "OWNER",
+      "1.943253213312453": "MEMBER"
+    }
+  } ],
+  "messages" : [ {
+    "content" : "m1",
+    "uuid" : "1.3350517446",
+    "nextUUID" : "1.3548245186",
+    "previousUUID" : "0",
+    "authorUUID" : "1.495319334",
+    "creationTime" : 1497935703101
+  }, {
+    "content" : "m2",
+    "uuid" : "1.3548245186",
+    "nextUUID" : "1.2992919775",
+    "previousUUID" : "0",
+    "authorUUID" : "1.495319334",
+    "creationTime" : 1497935705140
+  }, {
+    "content" : "m3",
+    "uuid" : "1.2992919775",
+    "nextUUID" : "1.1516759239",
+    "previousUUID" : "0",
+    "authorUUID" : "1.495319334",
+    "creationTime" : 1497935707138
+  }, {
+    "content" : "m4",
+    "uuid" : "1.1516759239",
+    "nextUUID" : "0",
+    "previousUUID" : "0",
+    "authorUUID" : "1.495319334",
+    "creationTime" : 1497935709043
+  } ]
+}
