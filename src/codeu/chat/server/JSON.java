@@ -27,12 +27,12 @@ import com.fasterxml.jackson.databind.*;
 
 /**
  * JSON class used to write and read from the given save file.
- *
- * This file is to be used to allow the server to get a log of all actions completed
- * This class saves all inputted commands
- * It creates a new command so that the user can then access the log
- * This log can be used by the server to re-load all commands from previous
- * uses of the server, and to save all users and conversations on the server
+ * 
+ * This file is to be used to allow the server to get a log of all actions
+ * completed This class saves all inputted commands It creates a new command so
+ * that the user can then access the log This log can be used by the server to
+ * re-load all commands from previous uses of the server, and to save all users
+ * and conversations on the server
  */
 public final class JSON {
 
@@ -70,8 +70,7 @@ public final class JSON {
 	 */
 	private void save(Object obj, String arrayName, String UUID) {
 		final ObjectMapper mapper = new ObjectMapper();
-		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
-				false);
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		File file = new File(fileName);
 		// if the file doesn't exist, try to create it
 		if (!file.exists()) {
@@ -102,21 +101,12 @@ public final class JSON {
 		int index = 0;
 		boolean isAlreadyPresent = false;
 		// loop through to check that there are no same uuid already saved
-		for (JsonNode curObj : requestedArrayNode ) {
+		for (JsonNode curObj : requestedArrayNode) {
 			if (UUID.equals(curObj.get("uuid").asText())) {
-				// if payload, keep same data, just added first and last
-				if (obj instanceof ConversationPayload) {
-
-					ObjectNode nodeToSave = mapper.createObjectNode();
-					nodeToSave.setAll((ObjectNode)curObj);
-					nodeToSave.put("firstMessageUUID", ((ConversationPayload)obj).firstMessage.toString());
-					nodeToSave.put("lastMessageUUID", ((ConversationPayload)obj).lastMessage.toString());
-					requestedArrayNode.set(index, nodeToSave);
-				}else {
-					// if anything else, just rewrite with new version of object
-					JsonNode nodeToSave = mapper.convertValue(obj, JsonNode.class);
-					requestedArrayNode.set(index, nodeToSave);
-				}
+				System.out.println("Found same UUID, updating existing object");
+				// if anything else, just rewrite with new version of object
+				JsonNode nodeToSave = mapper.convertValue(obj, JsonNode.class);
+				requestedArrayNode.set(index, nodeToSave);
 				isAlreadyPresent = true;
 			}
 			index++;
@@ -176,7 +166,6 @@ public final class JSON {
 	}
 
 	/**
-	 *
 	 * @return
 	 */
 	public void save(ConversationPayload foundConversation) {

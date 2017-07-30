@@ -22,131 +22,138 @@ import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import codeu.chat.util.Serializer;
 import codeu.chat.util.Serializers;
 import codeu.chat.util.Time;
 import codeu.chat.util.Uuid;
 
-@JsonIgnoreProperties(ignoreUnknown=true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public final class ConversationHeader {
 
-  // no need to serialize the serializer when converting to JOSN
-  public static final Serializer<ConversationHeader> SERIALIZER = new Serializer<ConversationHeader>() {
+	// no need to serialize the serializer when converting to JOSN
+	public static final Serializer<ConversationHeader> SERIALIZER = new Serializer<ConversationHeader>() {
 
-    @Override
-    public void write(OutputStream out, ConversationHeader value) throws IOException {
+		@Override
+		public void write(OutputStream out, ConversationHeader value)
+				throws IOException {
 
-      Uuid.SERIALIZER.write(out, value.id);
-      Uuid.SERIALIZER.write(out, value.owner);
-      Time.SERIALIZER.write(out, value.creation);
-      Serializers.STRING.write(out, value.title);
+			Uuid.SERIALIZER.write(out, value.id);
+			Uuid.SERIALIZER.write(out, value.owner);
+			Time.SERIALIZER.write(out, value.creation);
+			Serializers.STRING.write(out, value.title);
+			UserType.SERIALIZER.write(out, value.defaultType);
+			Serializers.hashmap(Uuid.SERIALIZER, UserType.SERIALIZER).write(
+					out, value.userAccessRoles);
+		}
 
-    }
+		@Override
+		public ConversationHeader read(InputStream in) throws IOException {
+			ConversationHeader header = new ConversationHeader(
+					Uuid.SERIALIZER.read(in), Uuid.SERIALIZER.read(in),
+					Time.SERIALIZER.read(in), Serializers.STRING.read(in));
+			header.defaultType = UserType.SERIALIZER.read(in);
+			header.userAccessRoles = Serializers.hashmap(Uuid.SERIALIZER,
+					UserType.SERIALIZER).read(in);
+			return header;
+		}
+	};
 
-    @Override
-    public ConversationHeader read(InputStream in) throws IOException {
+	// ignore objects that aren't built-in types (string, int, etc)
+	// Jackon will default to the getters since instance vars are ignored
+	@JsonIgnore
+	public final Uuid id;
+	@JsonIgnore
+	public final Uuid owner;
+	@JsonIgnore
+	public final Time creation;
+	public final String title;
+	// default type a user is assigned when they call "c-join" on this convo
+	public UserType defaultType = UserType.MEMBER;
 
-      return new ConversationHeader(
-              Uuid.SERIALIZER.read(in),
-              Uuid.SERIALIZER.read(in),
-              Time.SERIALIZER.read(in),
-              Serializers.STRING.read(in)
-      );
+	// a hashmap with user id as key and their usertype as value
+	private HashMap<Uuid, UserType> userAccessRoles = new HashMap<Uuid, UserType>();
 
-    }
-  };
-  
-  //ignore objects that aren't built-in types (string, int, etc)
-  // Jackon will default to the getters since instance vars are ignored
-  @JsonIgnore
-  public final Uuid id;
-  @JsonIgnore
-  public final Uuid owner;
-  @JsonIgnore
-  public final Time creation;
-  public final String title;
-  // default type a user is assigned when they call "c-join" on this convo
-  public UserType defaultType = UserType.MEMBER;
-  
-  // a hashmap with user id as key and their usertype as value
-  private HashMap<Uuid, UserType> userAccessRoles = new HashMap<Uuid, UserType>();
+	public ConversationHeader(Uuid id, Uuid owner, Time creation, String title) {
 
-  public ConversationHeader(Uuid id, Uuid owner, Time creation, String title) {
+		this.id = id;
+		this.owner = owner;
+		this.creation = creation;
+		this.title = title;
+		this.setAccessOf(owner, UserType.CREATOR);
+	}
 
-    this.id = id;
-    this.owner = owner;
-    this.creation = creation;
-    this.title = title;
+	public String getUUID() {
+		return id.toString();
+	}
 
-  }
-  
-  public String getUUID() {
-	  return id.toString();
-  }
-  
-  public String getOwnerUUID() {
-	  return owner.toString();
-  }
-  
-  public long getCreationTime() {
-	  return creation.inMs();
-  }
-  
-  @Override
-  public boolean equals(Object toCompare)
-  {
-    if(!(toCompare instanceof ConversationHeader)) {
-      return false;
-    }
-    ConversationHeader toCompareConv = (ConversationHeader)(toCompare);
-    if(!this.id.equals(toCompareConv.id)) {
-      return false;
-    }
-    if(!this.owner.equals(toCompareConv.owner)) {
-      return false;
-    }
-    if(!this.creation.equals(toCompareConv.creation)) {
-      return false;
-    }
-    if(!this.title.equals(toCompareConv.title)) {
-      return false;
-    }
-    if(!this.defaultType.equals(((ConversationHeader) toCompare).defaultType))
-    {
-      return false;
-    }
-    for(Uuid userID: userAccessRoles.keySet())
-    {
-      if(!(((ConversationHeader) toCompare).userAccessRoles.get(userID).equals(userAccessRoles.get(userID))))
-      {
-        return false;
-      }
-    }
-    return true;
-  }
+	public String getOwnerUUID() {
+		return owner.toString();
+	}
 
-  public int hashCode() { return hash(this); }
+	public long getCreationTime() {
+		return creation.inMs();
+	}
+	
+	public String getDefaultType() {
+		return defaultType.toString();
+	}
+	
+	@JsonProperty("userAccessRoles")
+	public HashMap<String, String> getUserAccessRolesStringFormat() {
+		HashMap<String, String> map = new HashMap<String, String>();
+		for (Uuid key: this.userAccessRoles.keySet()) {
+			map.put(key.toString(), this.userAccessRoles.get(key).toString());
+		}
+		return map;
+	}
 
-  private static int hash(ConversationHeader conv) {
-    int hash = 0;
-    hash+=conv.id.hashCode();
-    hash+=conv.owner.hashCode();
-    hash+=conv.creation.hashCode();
-    hash+=conv.title.hashCode();
-    return hash;
-  }
-  
-  public UserType getAccessOf(Uuid idOfUser) {
-	  UserType type = this.userAccessRoles.get(idOfUser);
-	  // if user is not in map, assign them default type
-	  if (type == null) {
-		  return this.defaultType;
-	  }
-	  return type;
-  }
+	@Override
+	public boolean equals(Object toCompare) {
+		if (!(toCompare instanceof ConversationHeader)) {
+			return false;
+		}
+		ConversationHeader toCompareConv = (ConversationHeader) (toCompare);
+		if (!this.id.equals(toCompareConv.id)) {
+			return false;
+		}
+		if (!this.owner.equals(toCompareConv.owner)) {
+			return false;
+		}
+		if (!this.creation.equals(toCompareConv.creation)) {
+			return false;
+		}
+		if (!this.title.equals(toCompareConv.title)) {
+			return false;
+		}
+		return true;
+	}
 
-  public void setAccessOf(Uuid idOfUser, UserType type) {
-	  userAccessRoles.put(idOfUser, type);
-  }
+	public int hashCode() {
+		return hash(this);
+	}
+
+	private static int hash(ConversationHeader conv) {
+		int hash = 0;
+		hash += conv.id.hashCode();
+		hash += conv.owner.hashCode();
+		hash += conv.creation.hashCode();
+		hash += conv.title.hashCode();
+		return hash;
+	}
+
+	public UserType getAccessOf(Uuid idOfUser) {
+		UserType type = this.userAccessRoles.get(idOfUser);
+		// if user is not in map, assign them default type
+		if (type == null) {
+			return this.defaultType;
+		}
+		return type;
+	}
+
+	public void setAccessOf(Uuid idOfUser, UserType type) {
+		System.out.println("Setting ACCESS! " + type + idOfUser);
+		userAccessRoles.put(idOfUser, type);
+	}
 }

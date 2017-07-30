@@ -97,8 +97,6 @@ public final class UserContext {
 	public ConversationContext start(String name) {
 		final ConversationHeader conversation = controller.newConversation(
 				name, user.id);
-		// sets creator's id to creator in hashmap
-		conversation.setAccessOf(user.id, UserType.CREATOR);
 		return conversation == null ? null : new ConversationContext(user,
 				conversation, view, controller);
 	}

@@ -20,6 +20,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public final class Uuid {
 
   public static final Uuid NULL = new Uuid(0);
@@ -115,6 +117,7 @@ public final class Uuid {
   public int hashCode() { return hash(this); }
 
   @Override
+  @JsonValue
   public String toString() {
     return toString(this);
   }
