@@ -18,12 +18,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
-import java.util.Objects;
-
+import java.util.LinkedList;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import codeu.chat.util.Serializer;
 import codeu.chat.util.Serializers;
 import codeu.chat.util.Time;
@@ -75,6 +73,8 @@ public final class ConversationHeader {
 	// a hashmap with user id as key and their usertype as value
 	private HashMap<Uuid, UserType> userAccessRoles = new HashMap<Uuid, UserType>();
 
+	public LinkedList<Bot> bots = new LinkedList<Bot>();
+
 	public ConversationHeader(Uuid id, Uuid owner, Time creation, String title) {
 
 		this.id = id;
@@ -95,11 +95,11 @@ public final class ConversationHeader {
 	public long getCreationTime() {
 		return creation.inMs();
 	}
-	
+
 	public String getDefaultType() {
 		return defaultType.toString();
 	}
-	
+
 	@JsonProperty("userAccessRoles")
 	public HashMap<String, String> getUserAccessRolesStringFormat() {
 		HashMap<String, String> map = new HashMap<String, String>();
