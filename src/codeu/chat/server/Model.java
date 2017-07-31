@@ -15,6 +15,7 @@
 package codeu.chat.server;
 
 import java.util.Comparator;
+import java.util.LinkedList;
 
 import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.ConversationPayload;
@@ -52,7 +53,8 @@ public final class Model {
   };
 
   private static final Comparator<String> STRING_COMPARE = String.CASE_INSENSITIVE_ORDER;
-
+  public LinkedList<String> bots = new LinkedList<String>();
+  
   private final Store<Uuid, User> userById = new Store<>(UUID_COMPARE);
   private final Store<Time, User> userByTime = new Store<>(TIME_COMPARE);
   private final Store<String, User> userByText = new Store<>(STRING_COMPARE);

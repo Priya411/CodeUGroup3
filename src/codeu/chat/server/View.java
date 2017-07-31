@@ -79,6 +79,9 @@ public final class View implements BasicView, SinglesView {
 
   @Override
   public Message findMessage(Uuid id) { return model.messageById().first(id); }
+  
+  @Override
+  public Collection<String> getBots(){ return model.bots; }
 
   private static <S,T> Collection<T> all(StoreAccessor<S,T> store) {
 
