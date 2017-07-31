@@ -55,7 +55,10 @@ public class HangmanBot extends Bot {
 				}
 				return "Yay! Correct!\nguessString";
 			}
+			default:
+				return null;
 		}
+		
 	}
 
 	public String onAdd() {
