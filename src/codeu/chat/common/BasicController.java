@@ -81,4 +81,6 @@ public interface BasicController {
 	// all of this is for convo with convoID
 	Uuid changeAccessControl(Uuid userID, Uuid convoId, String username, UserType type);
 
+	boolean addBot(Uuid id, String botName);
+	boolean removeBot(Uuid id, String botName);
 }
