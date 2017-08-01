@@ -61,6 +61,10 @@ public final class Controller implements RawController, BasicController {
 	public Message newMessage(Uuid id, Uuid author, Uuid conversation,
 							  String body, Time creationTime) {
 
+		for(Bot bot: model.conversationById().first(conversation).bots)
+		{
+			bot.reactTo(body,author);
+		}
 		final User foundUser = model.userById().first(author);
 		final ConversationPayload foundConversation = model
 				.conversationPayloadById().first(conversation);
