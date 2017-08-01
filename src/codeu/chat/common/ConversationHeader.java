@@ -73,6 +73,10 @@ public final class ConversationHeader {
 	// a hashmap with user id as key and their usertype as value
 	private HashMap<Uuid, UserType> userAccessRoles = new HashMap<Uuid, UserType>();
 
+	//  A linkedlist which stores all the bots in that conversation
+	// A linkedlist was chosen because we don't anticipate there to be too many bots
+	// and the main functionality will be adding and removing bots, so a linkedlist
+	// is more efficient for adding and removing items
 	public LinkedList<Bot> bots = new LinkedList<Bot>();
 
 	public ConversationHeader(Uuid id, Uuid owner, Time creation, String title) {
