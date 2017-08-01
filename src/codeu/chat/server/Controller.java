@@ -308,12 +308,24 @@ public final class Controller implements RawController, BasicController {
 	}
 
 	@Override
-	public boolean addBot(Uuid convoId, String botName) {
+	public boolean addBot(Uuid convoId, String botName)
+	{
+		// This function will allow the user to add in a bot to a conversation
+		// The conversation is specified by the UUID and the bot is specified
+		// by its name, which is just a string version of the class name.
+		// Any user can add a bot, but multiple bots can't be added into
+		// a conversation. It will return true if the bot was added.
 		ConversationHeader conv = model.conversationById().first(convoId);
 		if (conv!=null)
 		{
 			if (model.bots.contains(botName))
 			{
+				for(Bot bot: conv.bots) {
+				if(bot.getName().equals(botName))
+					{
+						return false;
+					}
+				}
 				try {
 					conv.bots.add((Bot) Class.forName(botName).newInstance());
 					return true;
@@ -322,13 +334,19 @@ public final class Controller implements RawController, BasicController {
 				{
 					return false;
 				}
+
 			}
+			return false;
 		}
 		return false;
 	}
 
 	@Override
 	public boolean removeBot(Uuid convoId, String botName) {
+		// This function will allow the user to remove a bot from a conversation
+		// The conversation is specified by the UUID and the bot is specified
+		// by its name, which is just a string version of the class name.
+		// Any user can remove a bot, and it will return true if the bot was removed.
 		ConversationHeader conv = model.conversationById().first(convoId);
 		if (conv!=null)
 		{
@@ -340,6 +358,7 @@ public final class Controller implements RawController, BasicController {
 					return true;
 				}
 			}
+			return false;
 		}
 		return false;
 	}
