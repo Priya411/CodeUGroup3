@@ -115,6 +115,11 @@ public final class ConversationContext {
     return messages.hasNext() ? new MessageContext(messages.next(), view) : null;
   }
 
+  /**
+   * Adds a bot the conversationHeader associated with this context
+   * @param botName name of the bot being added
+   * @return
+   */
   public boolean addBot(String botName) {	
 	if (controller.addBot(this.conversation.id, botName)) {
 	  this.conversation.bots.add(botName);
@@ -123,6 +128,11 @@ public final class ConversationContext {
 	return false;	
   }
 
+  /**
+   * removes bot from conversationheader associated with this context
+   * @param botName name of bot being removed
+   * @return
+   */
   public boolean removeBot(String botName) {
 	if (controller.removeBot(this.conversation.id, botName)) {
       this.conversation.bots.remove(botName);

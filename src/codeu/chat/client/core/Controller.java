@@ -265,7 +265,7 @@ final class Controller implements BasicController {
 	}
 
 	// send an add bot request along with the id of the convo and the name of the bot that should be added to the convo
-	// it expects a boolean indicating whether or not a bot with that name was successfully added to the convo
+	// it returns a boolean indicating whether or not a bot with that name was successfully added to the convo
 	// true = bot added, false = bot not added
 	@Override
 	public boolean addBot(Uuid convoId, String botName) {
@@ -289,7 +289,7 @@ final class Controller implements BasicController {
 	}
 	
 	// send an remove bot request along with the id of the convo and the name of the bot that should be added to the convo
-	// it expects a boolean indicating whether or not a bot with that name was successfully removed from the convo
+	// it returns a boolean indicating whether or not a bot with that name was successfully removed from the convo
 	// true = bot removed, false = bot not removed
 	@Override
 	public boolean removeBot(Uuid convoId, String botName) {
