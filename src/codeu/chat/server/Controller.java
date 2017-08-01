@@ -331,7 +331,9 @@ public final class Controller implements RawController, BasicController {
 					}
 				}
 				try {
-					conv.bots.add((Bot) Class.forName(botName).newInstance());
+					Bot bot = (Bot)Class.forName(botName).newInstance();
+					bot.onAdd();
+					conv.bots.add(bot);
 					return true;
 				}
 				catch(Exception e)
