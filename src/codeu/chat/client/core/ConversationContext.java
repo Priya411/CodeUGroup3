@@ -117,10 +117,7 @@ public final class ConversationContext {
   }
   
 	public Iterable<String> listBots(){ 
-		final Collection<String> allBots = new ArrayList<>();
-	    for (String bot : view.getBots()) {
-	      allBots.add(bot);
-	    }
+		final Collection<String> allBots = new ArrayList<>(view.getBots());
 	    return allBots;
 	  }
 }

@@ -157,8 +157,9 @@ final class View implements BasicView {
 			System.out.println("ERROR: Exception during call on server. Check log for details.");
 			LOG.error(ex, "Exception during call on server.");
 		}
-		//returns null if there are no bots available 
-		return null;
+		//returns allBots
+		//allBots will be empty if there are no bots available 
+		return allBots;
 	}
 	
 
