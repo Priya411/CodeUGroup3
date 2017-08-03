@@ -24,6 +24,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import codeu.chat.client.core.Bot;
 import codeu.chat.util.Serializer;
 import codeu.chat.util.Serializers;
 import codeu.chat.util.Time;
@@ -78,7 +79,7 @@ public final class ConversationHeader {
 	public LinkedList<Bot> bots = new LinkedList<Bot>();
 
 	public ConversationHeader(Uuid id, Uuid owner, Time creation, String title) {
-
+		
 		this.id = id;
 		this.owner = owner;
 		this.creation = creation;
