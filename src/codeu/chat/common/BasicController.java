@@ -83,5 +83,4 @@ public interface BasicController {
 
 	boolean addBot(Uuid id, String botName);
 	boolean removeBot(Uuid id, String botName);
-
 }

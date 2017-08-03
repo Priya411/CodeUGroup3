@@ -138,6 +138,30 @@ final class View implements BasicView {
 		return messages;
 	}
 
+	@Override
+	public Collection<String> getBots() {
+
+		final Collection<String> allBots = new ArrayList<>();
+
+		try (final Connection connection = source.connect()) {
+
+			Serializers.INTEGER.write(connection.out(), NetworkCode.GET_ALL_BOTS_REQUEST);
+
+			if (Serializers.INTEGER.read(connection.in()) == NetworkCode.GET_ALL_BOTS_RESPONSE) {
+				allBots.add(Serializers.STRING.read(connection.in()));
+			} else {
+				LOG.error("Response from server failed.");
+			}
+
+		} catch (Exception ex) {
+			System.out.println("ERROR: Exception during call on server. Check log for details.");
+			LOG.error(ex, "Exception during call on server.");
+		}
+		//returns allBots
+		//allBots will be empty if there are no bots available 
+		return allBots;
+	}
+	
 
   
   // This function returns the information about the Server,
@@ -178,6 +202,7 @@ final class View implements BasicView {
     // If we get here it means something went wrong and null should be returned
     return null;
   }
+  
 
 
 }

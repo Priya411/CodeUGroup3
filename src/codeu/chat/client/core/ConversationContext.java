@@ -14,6 +14,7 @@
 
 package codeu.chat.client.core;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
@@ -138,4 +139,10 @@ public final class ConversationContext {
 	}
 	return false;
   }
+}
+  
+	public Iterable<String> listBots(){ 
+		final Collection<String> allBots = new ArrayList<>(view.getBots());
+	    return allBots;
+	  }
 }
