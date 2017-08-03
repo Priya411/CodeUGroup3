@@ -263,4 +263,52 @@ final class Controller implements BasicController {
 		}
 		return null;
 	}
+
+	// send an add bot request along with the id of the convo and the name of the bot that should be added to the convo
+	// it returns a boolean indicating whether or not a bot with that name was successfully added to the convo
+	// true = bot added, false = bot not added
+	@Override
+	public boolean addBot(Uuid convoId, String botName) {
+		try (final Connection connection = source.connect()) {
+			Serializers.INTEGER.write(connection.out(),
+					NetworkCode.BOT_ADD_REQUEST);
+			Uuid.SERIALIZER.write(connection.out(), convoId);
+			Serializers.STRING.write(connection.out(), botName);
+			if (Serializers.INTEGER.read(connection.in()) == NetworkCode.BOT_ADD_RESPONSE) {
+				return Serializers.nullable(Serializers.BOOLEAN).read(
+						connection.in());
+			} else {
+				LOG.error("Response from server failed.");
+			}
+		} catch (Exception ex) {
+			System.out
+					.println("ERROR: Exception during call on server. Check log for details.");
+			LOG.error(ex, "Exception during call on server.");
+		}
+		return false;
+	}
+	
+	// send an remove bot request along with the id of the convo and the name of the bot that should be added to the convo
+	// it returns a boolean indicating whether or not a bot with that name was successfully removed from the convo
+	// true = bot removed, false = bot not removed
+	@Override
+	public boolean removeBot(Uuid convoId, String botName) {
+		try (final Connection connection = source.connect()) {
+			Serializers.INTEGER.write(connection.out(),
+					NetworkCode.BOT_REMOVE_REQUEST);
+			Uuid.SERIALIZER.write(connection.out(), convoId);
+			Serializers.STRING.write(connection.out(), botName);
+			if (Serializers.INTEGER.read(connection.in()) == NetworkCode.BOT_REMOVE_RESPONSE) {
+				return Serializers.nullable(Serializers.BOOLEAN).read(
+						connection.in());
+			} else {
+				LOG.error("Response from server failed.");
+			}
+		} catch (Exception ex) {
+			System.out
+					.println("ERROR: Exception during call on server. Check log for details.");
+			LOG.error(ex, "Exception during call on server.");
+		}
+		return false;
+	}
 }

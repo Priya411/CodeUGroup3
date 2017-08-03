@@ -115,6 +115,31 @@ public final class ConversationContext {
     final Iterator<Message> messages = view.getMessages(Arrays.asList(id)).iterator();
     return messages.hasNext() ? new MessageContext(messages.next(), view) : null;
   }
+
+  /**
+   * Adds a bot the conversationHeader associated with this context
+   * @param botName name of the bot being added
+   * @return
+   */
+  public boolean addBot(String botName) {	
+	if (controller.addBot(this.conversation.id, botName)) {
+	  return true;
+	}
+	return false;	
+  }
+
+  /**
+   * removes bot from conversationheader associated with this context
+   * @param botName name of bot being removed
+   * @return
+   */
+  public boolean removeBot(String botName) {
+	if (controller.removeBot(this.conversation.id, botName)) {
+		return true;
+	}
+	return false;
+  }
+}
   
 	public Iterable<String> listBots(){ 
 		final Collection<String> allBots = new ArrayList<>(view.getBots());
