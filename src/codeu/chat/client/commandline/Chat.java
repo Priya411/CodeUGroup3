@@ -53,10 +53,6 @@ public final class Chat {
 		this.panels.push(createRootPanel(context));
 	}
 
-	//CONSTRUCTOR FOR TESTING ONLY: 
-	public Chat(){
-
-	}
 
 	// RECREATE 
 	//
@@ -606,6 +602,8 @@ public final class Chat {
 				System.out.println("  m-add <message>");
 				System.out
 						.println("    Add a new message to the current conversation as the current user.");
+				System.out.println("  list-bots");
+				System.out.println("    Lists all of the available bots that can be added to the conversation"); 
 				System.out.println("  info");
 				System.out
 						.println("    Display all info about the current conversation.");
@@ -655,6 +653,20 @@ public final class Chat {
 					conversation.add(message);
 				} else {
 					System.out.println("ERROR: Messages must contain text");
+				}
+			}
+		});
+		
+		// LIST-BOTS 
+		//
+		// Allows user to see all the available bots that can be added to the conversation 
+		//
+		panel.register("list-bots", new Panel.Command() {
+			@Override
+			public void invoke(List<String> args) {
+				System.out.println("List of bots:");
+				while (conversation.conversation.listBots().iterator().hasNext()){
+					System.out.format("   %s\n", conversation.listBots().iterator().next()); 
 				}
 			}
 		});

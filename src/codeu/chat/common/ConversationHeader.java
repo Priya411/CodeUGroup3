@@ -17,11 +17,15 @@ package codeu.chat.common;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import codeu.chat.client.core.UserContext;
+
 import codeu.chat.util.Serializer;
 import codeu.chat.util.Serializers;
 import codeu.chat.util.Time;
@@ -160,4 +164,13 @@ public final class ConversationHeader {
 		System.out.println("Setting ACCESS! " + type + idOfUser);
 		userAccessRoles.put(idOfUser, type);
 	}
+	
+	public Iterable<String> listBots(){ 
+		final Collection<String> allBots = new ArrayList<>();
+	    for (String bot : view.getBots()) {
+	      allBots.add(bot);
+	    }
+	    return allBots;
+	  }
 }
+
