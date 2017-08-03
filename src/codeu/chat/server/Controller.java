@@ -22,6 +22,7 @@ import codeu.chat.common.Message;
 import codeu.chat.common.RandomUuidGenerator;
 import codeu.chat.common.RawController;
 import codeu.chat.common.User;
+import codeu.chat.common.Bot;
 import codeu.chat.common.UserType;
 import codeu.chat.util.Logger;
 import codeu.chat.util.Time;
@@ -58,8 +59,12 @@ public final class Controller implements RawController, BasicController {
 
 	@Override
 	public Message newMessage(Uuid id, Uuid author, Uuid conversation,
-			String body, Time creationTime) {
+							  String body, Time creationTime) {
 
+		for(Bot bot: model.conversationById().first(conversation).bots)
+		{
+			bot.reactTo(body,author);
+		}
 		final User foundUser = model.userById().first(author);
 		final ConversationPayload foundConversation = model
 				.conversationPayloadById().first(conversation);
@@ -141,7 +146,7 @@ public final class Controller implements RawController, BasicController {
 
 	@Override
 	public ConversationHeader newConversation(Uuid id, String title,
-			Uuid owner, Time creationTime) {
+											  Uuid owner, Time creationTime) {
 
 		final User foundOwner = model.userById().first(owner);
 
@@ -171,7 +176,7 @@ public final class Controller implements RawController, BasicController {
 		}
 		final ConversationPayload convoPayload = model
 				.conversationPayloadById().first(convoHeader.id);
-		
+
 		Message currentMessage = model.messageById().first(
 				convoPayload.firstMessage);
 		int count = 0;
@@ -261,7 +266,7 @@ public final class Controller implements RawController, BasicController {
 	// if so, update model, if not, return null
 	@Override
 	public Uuid changeAccessControl(Uuid userID, Uuid convo, String username,
-			UserType type) {
+									UserType type) {
 		System.out.println(model.conversationById().first(convo).getAccessOf(userID));
 		// This function will update the UserType of the User with the User Name
 		// username
@@ -278,7 +283,7 @@ public final class Controller implements RawController, BasicController {
 				ConversationHeader header = model.conversationById()
 						.first(convo);
 				header.setAccessOf(model.userByText().first(username).id,
-								type);
+						type);
 				new JSON().save(header);
 				return model.userByText().first(username).id;
 			} else {
@@ -295,7 +300,7 @@ public final class Controller implements RawController, BasicController {
 				ConversationHeader header = model.conversationById()
 						.first(convo);
 				header.setAccessOf(model.userByText().first(username).id,
-								type);
+						type);
 				new JSON().save(header);
 			} else {
 				return null;
@@ -306,4 +311,61 @@ public final class Controller implements RawController, BasicController {
 		return null;
 	}
 
+	@Override
+	public boolean addBot(Uuid convoId, String botName)
+	{
+		// This function will allow the user to add in a bot to a conversation
+		// The conversation is specified by the UUID and the bot is specified
+		// by its name, which is just a string version of the class name.
+		// Any user can add a bot, but multiple bots can't be added into
+		// a conversation. It will return true if the bot was added.
+		ConversationHeader conv = model.conversationById().first(convoId);
+		if (conv!=null)
+		{
+			if (model.bots.contains(botName))
+			{
+				for(Bot bot: conv.bots) {
+				if(bot.getName().equals(botName))
+					{
+						return false;
+					}
+				}
+				try {
+					Bot bot = (Bot)Class.forName(botName).newInstance();
+					bot.onAdd();
+					conv.bots.add(bot);
+					return true;
+				}
+				catch(Exception e)
+				{
+					return false;
+				}
+
+			}
+			return false;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean removeBot(Uuid convoId, String botName) {
+		// This function will allow the user to remove a bot from a conversation
+		// The conversation is specified by the UUID and the bot is specified
+		// by its name, which is just a string version of the class name.
+		// Any user can remove a bot, and it will return true if the bot was removed.
+		ConversationHeader conv = model.conversationById().first(convoId);
+		if (conv!=null)
+		{
+			for(Bot bot: conv.bots)
+			{
+				if(bot.getName().equals(botName))
+				{
+					conv.bots.remove(bot);
+					return true;
+				}
+			}
+			return false;
+		}
+		return false;
+	}
 }

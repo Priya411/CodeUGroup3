@@ -53,8 +53,15 @@ public final class Model {
   };
 
   private static final Comparator<String> STRING_COMPARE = String.CASE_INSENSITIVE_ORDER;
+
+
+  //  A linkedlist which stores all the names of bots in that conversation
+  // The names are strings which represent the class name, and it is public
+  // because this data structure needs to be accessed in the controllor class
+  // A linkedlist was chosen because we don't anticipate there to be too many bots
+  // and the main functionality will be adding and removing bots, so a linkedlist
+  // is more efficient for adding and removing items
   public LinkedList<String> bots = new LinkedList<String>();
-  
   private final Store<Uuid, User> userById = new Store<>(UUID_COMPARE);
   private final Store<Time, User> userByTime = new Store<>(TIME_COMPARE);
   private final Store<String, User> userByText = new Store<>(STRING_COMPARE);
