@@ -13,34 +13,6 @@
     "lastUpdateTime" : 1501877718854,
     "creationTime" : 1501877718854,
     "uuid" : "1.4208408980"
-  }, {
-    "conversationInterests" : { },
-    "userInterests" : [ ],
-    "name" : "user",
-    "lastUpdateTime" : 1501889167341,
-    "uuid" : "0.2747919981",
-    "creationTime" : 1501889167337
-  }, {
-    "conversationInterests" : { },
-    "userInterests" : [ ],
-    "name" : "user",
-    "lastUpdateTime" : 1501889168222,
-    "uuid" : "0.777837047",
-    "creationTime" : 1501889168222
-  }, {
-    "conversationInterests" : { },
-    "userInterests" : [ ],
-    "name" : "user",
-    "lastUpdateTime" : 1501889168243,
-    "uuid" : "0.769757320",
-    "creationTime" : 1501889168243
-  }, {
-    "conversationInterests" : { },
-    "userInterests" : [ ],
-    "name" : "user",
-    "lastUpdateTime" : 1501889168378,
-    "uuid" : "1",
-    "creationTime" : 1501889168378
   } ],
   "conversations" : [ {
     "title" : "convo",
@@ -52,44 +24,9 @@
       "1.3281440603" : "CREATOR"
     },
     "uuid" : "1.22527561",
+    "id" : "1.22527561",
     "firstMessage" : "1.3422412971",
     "lastMessage" : "1.3726470611"
-  }, {
-    "title" : "conversation",
-    "defaultType" : "MEMBER",
-    "bots" : [ ],
-    "ownerUUID" : "0.2747919981",
-    "creationTime" : 1501889168150,
-    "userAccessRoles" : {
-      "0.2747919981" : "CREATOR"
-    },
-    "uuid" : "0.2249498428",
-    "id" : "0.2249498428",
-    "firstMessage" : "0.4056038067",
-    "lastMessage" : "0.4056038067"
-  }, {
-    "title" : "conversation",
-    "defaultType" : "MEMBER",
-    "bots" : [ ],
-    "ownerUUID" : "0.777837047",
-    "creationTime" : 1501889168233,
-    "userAccessRoles" : {
-      "0.777837047" : "CREATOR"
-    },
-    "uuid" : "0.2987648333"
-  }, {
-    "title" : "conversation",
-    "defaultType" : "MEMBER",
-    "bots" : [ ],
-    "ownerUUID" : "1",
-    "creationTime" : 1501889168359,
-    "userAccessRoles" : {
-      "1" : "CREATOR"
-    },
-    "uuid" : "2",
-    "id" : "2",
-    "firstMessage" : "3",
-    "lastMessage" : "3"
   } ],
   "messages" : [ {
     "content" : "hello",
@@ -105,19 +42,5 @@
     "authorUUID" : "1.4208408980",
     "creationTime" : 1501877734268,
     "uuid" : "1.3726470611"
-  }, {
-    "content" : "Hello World",
-    "uuid" : "0.4056038067",
-    "previousUUID" : "0",
-    "nextUUID" : "0",
-    "authorUUID" : "0.2747919981",
-    "creationTime" : 1501889168197
-  }, {
-    "content" : "Hello World",
-    "uuid" : "3",
-    "previousUUID" : "0",
-    "nextUUID" : "0",
-    "authorUUID" : "1",
-    "creationTime" : 1501889168288
   } ]
 }
