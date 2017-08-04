@@ -1,5 +1,6 @@
 package codeu.chat.common;
 
+import codeu.chat.util.Uuid;
 
 public abstract class Bot {
     // This class is used for allowing bots with similar functionality to be added

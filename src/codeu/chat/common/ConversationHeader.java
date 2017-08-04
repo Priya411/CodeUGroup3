@@ -27,7 +27,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import codeu.chat.client.core.UserContext;
 
-import codeu.chat.client.core.Bot;
+import codeu.chat.common.Bot;
 import codeu.chat.util.Serializer;
 import codeu.chat.util.Serializers;
 import codeu.chat.util.Time;
@@ -168,12 +168,6 @@ public final class ConversationHeader {
 		userAccessRoles.put(idOfUser, type);
 	}
 	
-	public Iterable<String> listBots(){ 
-		final Collection<String> allBots = new ArrayList<>();
-	    for (String bot : view.getBots()) {
-	      allBots.add(bot);
-	    }
-	    return allBots;
-	  }
+
 }
 
