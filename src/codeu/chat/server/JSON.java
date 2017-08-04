@@ -438,6 +438,7 @@ public final class JSON {
                       String body = "";
                       Uuid next = null;
                       Uuid previous = null;
+                      boolean ownerRun = false;
                     while (jp.nextToken() != JsonToken.END_ARRAY) {
                         if (jp.getText().equals("content")) {
                             jp.nextToken();
@@ -452,6 +453,7 @@ public final class JSON {
                             }
                         }
                         if (jp.getText().equals("authorUUID")) {
+                            ownerRun = true;
                             jp.nextToken();
                             try {
                                 owner = Uuid.parse(jp.getText());
@@ -479,7 +481,7 @@ public final class JSON {
                                 System.out.println("Invalid Uuid");
                             }
                         }
-                        if (!(body.equals("")) && id != null && owner != null && creation != null && previous!=null && next!=null) {
+                        if (!(body.equals("")) && id != null && ownerRun && creation != null && previous!=null && next!=null) {
                             model.add(new Message(id, next, previous, creation, owner, body));
                             body = "";
                             id = null;
@@ -487,6 +489,7 @@ public final class JSON {
                             creation = null;
                             next = null;
                             previous = null;
+                            ownerRun = false;
                         }
                     }
                 }
