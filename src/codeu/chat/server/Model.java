@@ -75,6 +75,10 @@ public final class Model {
   private final Store<Uuid, Message> messageById = new Store<>(UUID_COMPARE);
   private final Store<Time, Message> messageByTime = new Store<>(TIME_COMPARE);
   private final Store<String, Message> messageByText = new Store<>(STRING_COMPARE);
+  
+  public Model() {
+	  bots.add("HangmanBot");
+  }
 
   public void add(User user) {
 	  userById.insert(user.id, user);

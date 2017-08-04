@@ -103,7 +103,7 @@ public final class JSON {
 		boolean isAlreadyPresent = false;
 		// loop through to check that there are no same uuid already saved
 		for (JsonNode curObj : requestedArrayNode) {
-			if (UUID.equals(curObj.get("uuid").asText())) {
+			if (curObj.get("uuid") != null && UUID.equals(curObj.get("uuid").asText())) {
 				System.out.println("Found same UUID, updating existing object");
 				// if anything else, just rewrite with new version of object
 				JsonNode nodeToSave = mapper.convertValue(obj, JsonNode.class);
