@@ -706,7 +706,7 @@ public final class Chat {
 				if (conversation.addBot(botName)) {
 					System.out.println("Beep Bop! Bot succssfully added!");
 				} else {
-					System.out.println("Not A valid bot name! Check Bot-List Please!");
+					System.out.println("Not A valid bot name! Please check use list-bots to see all bots!");
 				}
 
 			}
@@ -719,7 +719,7 @@ public final class Chat {
 				if (conversation.removeBot(botName)) {
 					System.out.println("Beep Bop! Bot succssfully removed!");
 				} else {
-					System.out.println("Not A valid bot name! Check Bot-List Please!");
+					System.out.println("Not A valid bot name! Please check use list-bots to see all bots!");
 				}
 
 			}
