@@ -331,11 +331,9 @@ public final class Server {
     this.commands.put(NetworkCode.GET_ALL_BOTS_REQUEST, new Command() {
       @Override
       public void onMessage(InputStream in, OutputStream out) throws IOException {
-          final Uuid convoId = Uuid.SERIALIZER.read(in);
-          final String botName = Serializers.STRING.read(in);
           
           Serializers.INTEGER.write(out, NetworkCode.GET_ALL_BOTS_RESPONSE);
-          //Serializers.nullable(Serializers.BOOLEAN).write(out, controller.);
+          Serializers.collection(Serializers.STRING).write(out, controller.getAllBots());
       }
     });
     

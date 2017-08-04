@@ -14,6 +14,8 @@
 
 package codeu.chat.server;
 
+import java.util.LinkedList;
+
 import codeu.chat.common.BasicController;
 import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.ConversationPayload;
@@ -367,5 +369,9 @@ public final class Controller implements RawController, BasicController {
 			return false;
 		}
 		return false;
+	}
+	
+	public LinkedList<String> getAllBots() {
+		return this.model.bots;
 	}
 }

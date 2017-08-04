@@ -14,26 +14,24 @@
 
 package codeu.chat.client.commandline;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 import codeu.chat.client.core.Context;
 import codeu.chat.client.core.ConversationContext;
 import codeu.chat.client.core.MessageContext;
 import codeu.chat.client.core.UserContext;
 import codeu.chat.common.ServerInfo;
-import codeu.chat.common.User;
 import codeu.chat.common.UserInterest;
 import codeu.chat.common.UserType;
 import codeu.chat.util.CommandTokenizer;
 import codeu.chat.util.Logger;
 import codeu.chat.util.Time;
 import codeu.chat.util.Uuid;
-
-import java.util.Iterator;
-import java.io.IOException;
 
 public final class Chat {
 
@@ -648,8 +646,9 @@ public final class Chat {
 			@Override
 			public void invoke(List<String> args) {
 				System.out.println("List of bots:");
-				while (conversation.listBots().iterator().hasNext()){
-					System.out.format("   %s\n", conversation.listBots().iterator().next()); 
+				Iterator<String> botList = conversation.listBots().iterator();
+				while (botList.hasNext()) {
+					System.out.format("   %s\n", botList.next()); 
 				}
 			}
 		});

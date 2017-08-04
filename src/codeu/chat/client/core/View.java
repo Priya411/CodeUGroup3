@@ -141,14 +141,14 @@ final class View implements BasicView {
 	@Override
 	public Collection<String> getBots() {
 
-		final Collection<String> allBots = new ArrayList<>();
+		Collection<String> allBots = new ArrayList<>();
 
 		try (final Connection connection = source.connect()) {
 
 			Serializers.INTEGER.write(connection.out(), NetworkCode.GET_ALL_BOTS_REQUEST);
 
 			if (Serializers.INTEGER.read(connection.in()) == NetworkCode.GET_ALL_BOTS_RESPONSE) {
-				allBots.add(Serializers.STRING.read(connection.in()));
+				allBots = Serializers.collection(Serializers.STRING).read(connection.in());
 			} else {
 				LOG.error("Response from server failed.");
 			}
