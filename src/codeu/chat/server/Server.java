@@ -302,6 +302,44 @@ public final class Server {
           Serializers.nullable(Uuid.SERIALIZER).write(out, idOfConvoToRemove);
       }
     });
+    
+    // Allows user to add a bot to given conversation
+    this.commands.put(NetworkCode.BOT_ADD_REQUEST, new Command() {
+      @Override
+      public void onMessage(InputStream in, OutputStream out) throws IOException {
+          final Uuid convoId = Uuid.SERIALIZER.read(in);
+          final String botName = Serializers.STRING.read(in);
+          
+          Serializers.INTEGER.write(out, NetworkCode.BOT_ADD_RESPONSE);
+          Serializers.nullable(Serializers.BOOLEAN).write(out, controller.addBot(convoId, botName));
+      }
+    });
+    
+ // Allows user to remove a bot to given conversation
+    this.commands.put(NetworkCode.BOT_REMOVE_REQUEST, new Command() {
+      @Override
+      public void onMessage(InputStream in, OutputStream out) throws IOException {
+          final Uuid convoId = Uuid.SERIALIZER.read(in);
+          final String botName = Serializers.STRING.read(in);
+          
+          Serializers.INTEGER.write(out, NetworkCode.BOT_REMOVE_RESPONSE);
+          Serializers.nullable(Serializers.BOOLEAN).write(out, controller.removeBot(convoId, botName));
+      }
+    });
+    
+ // Allows user to remove a bot to given conversation
+    this.commands.put(NetworkCode.GET_ALL_BOTS_REQUEST, new Command() {
+      @Override
+      public void onMessage(InputStream in, OutputStream out) throws IOException {
+          final Uuid convoId = Uuid.SERIALIZER.read(in);
+          final String botName = Serializers.STRING.read(in);
+          
+          Serializers.INTEGER.write(out, NetworkCode.GET_ALL_BOTS_RESPONSE);
+          //Serializers.nullable(Serializers.BOOLEAN).write(out, controller.);
+      }
+    });
+    
+    
 
 
     this.timeline.scheduleNow(new Runnable() {
