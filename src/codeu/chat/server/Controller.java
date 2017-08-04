@@ -329,6 +329,7 @@ public final class Controller implements RawController, BasicController {
 				for(Bot bot: conv.bots) {
 				if(bot.getName().equals(botName))
 					{
+						System.out.println("Bot already added");
 						return false;
 					}
 				}
@@ -340,6 +341,7 @@ public final class Controller implements RawController, BasicController {
 				}
 				catch(Exception e)
 				{
+					System.out.println("Bot class not reached");
 					return false;
 				}
 
