@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 
 import codeu.chat.common.*;
 
@@ -49,7 +50,7 @@ public final class JSON {
 	 * Writes empty arrays to the json file. Should be used to reset the file or
 	 * initialize basic backbone if file is blank
 	 *
-	 * @param mapper
+	 * param mapper
 	 */
 	private JsonNode createNodeWithBlankArrays() {
 		ObjectMapper mapper = new ObjectMapper();
@@ -326,8 +327,10 @@ public final class JSON {
                     Uuid last = null;
                     Uuid first = null;
                     boolean userRolesRun = false;
+                    boolean botsRun = false;
                     UserType defaultType = null;
                     HashMap<Uuid, UserType> userAccessRoles = new HashMap<Uuid, UserType>();
+                    LinkedList<Bot> bots = new LinkedList<Bot>();
                     while(jp.nextToken()!=JsonToken.END_ARRAY) {
                         if (jp.getText().equals("userAccessRoles")) {
                             userRolesRun = true;
@@ -385,15 +388,31 @@ public final class JSON {
                             jp.nextToken();
                             creation = Time.fromMs(jp.getLongValue());
                         }
+                        if(jp.getText().equals("bots"))
+                        {
+                            botsRun = true;
+                            jp.nextToken();
+                            while(jp.nextToken()!=JsonToken.END_OBJECT) {
+                                try {
+                                    Bot bot = (Bot) Class.forName(jp.getText()).newInstance();
+                                    bots.add(bot);
+                                } catch (Exception e) {
+                                }
+                            }
+                        }
                         if (jp.getText().equals("defaultType")) {
                             jp.nextToken();
                             defaultType = UserType.valueOf(jp.getText());
                         }
-                        if (!(title.equals("")) && id != null && owner != null && creation != null && last!=null && first!=null && userRolesRun && defaultType!=null) {
+                        if (!(title.equals("")) && id != null && owner != null && creation != null && last!=null && first!=null && userRolesRun && defaultType!=null && botsRun) {
                             ConversationHeader conv = new ConversationHeader(id, owner, creation, title);
                             for(Uuid Uid: userAccessRoles.keySet())
                             {
                                 conv.setAccessOf(Uid,userAccessRoles.get(Uid));
+                            }
+                            for(Bot bot: bots)
+                            {
+                                conv.bots.add(bot);
                             }
                             model.add(conv, new ConversationPayload(id,first,last));
                             title = "";
@@ -402,8 +421,11 @@ public final class JSON {
                             creation = null;
                             first = null;
                             userRolesRun = false;
+                            userAccessRoles = new HashMap<Uuid, UserType>();
                             last = null;
                             defaultType = null;
+                            botsRun = false;
+                            bots = new LinkedList<Bot>();
                         }
                     }
                     continue;
