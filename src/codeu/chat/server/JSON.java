@@ -327,7 +327,6 @@ public final class JSON {
                     Uuid last = null;
                     Uuid first = null;
                     boolean userRolesRun = false;
-                    boolean botsRun = false;
                     UserType defaultType = null;
                     HashMap<Uuid, UserType> userAccessRoles = new HashMap<Uuid, UserType>();
                     LinkedList<Bot> bots = new LinkedList<Bot>();
@@ -388,9 +387,13 @@ public final class JSON {
                             jp.nextToken();
                             creation = Time.fromMs(jp.getLongValue());
                         }
+
+                        if (jp.getText().equals("defaultType")) {
+                            jp.nextToken();
+                            defaultType = UserType.valueOf(jp.getText());
+                        }
                         if(jp.getText().equals("bots"))
                         {
-                            botsRun = true;
                             jp.nextToken();
                             while(jp.nextToken()!=JsonToken.END_OBJECT) {
                                 try {
@@ -400,11 +403,7 @@ public final class JSON {
                                 }
                             }
                         }
-                        if (jp.getText().equals("defaultType")) {
-                            jp.nextToken();
-                            defaultType = UserType.valueOf(jp.getText());
-                        }
-                        if (!(title.equals("")) && id != null && owner != null && creation != null && last!=null && first!=null && userRolesRun && defaultType!=null && botsRun) {
+                        if (!(title.equals("")) && id != null && owner != null && creation != null && last!=null && first!=null && userRolesRun && defaultType!=null) {
                             ConversationHeader conv = new ConversationHeader(id, owner, creation, title);
                             for(Uuid Uid: userAccessRoles.keySet())
                             {
@@ -424,7 +423,6 @@ public final class JSON {
                             userAccessRoles = new HashMap<Uuid, UserType>();
                             last = null;
                             defaultType = null;
-                            botsRun = false;
                             bots = new LinkedList<Bot>();
                         }
                     }
