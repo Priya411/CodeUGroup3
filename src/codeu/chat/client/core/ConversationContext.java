@@ -139,7 +139,6 @@ public final class ConversationContext {
 	}
 	return false;
   }
-}
   
 	public Iterable<String> listBots(){ 
 		final Collection<String> allBots = new ArrayList<>(view.getBots());

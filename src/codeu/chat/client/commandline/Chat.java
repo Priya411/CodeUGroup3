@@ -644,7 +644,7 @@ public final class Chat {
 			@Override
 			public void invoke(List<String> args) {
 				System.out.println("List of bots:");
-				while (conversation.conversation.listBots().iterator().hasNext()){
+				while (conversation.listBots().iterator().hasNext()){
 					System.out.format("   %s\n", conversation.listBots().iterator().next()); 
 				}
 			}
