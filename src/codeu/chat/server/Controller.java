@@ -333,10 +333,14 @@ public final class Controller implements RawController, BasicController {
 		// Any user can add a bot, but multiple bots can't be added into
 		// a conversation. It will return true if the bot was added.
 		ConversationHeader conv = model.conversationById().first(convoId);
-		if (conv != null) {
-			if (model.bots.contains(botName)) {
-				for (Bot bot : conv.bots) {
-					if (bot.getName().equals(botName)) {
+		if (conv!=null)
+		{
+			if (model.bots.contains(botName))
+			{
+				for(Bot bot: conv.bots) {
+				if(bot.getName().equals(botName))
+					{
+						System.out.println("Bot already added");
 						return false;
 					}
 				}
@@ -345,6 +349,7 @@ public final class Controller implements RawController, BasicController {
 					bot.onAdd();
 					conv.bots.add(bot);
 					return true;
+
 				} catch (Exception e) {
 					e.printStackTrace();
 					return false;
