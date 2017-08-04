@@ -16,8 +16,8 @@
     "uuid" : "1.3394057727",
     "ownerUUID" : "1.495319334",
     "creationTime" : 1497935701083,
-    "firstMessageUUID" : "1.3350517446",
-    "lastMessageUUID" : "1.1516759239",
+    "firstMessage" : "1.3350517446",
+    "lastMessage" : "1.1516759239",
     "defaultType": "MEMBER",
     "userAccessRoles": {
       "1.243253453": "MEMBER",
