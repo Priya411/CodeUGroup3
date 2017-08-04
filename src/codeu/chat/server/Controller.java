@@ -62,50 +62,10 @@ public final class Controller implements RawController, BasicController {
 	public Message newMessage(Uuid id, Uuid author, Uuid conversation, String body, Time creationTime) {
 		final User foundUser = model.userById().first(author);
 		final ConversationPayload foundConversation = model.conversationPayloadById().first(conversation);
-		for (Bot bot : model.conversationById().first(conversation).bots) {
 
-			String potentialMessage = bot.reactTo(body, author);
-
-			if (potentialMessage != null) {
-				Message message = new Message(createId(), Uuid.NULL, Uuid.NULL, creationTime, Uuid.NULL,
-						potentialMessage);
-				model.add(message);
-				if (Uuid.equals(foundConversation.lastMessage, Uuid.NULL)) {
-
-					// The conversation has no messages in it, that's why the last
-					// message is NULL (the first
-					// message should be NULL too. Since there is no last message,
-					// then it is not possible
-					// to update the last message's "next" value.
-				} else {
-					final Message lastMessage = model.messageById().first(foundConversation.lastMessage);
-					lastMessage.next = message.id;
-					new JSON().save(lastMessage);
-
-				}
-
-				// If the first message points to NULL it means that the
-				// conversation was empty and that
-				// the first message should be set to the new message. Otherwise the
-				// message should
-				// not change.
-
-				foundConversation.firstMessage = Uuid.equals(foundConversation.firstMessage, Uuid.NULL) ? message.id
-						: foundConversation.firstMessage;
-
-				// Update the conversation to point to the new last message as it
-				// has changed.
-
-				foundConversation.lastMessage = message.id;
-
-				new JSON().save(foundConversation);
-				new JSON().save(message);
-			}
-
-		}
 		Message message = null;
 
-		if (foundUser != null && foundConversation != null && isIdFree(id)) {
+		if (foundConversation != null && isIdFree(id)) {
 
 			message = new Message(id, Uuid.NULL, Uuid.NULL, creationTime, author, body);
 			model.add(message);
@@ -146,6 +106,16 @@ public final class Controller implements RawController, BasicController {
 
 			new JSON().save(foundConversation);
 			new JSON().save(message);
+			
+			for (Bot bot : model.conversationById().first(conversation).bots) {
+
+				String potentialMessage = bot.reactTo(body, author);
+
+				if (potentialMessage != null) {
+					System.out.println("newmessage");
+					newMessage(createId(), Uuid.NULL, conversation, potentialMessage, creationTime);
+				}
+			}
 		}
 
 		return message;
@@ -346,7 +316,11 @@ public final class Controller implements RawController, BasicController {
 				}
 				try {
 					Bot bot = (Bot) Class.forName("codeu.chat.server.bots." + botName).newInstance();
-					bot.onAdd();
+					
+					String onAddMessage = bot.onAdd();
+					if (onAddMessage != null) {
+						this.newMessage(Uuid.NULL, convoId, onAddMessage);
+					}
 					conv.bots.add(bot);
 					return true;
 
