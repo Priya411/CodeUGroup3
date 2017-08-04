@@ -40,8 +40,7 @@ public final class Controller implements RawController, BasicController {
 
 	public Controller(Uuid serverId, Model model) {
 		this.model = model;
-		this.uuidGenerator = new RandomUuidGenerator(serverId,
-				System.currentTimeMillis());
+		this.uuidGenerator = new RandomUuidGenerator(serverId, System.currentTimeMillis());
 	}
 
 	@Override
@@ -60,23 +59,55 @@ public final class Controller implements RawController, BasicController {
 	}
 
 	@Override
-	public Message newMessage(Uuid id, Uuid author, Uuid conversation,
-							  String body, Time creationTime) {
-
-		for(Bot bot: model.conversationById().first(conversation).bots)
-		{
-			bot.reactTo(body,author);
-		}
+	public Message newMessage(Uuid id, Uuid author, Uuid conversation, String body, Time creationTime) {
 		final User foundUser = model.userById().first(author);
-		final ConversationPayload foundConversation = model
-				.conversationPayloadById().first(conversation);
+		final ConversationPayload foundConversation = model.conversationPayloadById().first(conversation);
+		for (Bot bot : model.conversationById().first(conversation).bots) {
 
+			String potentialMessage = bot.reactTo(body, author);
+
+			if (potentialMessage != null) {
+				Message message = new Message(createId(), Uuid.NULL, Uuid.NULL, creationTime, Uuid.NULL,
+						potentialMessage);
+				model.add(message);
+				if (Uuid.equals(foundConversation.lastMessage, Uuid.NULL)) {
+
+					// The conversation has no messages in it, that's why the last
+					// message is NULL (the first
+					// message should be NULL too. Since there is no last message,
+					// then it is not possible
+					// to update the last message's "next" value.
+				} else {
+					final Message lastMessage = model.messageById().first(foundConversation.lastMessage);
+					lastMessage.next = message.id;
+					new JSON().save(lastMessage);
+
+				}
+
+				// If the first message points to NULL it means that the
+				// conversation was empty and that
+				// the first message should be set to the new message. Otherwise the
+				// message should
+				// not change.
+
+				foundConversation.firstMessage = Uuid.equals(foundConversation.firstMessage, Uuid.NULL) ? message.id
+						: foundConversation.firstMessage;
+
+				// Update the conversation to point to the new last message as it
+				// has changed.
+
+				foundConversation.lastMessage = message.id;
+
+				new JSON().save(foundConversation);
+				new JSON().save(message);
+			}
+
+		}
 		Message message = null;
 
 		if (foundUser != null && foundConversation != null && isIdFree(id)) {
 
-			message = new Message(id, Uuid.NULL, Uuid.NULL, creationTime,
-					author, body);
+			message = new Message(id, Uuid.NULL, Uuid.NULL, creationTime, author, body);
 			model.add(message);
 
 			LOG.info("Message added: %s", message.id);
@@ -93,8 +124,7 @@ public final class Controller implements RawController, BasicController {
 				// then it is not possible
 				// to update the last message's "next" value.
 			} else {
-				final Message lastMessage = model.messageById().first(
-						foundConversation.lastMessage);
+				final Message lastMessage = model.messageById().first(foundConversation.lastMessage);
 				lastMessage.next = message.id;
 				new JSON().save(lastMessage);
 
@@ -106,8 +136,7 @@ public final class Controller implements RawController, BasicController {
 			// message should
 			// not change.
 
-			foundConversation.firstMessage = Uuid.equals(
-					foundConversation.firstMessage, Uuid.NULL) ? message.id
+			foundConversation.firstMessage = Uuid.equals(foundConversation.firstMessage, Uuid.NULL) ? message.id
 					: foundConversation.firstMessage;
 
 			// Update the conversation to point to the new last message as it
@@ -133,30 +162,25 @@ public final class Controller implements RawController, BasicController {
 			model.add(user);
 			new JSON().save(user);
 
-			LOG.info("newUser success (user.id=%s user.name=%s user.time=%s)",
-					id, name, creationTime);
+			LOG.info("newUser success (user.id=%s user.name=%s user.time=%s)", id, name, creationTime);
 
 		} else {
 
-			LOG.info(
-					"newUser fail - id in use (user.id=%s user.name=%s user.time=%s)",
-					id, name, creationTime);
+			LOG.info("newUser fail - id in use (user.id=%s user.name=%s user.time=%s)", id, name, creationTime);
 		}
 
 		return user;
 	}
 
 	@Override
-	public ConversationHeader newConversation(Uuid id, String title,
-											  Uuid owner, Time creationTime) {
+	public ConversationHeader newConversation(Uuid id, String title, Uuid owner, Time creationTime) {
 
 		final User foundOwner = model.userById().first(owner);
 
 		ConversationHeader conversation = null;
 
 		if (foundOwner != null && isIdFree(id)) {
-			conversation = new ConversationHeader(id, owner, creationTime,
-					title);
+			conversation = new ConversationHeader(id, owner, creationTime, title);
 			model.add(conversation);
 			new JSON().save(conversation);
 			LOG.info("Conversation added: " + id);
@@ -170,17 +194,14 @@ public final class Controller implements RawController, BasicController {
 
 		// count the number of messages
 		// create header and payload objects from string title
-		final ConversationHeader convoHeader = model.conversationByText()
-				.first(title);
+		final ConversationHeader convoHeader = model.conversationByText().first(title);
 		// return null if not ofund
 		if (convoHeader == null) {
 			return null;
 		}
-		final ConversationPayload convoPayload = model
-				.conversationPayloadById().first(convoHeader.id);
+		final ConversationPayload convoPayload = model.conversationPayloadById().first(convoHeader.id);
 
-		Message currentMessage = model.messageById().first(
-				convoPayload.firstMessage);
+		Message currentMessage = model.messageById().first(convoPayload.firstMessage);
 		int count = 0;
 		while (currentMessage != null) {
 			currentMessage = model.messageById().first(currentMessage.next);
@@ -207,14 +228,12 @@ public final class Controller implements RawController, BasicController {
 	public Uuid removeConvoInterest(Uuid user, String title) {
 		final User foundUser = model.userById().first(user);
 		// create header and payload objects from string title
-		final ConversationHeader convoHeader = model.conversationByText()
-				.first(title);
+		final ConversationHeader convoHeader = model.conversationByText().first(title);
 		// return null if not found
 		if (convoHeader == null) {
 			return null;
 		}
-		final ConversationPayload convoPayload = model
-				.conversationPayloadById().first(convoHeader.id);
+		final ConversationPayload convoPayload = model.conversationPayloadById().first(convoHeader.id);
 
 		foundUser.remConvoInterest(convoPayload.id);
 		new JSON().save(foundUser);
@@ -236,8 +255,7 @@ public final class Controller implements RawController, BasicController {
 
 		Uuid candidate;
 
-		for (candidate = uuidGenerator.make(); isIdInUse(candidate); candidate = uuidGenerator
-				.make()) {
+		for (candidate = uuidGenerator.make(); isIdInUse(candidate); candidate = uuidGenerator.make()) {
 
 			// Assuming that "randomUuid" is actually well implemented, this
 			// loop should never be needed, but just incase make sure that the
@@ -249,8 +267,7 @@ public final class Controller implements RawController, BasicController {
 	}
 
 	private boolean isIdInUse(Uuid id) {
-		return model.messageById().first(id) != null
-				|| model.conversationById().first(id) != null
+		return model.messageById().first(id) != null || model.conversationById().first(id) != null
 				|| model.userById().first(id) != null;
 	}
 
@@ -267,8 +284,7 @@ public final class Controller implements RawController, BasicController {
 	// user with username in given convo
 	// if so, update model, if not, return null
 	@Override
-	public Uuid changeAccessControl(Uuid userID, Uuid convo, String username,
-									UserType type) {
+	public Uuid changeAccessControl(Uuid userID, Uuid convo, String username, UserType type) {
 		System.out.println(model.conversationById().first(convo).getAccessOf(userID));
 		// This function will update the UserType of the User with the User Name
 		// username
@@ -282,10 +298,8 @@ public final class Controller implements RawController, BasicController {
 				return null;
 			}
 			if (type == UserType.OWNER || type == UserType.MEMBER) {
-				ConversationHeader header = model.conversationById()
-						.first(convo);
-				header.setAccessOf(model.userByText().first(username).id,
-						type);
+				ConversationHeader header = model.conversationById().first(convo);
+				header.setAccessOf(model.userByText().first(username).id, type);
 				new JSON().save(header);
 				return model.userByText().first(username).id;
 			} else {
@@ -299,10 +313,8 @@ public final class Controller implements RawController, BasicController {
 				return null;
 			}
 			if (type == UserType.MEMBER) {
-				ConversationHeader header = model.conversationById()
-						.first(convo);
-				header.setAccessOf(model.userByText().first(username).id,
-						type);
+				ConversationHeader header = model.conversationById().first(convo);
+				header.setAccessOf(model.userByText().first(username).id, type);
 				new JSON().save(header);
 			} else {
 				return null;
@@ -314,32 +326,27 @@ public final class Controller implements RawController, BasicController {
 	}
 
 	@Override
-	public boolean addBot(Uuid convoId, String botName)
-	{
+	public boolean addBot(Uuid convoId, String botName) {
 		// This function will allow the user to add in a bot to a conversation
 		// The conversation is specified by the UUID and the bot is specified
 		// by its name, which is just a string version of the class name.
 		// Any user can add a bot, but multiple bots can't be added into
 		// a conversation. It will return true if the bot was added.
 		ConversationHeader conv = model.conversationById().first(convoId);
-		if (conv!=null)
-		{
-			if (model.bots.contains(botName))
-			{
-				for(Bot bot: conv.bots) {
-				if(bot.getName().equals(botName))
-					{
+		if (conv != null) {
+			if (model.bots.contains(botName)) {
+				for (Bot bot : conv.bots) {
+					if (bot.getName().equals(botName)) {
 						return false;
 					}
 				}
 				try {
-					Bot bot = (Bot)Class.forName(botName).newInstance();
+					Bot bot = (Bot) Class.forName("codeu.chat.server.bots." + botName).newInstance();
 					bot.onAdd();
 					conv.bots.add(bot);
 					return true;
-				}
-				catch(Exception e)
-				{
+				} catch (Exception e) {
+					e.printStackTrace();
 					return false;
 				}
 
@@ -356,12 +363,9 @@ public final class Controller implements RawController, BasicController {
 		// by its name, which is just a string version of the class name.
 		// Any user can remove a bot, and it will return true if the bot was removed.
 		ConversationHeader conv = model.conversationById().first(convoId);
-		if (conv!=null)
-		{
-			for(Bot bot: conv.bots)
-			{
-				if(bot.getName().equals(botName))
-				{
+		if (conv != null) {
+			for (Bot bot : conv.bots) {
+				if (bot.getName().equals(botName)) {
 					conv.bots.remove(bot);
 					return true;
 				}
@@ -370,7 +374,7 @@ public final class Controller implements RawController, BasicController {
 		}
 		return false;
 	}
-	
+
 	public LinkedList<String> getAllBots() {
 		return this.model.bots;
 	}
