@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import codeu.chat.util.CommandTokenizer;
 import codeu.chat.util.Uuid;
+import codeu.chat.common.Bot;
 
 public class HangmanBot extends Bot {
 
