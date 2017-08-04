@@ -21,9 +21,9 @@ public class CstatusTest {
     
     @Test
     public void TestToString() {
-        assertEquals("Creator", UserType.CREATOR.toString()); 
-		assertEquals("Member", UserType.MEMBER.toString()); 
-		assertEquals("Owner", UserType.OWNER.toString());
+        assertEquals("CREATOR", UserType.CREATOR.name());
+		assertEquals("MEMBER", UserType.MEMBER.name());
+		assertEquals("OWNER", UserType.OWNER.name());
     }
 
 }

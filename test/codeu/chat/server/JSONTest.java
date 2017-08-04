@@ -54,7 +54,7 @@ public class JSONTest {
         expected.add(new Message(createUuid("1.3928689216"), createUuid("1.1516759239"), createUuid("0"), Time.fromMs(49584908), createUuid("1.1074501217"),   "I'm so alone"));
         try {
             // Path used by Priyanka:
-            model = log.readFromFile("/Users/HMCLoaner/Desktop/CodeU/test/codeu/chat/server/input.json");
+            model = log.readFromFile("./data/input.json");
             // The path can vary from device, so this may not compile if it's not the correct path for your project
             // set up. A suggested path is as follows
             // model = log.readFromFile("CodeU/test/codeu/chat/server/input.json");
@@ -81,7 +81,7 @@ public class JSONTest {
         expected.add(user1);
         try {
             // Path used by Priyanka:
-            model = log.readFromFile("/Users/HMCLoaner/Desktop/CodeU/test/codeu/chat/server/input2.json");
+            model = log.readFromFile("./data/input2.json");
             // The path can vary from device, so this may not compile if it's not the correct path for your project
             // set up. A suggested path is as follows
             //model = log.readFromFile("CodeU/test/codeu/chat/server/input2.json");
@@ -100,7 +100,7 @@ public class JSONTest {
         Model expected = new Model();
         try {
             // Path used by Priyanka:
-            model = log.readFromFile("/Users/HMCLoaner/Desktop/CodeU/test/codeu/chat/server/input3.json");
+            model = log.readFromFile("./data/input3.json");
             // The path can vary from device, so this may not compile if it's not the correct path for your project
             // set up. A suggested path is as follows
             //model = log.readFromFile("CodeU/test/codeu/chat/server/input3.json");
@@ -152,7 +152,7 @@ public class JSONTest {
 
         try {
             // Path used by Priyanka:
-            model = log.readFromFile("/Users/HMCLoaner/Desktop/CodeU/test/codeu/chat/server/input4.json");
+            model = log.readFromFile("./data/input4.json");
             // The path can vary from device, so this may not compile if it's not the correct path for your project
             // set up. A suggested path is as follows
             //model = log.readFromFile("CodeU/test/codeu/chat/server/input4.json");
@@ -171,7 +171,7 @@ public class JSONTest {
         Model expected = new Model();
         try {
             // Path used by Priyanka:
-            model = log.readFromFile("/Users/HMCLoaner/Desktop/CodeU/test/codeu/chat/server/noFile.json");
+            model = log.readFromFile("./data/noFile.json");
             // The path can vary from device, so this may not compile if it's not the correct path for your project
             // set up. A suggested path is as follows
             //model = log.readFromFile("CodeU/test/codeu/chat/server/input3.json");
@@ -191,7 +191,7 @@ public class JSONTest {
         expected.add(new User(createUuid("1.1"), "Krager", Time.fromMs(12345)));
         try {
             // Path used by Priyanka:
-            model = log.readFromFile("/Users/HMCLoaner/Desktop/CodeU/test/codeu/chat/server/input2.json");
+            model = log.readFromFile("./data/input2.json");
             // The path can vary from device, so this may not compile if it's not the correct path for your project
             // set up. A suggested path is as follows
             //model = log.readFromFile("CodeU/test/codeu/chat/server/input2.json");
@@ -213,7 +213,7 @@ public class JSONTest {
         boolean errorThrown = false;
         try {
             // Path used by Priyanka:
-            Model model = log.readFromFile("/Users/HMCLoaner/Desktop/CodeU/test/codeu/chat/server/input5.json");
+            Model model = log.readFromFile("./data/input5.json");
             // The path can vary from device, so this may not compile if it's not the correct path for your project
             // set up. A suggested path is as follows
             //model = log.readFromFile("CodeU/test/codeu/chat/server/input2.json");
@@ -267,7 +267,7 @@ public class JSONTest {
 
         try {
             // Path used by Priyanka:
-            model = log.readFromFile("/Users/HMCLoaner/Desktop/CodeU/test/codeu/chat/server/input6.json");
+            model = log.readFromFile("./data/input6.json");
             // The path can vary from device, so this may not compile if it's not the correct path for your project
             // set up. A suggested path is as follows
             //model = log.readFromFile("CodeU/test/codeu/chat/server/input4.json");
