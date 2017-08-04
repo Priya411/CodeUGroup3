@@ -1,69 +1,46 @@
 {
   "users" : [ {
-    "name" : "K",
-    "uuid" : "1.3630241395",
-    "creationTime" : 1498337717688
+    "conversationInterests" : { },
+    "userInterests" : [ ],
+    "name" : "Kevin",
+    "lastUpdateTime" : 1501877686244,
+    "creationTime" : 1501877686244,
+    "uuid" : "1.3281440603"
   }, {
-    "name" : "K1",
-    "uuid" : "1.3849152428",
-    "creationTime" : 1498337724529
-  }, {
-    "name" : "K2",
-    "uuid" : "1.11145357",
-    "creationTime" : 1498337726369
+    "conversationInterests" : { },
+    "userInterests" : [ ],
+    "name" : "Stanley",
+    "lastUpdateTime" : 1501877718854,
+    "creationTime" : 1501877718854,
+    "uuid" : "1.4208408980"
   } ],
   "conversations" : [ {
-    "title" : "T",
-    "uuid" : "1.234761847",
-    "ownerUUID" : "1.3630241395",
-    "creationTime" : 1498337772979,
-    "firstMessageUUID" : "1.1126869100",
-    "lastMessageUUID" : "1.3212962674"
-  }, {
-    "title" : "T1",
-    "uuid" : "1.3357903759",
-    "ownerUUID" : "1.3630241395",
-    "creationTime" : 1498339327527
-  }, {
-    "title" : "this",
-    "uuid" : "1.80755046",
-    "ownerUUID" : "1.3849152428",
-    "creationTime" : 1499481250758,
-    "firstMessageUUID" : "1.314541654",
-    "lastMessageUUID" : "1.314541654"
-  }, {
-    "title" : "hello",
-    "uuid" : "1.1582847019",
-    "ownerUUID" : "1.3849152428",
-    "creationTime" : 1499481400528
+    "title" : "convo",
+    "defaultType" : "MEMBER",
+    "bots" : [ ],
+    "ownerUUID" : "1.3281440603",
+    "creationTime" : 1501877698037,
+    "userAccessRoles" : {
+      "1.3281440603" : "CREATOR"
+    },
+    "uuid" : "1.22527561",
+    "id" : "1.22527561",
+    "firstMessage" : "1.3422412971",
+    "lastMessage" : "1.3726470611"
   } ],
   "messages" : [ {
-    "content" : "M1",
-    "uuid" : "1.1126869100",
-    "nextUUID" : "1.473089087",
-    "previousUUID" : "0",
-    "authorUUID" : "1.3630241395",
-    "creationTime" : 1498337779661
-  }, {
-    "content" : "M2",
-    "uuid" : "1.473089087",
-    "nextUUID" : "1.3212962674",
-    "previousUUID" : "0",
-    "authorUUID" : "1.3630241395",
-    "creationTime" : 1498337781289
-  }, {
-    "content" : "M3",
-    "uuid" : "1.3212962674",
-    "nextUUID" : "0",
-    "previousUUID" : "0",
-    "authorUUID" : "1.3630241395",
-    "creationTime" : 1498337782908
-  }, {
     "content" : "hello",
-    "uuid" : "1.314541654",
+    "nextUUID" : "1.3726470611",
+    "previousUUID" : "0",
+    "authorUUID" : "1.3281440603",
+    "creationTime" : 1501877702644,
+    "uuid" : "1.3422412971"
+  }, {
+    "content" : "meow",
     "nextUUID" : "0",
     "previousUUID" : "0",
-    "authorUUID" : "1.3849152428",
-    "creationTime" : 1499481254448
+    "authorUUID" : "1.4208408980",
+    "creationTime" : 1501877734268,
+    "uuid" : "1.3726470611"
   } ]
 }
