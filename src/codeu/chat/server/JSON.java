@@ -395,7 +395,7 @@ public final class JSON {
                         if(jp.getText().equals("bots"))
                         {
                             jp.nextToken();
-                            while(jp.nextToken()!=JsonToken.END_OBJECT) {
+                            while(jp.nextToken()!=JsonToken.END_ARRAY) {
                                 try {
                                     Bot bot = (Bot) Class.forName(jp.getText()).newInstance();
                                     bots.add(bot);
