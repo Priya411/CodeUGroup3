@@ -376,7 +376,7 @@ public final class JSON {
                                 System.out.println("Invalid Uuid");
                             }
                         }
-                        if (jp.getText().equals("firstMessageUUID")) {
+                        if (jp.getText().equals("firstMessage")) {
                             jp.nextToken();
                             try {
                                 first = Uuid.parse(jp.getText());
@@ -384,7 +384,7 @@ public final class JSON {
                                 System.out.println("Invalid Uuid");
                             }
                         }
-                        if (jp.getText().equals("lastMessageUUID")) {
+                        if (jp.getText().equals("lastMessage")) {
                             jp.nextToken();
                             try {
                                 last = Uuid.parse(jp.getText());
