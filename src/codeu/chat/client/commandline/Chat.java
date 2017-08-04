@@ -581,6 +581,10 @@ public final class Chat {
 				System.out.println("  m-add <message>");
 				System.out
 						.println("    Add a new message to the current conversation as the current user.");
+				System.out.println("  bot-add <Name>");
+				System.out.println("    Adds bot with a given name to the conversation"); 
+				System.out.println("  bot-remove <Name>");
+				System.out.println("    Removes bot with a given name from the conversation"); 
 				System.out.println("  list-bots");
 				System.out.println("    Lists all of the available bots that can be added to the conversation"); 
 				System.out.println("  info");
@@ -695,7 +699,7 @@ public final class Chat {
 			}
 		});
 
-		panel.register("bot-add <Bot-Name>", new Panel.Command() {
+		panel.register("bot-add", new Panel.Command() {
 			@Override
 			public void invoke(List<String> args) {
 				String botName = args.get(0);
@@ -708,7 +712,7 @@ public final class Chat {
 			}
 		});
 		
-		panel.register("bot-remove <Bot-Name>", new Panel.Command() {
+		panel.register("bot-remove", new Panel.Command() {
 			@Override
 			public void invoke(List<String> args) {
 				String botName = args.get(0);
