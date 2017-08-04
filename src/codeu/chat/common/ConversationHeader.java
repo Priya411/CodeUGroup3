@@ -95,6 +95,7 @@ public final class ConversationHeader {
 		this.setAccessOf(owner, UserType.CREATOR);
 	}
 
+	@JsonProperty("uuid")
 	public String getUUID() {
 		return id.toString();
 	}

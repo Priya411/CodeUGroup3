@@ -15,9 +15,11 @@ public class HangmanBot extends Bot {
 	public String loseOrRejectGuessWith(String message) {
 		lives -= 1;
 		if (lives < 0) {
+			String returnMessage = "Out of lives! Sorry but you lose! The word was " + word;
 			word = null;
-			return "Out of lives! Sorry but you lose! The word was " + word;
+			return returnMessage;
 		}
+		message += "\n" + lives + " lives left!";
 		return message;
 	}
 
@@ -51,8 +53,9 @@ public class HangmanBot extends Bot {
 			if (guess.length() > 1) {
 				// check if the guessed word is correct
 				if (word.equals(guess)) {
+					String returnMessage = "You did it! You win! The word was " + word;
 					word = null;
-					return "You did it! You win! The word was " + word;
+					return returnMessage;
 				} else {
 					return loseOrRejectGuessWith("Nope! The word certainly isn't \"" + guess + "\"");
 				}
@@ -62,8 +65,11 @@ public class HangmanBot extends Bot {
 				// each time, replace the dash in guesstring with the actual letter
 				while (word.indexOf(guess, lastIndexOfLetter) != -1) {
 					lastIndexOfLetter = word.indexOf(guess, lastIndexOfLetter);
+					System.out.println("lastIndex" + lastIndexOfLetter);
 					guessString = guessString.substring(0, lastIndexOfLetter) + guess
 							+ guessString.substring(lastIndexOfLetter + 1);
+					// this is done because indexOf includes the starting index
+					lastIndexOfLetter++;
 				}
 				// if the guess was not found inside of the word
 				if (lastIndexOfLetter == -1) {
@@ -71,11 +77,12 @@ public class HangmanBot extends Bot {
 							"Nope! Sorry but the word does not contain any " + guess + "'s...\n" + guessString);
 				}
 				// if the guessString is out of dashes and is complete
-				if (guessString == word) {
+				if (guessString.equals(word)) {
+					String returnMessage = "You did it! You win! The word was " + word;
 					word = null;
-					return "You WIN! The word was " + word;
+					return returnMessage;
 				}
-				return "Yay! Correct!\nguessString";
+				return "Yay! Correct!\n" + guessString;
 			}
 		default:
 			return null;

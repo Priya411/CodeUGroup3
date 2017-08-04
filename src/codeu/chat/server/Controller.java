@@ -106,7 +106,7 @@ public final class Controller implements RawController, BasicController {
 
 			new JSON().save(foundConversation);
 			new JSON().save(message);
-			
+
 			for (Bot bot : model.conversationById().first(conversation).bots) {
 
 				String potentialMessage = bot.reactTo(body, author);
@@ -303,25 +303,23 @@ public final class Controller implements RawController, BasicController {
 		// Any user can add a bot, but multiple bots can't be added into
 		// a conversation. It will return true if the bot was added.
 		ConversationHeader conv = model.conversationById().first(convoId);
-		if (conv!=null)
-		{
-			if (model.bots.contains(botName))
-			{
-				for(Bot bot: conv.bots) {
-				if(bot.getName().equals(botName))
-					{
+		if (conv != null) {
+			if (model.bots.contains(botName)) {
+				for (Bot bot : conv.bots) {
+					if (bot.getName().equals(botName)) {
 						System.out.println("Bot already added");
 						return false;
 					}
-				}
+				}				
 				try {
 					Bot bot = (Bot) Class.forName("codeu.chat.server.bots." + botName).newInstance();
-					
+
 					String onAddMessage = bot.onAdd();
 					if (onAddMessage != null) {
 						this.newMessage(Uuid.NULL, convoId, onAddMessage);
 					}
 					conv.bots.add(bot);
+					new JSON().save(conv);
 					return true;
 
 				} catch (Exception e) {

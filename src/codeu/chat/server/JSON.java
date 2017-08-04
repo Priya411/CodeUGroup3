@@ -5,7 +5,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map.Entry;
 
 import codeu.chat.common.*;
 
@@ -106,7 +108,14 @@ public final class JSON {
 			if (curObj.get("uuid") != null && UUID.equals(curObj.get("uuid").asText())) {
 				System.out.println("Found same UUID, updating existing object");
 				// if anything else, just rewrite with new version of object
-				JsonNode nodeToSave = mapper.convertValue(obj, JsonNode.class);
+				ObjectNode nodeToSave = mapper.convertValue(curObj, ObjectNode.class);
+				
+				ObjectNode nodeFromNewData = mapper.convertValue(obj, ObjectNode.class);
+				Iterator<Entry<String, JsonNode>> iterator = nodeFromNewData.fields();
+				while (iterator.hasNext()) {
+					Entry<String, JsonNode> entry = iterator.next();
+					nodeToSave.set(entry.getKey(), entry.getValue());
+				}
 				requestedArrayNode.set(index, nodeToSave);
 				isAlreadyPresent = true;
 			}
