@@ -78,6 +78,7 @@ public final class Model {
   
   public Model() {
 	  bots.add("HangmanBot");
+	  bots.add("KevinBot");
   }
 
   public void add(User user) {

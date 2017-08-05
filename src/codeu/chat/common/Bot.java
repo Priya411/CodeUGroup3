@@ -1,5 +1,7 @@
 package codeu.chat.common;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 import codeu.chat.util.Uuid;
 
 public abstract class Bot {
@@ -21,6 +23,8 @@ public abstract class Bot {
         // It is not abstract because the controllor makes a call to it.
         return null;
     }
+    
+    @JsonValue
     public String getName()
     {
         // This function will return the class name of the
