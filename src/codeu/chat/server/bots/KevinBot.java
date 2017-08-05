@@ -29,7 +29,10 @@ public class KevinBot extends Bot {
 			"Does this need to public?",
 			"As always, let me know if you have any questions or want to talk about anything!",
 			"Going to lunch now, be back in an hour or so!",
-			"What if there were a million users?"
+			"What if there were a million users?", 
+			"Tests would be nice", 
+			"There could be more comments and javadocs",
+			"If we had more time..."
 	};
 	@Override
 	public String reactTo(String message, Uuid sender) {
